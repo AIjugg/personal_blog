@@ -1,0 +1,20 @@
+#message .ivu-list-item-meta-title{
+  float: left;
+  width: 100px;
+  text-align:left;
+  padding:5px 0px;
+}
+#message .ivu-list-item-meta-description{
+  float: right;
+  text-align:right;
+  padding:7px 0px;
+  width: 200px
+}
+#message-like .ivu-list-item-action{
+  float: right;
+}
+/*留言板头像大小*/
+#message .ivu-avatar{
+  width: 64px;
+  height: 64px;
+}

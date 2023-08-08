@@ -1,0 +1,5 @@
+let baseURL = 'http://zcc.learn.net/'
+
+export default {
+  baseURL
+}
