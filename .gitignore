@@ -50,5 +50,6 @@
 /web/*.ntvs*
 /web/*.njsproj
 /web/*.sln
+/web/.vs
 
 /crontab_php
