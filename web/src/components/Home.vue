@@ -1,42 +1,80 @@
 <template>
-  <Content class="card-style">
-    <Card style="background-color:rgba(0,0,0,0)">
-      <div class="home-style">
-        <div class="total-box">
-          <div class="motto-box">
-            <Carousel autoplay v-model="speed" loop autoplay-speed="4000">
-              <CarouselItem v-for="item in list" :key="item.id">
-                <div class="home-carousel">
-                  <img :src="item.img" height="400" width="600">
-                  <div class="motto-word-board">
-                    <div class="motto-font">
-                        {{ item.motto }}
-                    </div>
+  <div>
+    <el-container>
+      <el-header style="height:150px">
+        <el-row>
+          <el-col :span="8"><div class="grid-content"></div></el-col>
+          <el-col :span="8">
+            <div class="grid-content">
+              <span style="font-size: 20px;
+    font-weight: 600;
+    color: azure;
+    font-family: STKaiti">
+                所谓门槛，能力够了就是门，能力不够就是槛。人生的沟沟坎坎，多半是能力不足所致。
+              </span>
+            </div>
+          </el-col>
+          <el-col :span="8"><div class="grid-content"></div></el-col>
+        </el-row>
+      </el-header>
+      <el-main>
+        <el-row :gutter="20">
+          <el-col :span="4"><div class="grid-content"></div></el-col>
+          <el-col :span="8">
+            <div class="grid-content" style="width: 600px">
+              <el-image :src="src" style="width: 600px; height: 400px"></el-image>
+              <div style="margin:100px 0 0 0">
+                <el-card class="box-card" shadow="hover">
+                  <div class="text item">
+                    <span style="font-size: 15px;
+    font-weight: 600;
+    color:black;
+    font-family: STKaiti">最新博客</span>
                   </div>
-                </div>
-              </CarouselItem>
-            </Carousel>
-          </div>
-          <div class="date-box">
-            <div class="home-date">
-              <div class="month-style">
-                <span class="date-month">{{ month }}</span>
-              </div>
-              <div class="day-style">
-                <span class="date-day">{{ day }}</span>
-              </div>
-              <div class="year-style">
-                <span class="date-year">{{ year }}</span>
+                </el-card>
               </div>
             </div>
-          </div>
-        </div>
-        <div style="clear: both"></div>
-        <iframe src="https://zhanyuzhang.github.io/lovely-cat/cat.html" frameborder="0" id="catIframe"></iframe>
-      </div>
-      <div id="jsi-flying-fish-container"></div>
-    </Card>
-  </Content>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content" style="margin: 200px 0 0 0">
+              <span style="font-size: 40px;
+    font-weight: 600;
+    color:black;
+    font-family: STKaiti">
+                贺新郎·读史
+              </span>
+              <br />
+              <span style="font-size: 20px;
+    font-weight: 600;
+    color:black;
+    font-family: STKaiti">
+                人猿相揖别。<br />
+                只几个石头磨过，<br />
+                小儿时节。<br />
+                铜铁炉中翻火焰，<br />
+                为问何时猜得？<br />
+                不过几千寒热。<br />
+                人世难逢开口笑，<br />
+                上疆场彼此弯弓月。<br />
+                流遍了，<br />
+                郊原血。<br />
+                一篇读罢头飞雪，<br />
+                但记得斑斑点点，<br />
+                几行陈迹。<br />
+                五帝三皇神圣事，<br />
+                骗了无涯过客。<br />
+                有多少风流人物？<br />
+                盗跖庄蹻流誉后，<br />
+                更陈王奋起挥黄钺。<br />
+                歌未竟，<br />
+                东方白。
+              </span>
+            </div>
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-container>
+  </div>
 </template>
 
 
@@ -48,7 +86,8 @@ export default {
       year: '2020',
       month: 'May',
       day: '10',
-      list: []
+      list: [],
+      src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'
     }
   },
   mounted () {
@@ -71,15 +110,10 @@ export default {
     }
   }
 }
-import '../plugin/fish'
+
 </script>
 <style scoped>
-.card-style {
-  margin: 0 auto;
-  width:80%;
-  min-width: 900px;
-  background-color:rgba(0,0,0,0);
-}
+
 .home-style {
   background-color: #ffffff;
   background-color: rgba(256, 256, 256, 0.2);
@@ -157,11 +191,39 @@ import '../plugin/fish'
   bottom: 10%;
   right: 5%;
 }
-#jsi-flying-fish-container {
-  width: 100%;
-  height: 200px;
-  z-index: 1;
-  bottom: 145px;
-  left: 0;
-}
+  .el-row {
+    margin-bottom: 20px;
+    &:last-child
+
+  {
+    margin-bottom: 0;
+  }
+
+  }
+
+  .el-col {
+    border-radius: 4px;
+  }
+
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+
+  .bg-purple {
+    background: #d3dce6;
+  }
+
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
 </style>

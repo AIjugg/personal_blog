@@ -1,9 +1,11 @@
 <template>
   <div>
-    <myHeader></myHeader>
-    <state></state>
-    <router-view></router-view>
-    <myFooter></myFooter>
+    <el-container>
+      <el-header style="padding:0; height:400px"><myHeader></myHeader></el-header>
+      <el-main><state></state></el-main>
+      <router-view></router-view>
+      <el-footer><myFooter></myFooter></el-footer>
+    </el-container>
   </div>
 </template>
 

@@ -1,0 +1,54 @@
+# phpstorm project files
+/php/.idea
+
+/images
+
+# zend studio for eclipse project files
+/php/.buildpath
+/php/.project
+/php/.settings
+/php/.env
+/php/.bowerrc
+
+
+# composer vendor dir
+/php/vendor
+/php/runtime
+
+# composer itself is not needed
+/php/composer.phar
+
+# Mac DS_Store Files
+.DS_Store
+
+# phpunit itself is not needed
+/php/phpunit.phar
+# local phpunit config
+/phpunit.xml
+
+/php/tests/_output/*
+/php/tests/_support/_generated
+
+#vagrant folder
+/.vagrant
+
+/web/.DS_Store
+/web/node_modules/
+/web/dist/
+/web/npm-debug.log*
+/web/yarn-debug.log*
+/web/yarn-error.log*
+/web/test/unit/coverage/
+/web/test/e2e/reports/
+/web/selenium-debug.log
+/web/src/plugin/globleApi.js
+
+# Editor directories and files
+/web/.idea
+/web/.vscode
+/web/*.suo
+/web/*.ntvs*
+/web/*.njsproj
+/web/*.sln
+
+/crontab_php
