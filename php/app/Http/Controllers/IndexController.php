@@ -13,10 +13,10 @@ use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
-    public function IndexAction(Request $request)
+    public function index(Request $request)
     {
         $result = (new MottoService())->getLastMotto();
 
-        return response($result);
+        return self::buildResponse($result);
     }
 }

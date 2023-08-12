@@ -13,9 +13,11 @@ use Illuminate\Support\Facades\DB;
 
 class Motto extends Model
 {
+    protected $table = 'motto';
+
     public function getMotto()
     {
-        $data = DB::table('motto')->select('img','motto')
+        $data = DB::table($this->table)->select('img','motto')
             ->orderBy("id",'desc')
             ->limit(1)
             ->get()->toArray();
