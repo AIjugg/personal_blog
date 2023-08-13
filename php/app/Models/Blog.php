@@ -71,6 +71,19 @@ class Blog extends Model
 
 
     /**
+     * 新增博客
+     * @param $data
+     * @return int
+     */
+    public function addBlogGetId($data)
+    {
+        $blogId = DB::table($this->table)->insertGetId($data);
+
+        return $blogId;
+    }
+
+
+    /**
      * @param $data
      * @param $condition
      * @return int

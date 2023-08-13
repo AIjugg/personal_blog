@@ -31,17 +31,13 @@ class Controller extends BaseController
     }
 
 
-    public static function buildThrowableResponse($errorCode = 1001, $errorMsg = 'error',array $result = [])
+    public static function buildThrowableResponse($errorCode = 1001, $errorMsg = 'error',array $data = [])
     {
-        $errorData = $result;
-
-        if (!isset($result['code']) && !isset($result['msg'])) {
-            $errorData = [
-                'msg' => $result['msg'] ?? $errorMsg,
-                'code' => $result['code'] ?? $errorCode,
-                'data' => $result['data'] ?? $result
-            ];
-        }
+        $errorData = [
+            'msg' => $errorMsg,
+            'code' => $errorCode,
+            'data' => $data
+        ];
 
         if (getenv('APP_DEBUG')) {
 

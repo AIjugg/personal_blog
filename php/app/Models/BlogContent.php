@@ -43,4 +43,17 @@ class BlogContent extends Model
 
         return $blogDetail;
     }
+
+
+    /**
+     * 新增博客内容
+     * @param $data
+     * @return bool
+     */
+    public function addContent($data)
+    {
+        $res = DB::table($this->table)->insert($data);
+
+        return $res;
+    }
 }
