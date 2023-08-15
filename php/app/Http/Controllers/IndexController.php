@@ -10,13 +10,21 @@ namespace App\Http\Controllers;
 
 use App\Services\MottoService;
 use Illuminate\Http\Request;
+use App\Lib\Common\Util\ApiResponse;
+use Illuminate\Routing\Controller as BaseController;
 
-class IndexController extends Controller
+class IndexController extends BaseController
 {
     public function index(Request $request)
     {
-        $result = (new MottoService())->getLastMotto();
+        try {
+            $data = (new MottoService())->getLastMotto();
 
-        return self::buildResponse($result);
+            $result = ApiResponse::buildResponse($data);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
     }
 }

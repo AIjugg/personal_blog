@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\CommonException;
 use App\Models\BlogType;
 
 
@@ -23,7 +24,8 @@ class BlogTypeService
 
     /**
      * @param $typeId
-     * @return bool
+     * @return array|bool
+     * @throws CommonException
      */
     public function deleteBlogType($typeId)
     {
@@ -35,6 +37,9 @@ class BlogTypeService
 
         $res = $blogType->deleteBlogType($typeId);
 
-        return $res;
+        if (!$res) {
+            throw new CommonException('删除失败', 1003);
+        }
+        return [];
     }
 }

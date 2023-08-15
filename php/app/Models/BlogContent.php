@@ -56,4 +56,19 @@ class BlogContent extends Model
 
         return $res;
     }
+
+
+    /**
+     * 编辑博客内容
+     * @param $blogId
+     * @param $content
+     * @return int
+     */
+    public function editContent($blogId, $content)
+    {
+        $res = DB::table($this->table)->where('blog_id', $blogId)
+            ->update(['content' => $content]);
+
+        return $res;
+    }
 }

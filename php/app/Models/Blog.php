@@ -95,9 +95,18 @@ class Blog extends Model
         if (!empty($condition['blog_id'])) {
             $blogQuery->where('blog_id', $condition['blog_id']);
         }
+        if (!empty($condition['uid'])) {
+            $blogQuery->where('blog_id', $condition['uid']);
+        }
 
         $res = $blogQuery->update($data);
 
         return $res;
+    }
+
+
+    public function updateBlog($data)
+    {
+
     }
 }
