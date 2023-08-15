@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Lib\Common\Util\ErrorCodes;
 use App\Models\Blog;
 use App\Models\BlogContent;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,7 @@ class BlogService
         $result = (new BlogContent())->getBlogAndContent($blogId);
 
         if (empty($result)) {
-            throw new CommonException('找不到相应博客', 1005);
+            throw new CommonException(ErrorCodes::BLOG_NOT_EXIST);
         } else {
             return $result[0];
         }
@@ -55,7 +56,7 @@ class BlogService
             // 先插入博客获取博客Id
             $blogId = (new Blog())->addBlogGetId($blogData);
             if (empty($blogId)) {
-                throw new CommonException('创建博客失败', 1002);
+                throw new CommonException(ErrorCodes::BLOG_ADD_FAIL);
             }
 
             $blogContent = [
@@ -66,7 +67,7 @@ class BlogService
             // 插入博客内容
             $res = (new BlogContent())->addContent($blogContent);
             if (!$res) {
-                throw new CommonException('插入博客内容失败', 1006);
+                throw new CommonException(ErrorCodes::BLOG_CONTENT_ADD_FAIL);
             }
 
             DB::commit();
@@ -89,7 +90,7 @@ class BlogService
     public function editBlog($uid, $data)
     {
         if (empty($data['blog_id'])) {
-            throw new CommonException('找不到相关博客', 1001);
+            throw new CommonException(ErrorCodes::PARAM_ERROR);
         }
 
         $blogId = $data['blog_id'];
@@ -99,13 +100,13 @@ class BlogService
             $res = (new Blog())->editBlog($data, ['uid' => $uid, 'blog_id' => $blogId]);
 
             if (empty($res)) {
-                throw new CommonException('编辑博客失败', 1001);
+                throw new CommonException(ErrorCodes::BLOG_EDIT_FAIL);
             }
 
             if (!empty($data['content'])) {
                 $res2 = (new BlogContent())->editContent($blogId, $data['content']);
                 if (!$res2) {
-                    throw new CommonException('更新博客内容失败', 1007);
+                    throw new CommonException(ErrorCodes::BLOG_CONTENT_EDIT_FAIL);
                 }
             }
 

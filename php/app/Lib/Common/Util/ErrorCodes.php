@@ -20,6 +20,8 @@ class ErrorCodes
      const BLOG_ADD_FAIL = 12002;
      const BLOG_EDIT_FAIL = 12003;
      const BLOG_TYPE_DELETE_FAIL = 12004;
+     const BLOG_CONTENT_ADD_FAIL = 12005;
+     const BLOG_CONTENT_EDIT_FAIL = 12006;
 
 
     private static $codeMap = [
@@ -29,9 +31,9 @@ class ErrorCodes
         self::BLOG_NOT_EXIST => '博客不存在',
         self::BLOG_ADD_FAIL => '创建博客失败',
         self::BLOG_EDIT_FAIL => '编辑博客失败',
-        self::BLOG_TYPE_DELETE_FAIL => '博客分类删除失败'
-
-
+        self::BLOG_TYPE_DELETE_FAIL => '博客分类删除失败',
+        self::BLOG_CONTENT_ADD_FAIL => '博客内容创建失败',
+        self::BLOG_CONTENT_EDIT_FAIL => '博客内容编辑失败',
 
     ];
 
