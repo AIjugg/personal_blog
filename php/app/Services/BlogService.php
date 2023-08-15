@@ -11,7 +11,7 @@ namespace App\Services;
 use App\Models\Blog;
 use App\Models\BlogContent;
 use Illuminate\Support\Facades\DB;
-use App\Exceptions\CommonException;
+use App\Lib\Common\Util\CommonException;
 
 class BlogService
 {

@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\CommonException;
+use App\Lib\Common\Util\CommonException;
 use App\Services\BlogService;
 use App\Services\BlogTypeService;
 use Illuminate\Http\Request;

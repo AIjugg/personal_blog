@@ -8,8 +8,9 @@
 
 namespace App\Services;
 
-use App\Exceptions\CommonException;
+use App\Lib\Common\Util\CommonException;
 use App\Models\BlogType;
+use App\Lib\Common\Util\ErrorCodes;
 
 
 class BlogTypeService
@@ -38,7 +39,7 @@ class BlogTypeService
         $res = $blogType->deleteBlogType($typeId);
 
         if (!$res) {
-            throw new CommonException('删除失败', 1003);
+            throw new CommonException(ErrorCodes::BLOG_TYPE_DELETE_FAIL);
         }
         return [];
     }
