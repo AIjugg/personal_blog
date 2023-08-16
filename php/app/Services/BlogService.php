@@ -29,7 +29,7 @@ class BlogService
         if (empty($result)) {
             throw new CommonException(ErrorCodes::BLOG_NOT_EXIST);
         } else {
-            return $result[0];
+            return $result;
         }
     }
 

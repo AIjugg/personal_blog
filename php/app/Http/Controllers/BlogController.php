@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Lib\Common\Util\CommonException;
+use App\Lib\Common\Util\ErrorCodes;
 use App\Services\BlogService;
 use App\Services\BlogTypeService;
 use Illuminate\Http\Request;
@@ -33,10 +34,22 @@ class BlogController extends BaseController
      * 删除博客分类
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws CommonException
      */
     public function deleteBlogType(Request $request)
     {
         $input = $request->only(['type_id']);
+
+        // 验证参数
+        $validate = Validator::make($input, [
+            'type_id' => ['required', 'integer'],
+        ]);
+
+        if ($validate->fails()) {
+            $errorMsg = $validate->errors()->first();
+
+            throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+        }
 
         $typeId = $input['type_id'];
 
@@ -96,7 +109,7 @@ class BlogController extends BaseController
             if ($validate->fails()) {
                 $errorMsg = $validate->errors()->first();
 
-                throw new CommonException($errorMsg, 1001);
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
             $data = [
@@ -146,7 +159,54 @@ class BlogController extends BaseController
             if ($validate->fails()) {
                 $errorMsg = $validate->errors()->first();
 
-                throw new CommonException($errorMsg, 1001);
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            $data = [
+                'blog_id' => $input['blog_id'],
+                'title' => $input['title'],
+                'description' => $input['description'],
+                'image' => $input['image'],
+                'state' => $input['state'],
+                'top' => $input['top'],
+                'content_simple' => $input['content_simple'],
+                'content' => $input['content']
+            ];
+
+            // 获取登录用户的信息
+            $uid = 1;
+
+            $res = (new BlogService())->editBlog($uid, $data);
+
+            $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
+
+
+    /**
+     * 获取博客列表
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getBlogList(Request $request)
+    {
+        try {
+            $input = $request->only(['title','description','state','page','pagesize','sort_filed','sort_direction']);
+
+            // 验证参数
+            $validate = Validator::make($input, [
+                'title' => 'string',
+                'state' => ['nullable', Rule::in([1, 2])]
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
             $data = [

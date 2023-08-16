@@ -23,6 +23,8 @@ class ErrorCodes
      const BLOG_CONTENT_ADD_FAIL = 12005;
      const BLOG_CONTENT_EDIT_FAIL = 12006;
 
+     // 用户
+    const USER_PWD_WRONG = 13001;
 
     private static $codeMap = [
         self::PARAM_ERROR => '参数错误',
@@ -35,6 +37,7 @@ class ErrorCodes
         self::BLOG_CONTENT_ADD_FAIL => '博客内容创建失败',
         self::BLOG_CONTENT_EDIT_FAIL => '博客内容编辑失败',
 
+        self::USER_PWD_WRONG => '用户密码错误'
     ];
 
 

@@ -8,8 +8,14 @@
 
 namespace App\Services;
 
+use App\Models\User;
 
 class UserService
 {
+    public function getUserByAccount($username)
+    {
+        $user = (new User())->getUserByCondition(['username' => $username]);
 
+        return $user;
+    }
 }

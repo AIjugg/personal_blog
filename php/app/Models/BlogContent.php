@@ -39,9 +39,9 @@ class BlogContent extends Model
         $blogDetail = DB::table('blog', 'b')->join('blog_content as bc', 'b.blog_id', '=', 'bc.blog_id')
             ->select(['b.blog_id', 'b.uid', 'b.title', 'b.like', 'b.comment', 'b.pageviews', 'bc.content'])
             ->where('b.blog_id', $blogId)
-            ->get()->toArray();
+            ->first();
 
-        return $blogDetail;
+        return (array)$blogDetail;
     }
 
 
