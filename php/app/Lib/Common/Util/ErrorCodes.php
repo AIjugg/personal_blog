@@ -25,6 +25,11 @@ class ErrorCodes
 
      // 用户
     const USER_PWD_WRONG = 13001;
+    const USER_PWD_REPEAT_WRONG = 13002;
+    const USER_EXIST = 13003;
+    const USERNAME_WRONG = 13004;
+    const ADD_USER_WRONG = 13005;
+    const EDIT_USER_WRONG = 13006;
 
     private static $codeMap = [
         self::PARAM_ERROR => '参数错误',
@@ -37,7 +42,12 @@ class ErrorCodes
         self::BLOG_CONTENT_ADD_FAIL => '博客内容创建失败',
         self::BLOG_CONTENT_EDIT_FAIL => '博客内容编辑失败',
 
-        self::USER_PWD_WRONG => '用户密码错误'
+        self::USER_PWD_WRONG => '用户密码错误',
+        self::USER_PWD_REPEAT_WRONG => '两次密码不一致',
+        self::USER_EXIST => '用户名已存在',
+        self::USERNAME_WRONG => '用户名不规范请使用纯字母',
+        self::ADD_USER_WRONG => '创建用户失败',
+        self::EDIT_USER_WRONG => '编辑用户失败'
     ];
 
 

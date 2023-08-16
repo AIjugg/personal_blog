@@ -23,3 +23,8 @@ Route::group(['prefix' => 'blog'], function () {
 
 });
 
+Route::group(['prefix' => 'user'], function () {
+    Route::post('/login', 'UserController@loginByAccount');
+    Route::post('/register', 'UserController@registerByAccount');
+
+});

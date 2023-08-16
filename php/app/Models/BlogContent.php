@@ -52,6 +52,7 @@ class BlogContent extends Model
      */
     public function addContent($data)
     {
+        $data['created_at'] = date('Y-m-d H:i:s', time());
         $res = DB::table($this->table)->insert($data);
 
         return $res;
@@ -66,6 +67,7 @@ class BlogContent extends Model
      */
     public function editContent($blogId, $content)
     {
+        $data['updated_at'] = date('Y-m-d H:i:s', time());
         $res = DB::table($this->table)->where('blog_id', $blogId)
             ->update(['content' => $content]);
 

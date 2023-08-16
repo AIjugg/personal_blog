@@ -64,6 +64,7 @@ class Blog extends Model
      */
     public function addBlog($data)
     {
+        $data['created_at'] = date('Y-m-d H:i:s', time());
         $res = DB::table($this->table)->insert($data);
 
         return $res;
@@ -77,6 +78,8 @@ class Blog extends Model
      */
     public function addBlogGetId($data)
     {
+        $data['created_at'] = date('Y-m-d H:i:s', time());
+
         $blogId = DB::table($this->table)->insertGetId($data);
 
         return $blogId;
@@ -99,14 +102,9 @@ class Blog extends Model
             $blogQuery->where('blog_id', $condition['uid']);
         }
 
+        $data['updated_at'] = date('Y-m-d H:i:s', time());
         $res = $blogQuery->update($data);
 
         return $res;
-    }
-
-
-    public function updateBlog($data)
-    {
-
     }
 }

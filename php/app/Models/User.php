@@ -22,13 +22,16 @@ class User
             $query->where('id', $condition['id']);
         }
         if (!empty($condition['username'])) {
-            $query->where('username', $condition['username']);
+            $username = $condition['username'];
+            $query->where(function ($query) use ($username) {
+                $query->orWhere('username', $username)
+                    ->orWhere('email', $username)
+                    ->orWhere('mobile', $username);
+            });
         }
-        if (!empty($condition['email'])) {
-            $query->where('email', $condition['email']);
-        }
-        if (!empty($condition['mobile'])) {
-            $query->where('mobile', $condition['mobile']);
+
+        if (!empty($condition['state'])) {
+            $query->where('state', $condition['state']);
         }
 
         if (!empty($selectField)) {
@@ -38,5 +41,36 @@ class User
         $user = $query->first();
 
         return (array)$user;
+    }
+
+
+    /**
+     * 新增用户
+     * @param $data
+     * @return int
+     */
+    public function addUser($data)
+    {
+        $data['created_at'] = date('Y-m-d H:i:s', time());
+
+        $res = DB::table($this->table)->insertGetId($data);
+
+        return $res;
+    }
+
+
+    /**
+     * 编辑用户
+     * @param $uid
+     * @param $data
+     * @return int
+     */
+    public function editUser($uid, $data)
+    {
+        $data['updated_at'] = date('Y-m-d H:i:s', time());
+        $res = DB::table($this->table)->where('id', $uid)
+            ->update($data);
+
+        return $res;
     }
 }
