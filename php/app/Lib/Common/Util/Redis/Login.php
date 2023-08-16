@@ -28,7 +28,7 @@ class Login extends LoginBase
         $token = GenerateRandom::generateRandom();
 
         $value = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
-        $res = Redis::command('set', [self::USERKEY_PREFIX . $token, $value]);
+        $res = Redis::set(self::USERKEY_PREFIX . $token, $value);
         Redis::expire(self::USERKEY_PREFIX . $token, self::EXPIRE_TIME);
 
         return $res;

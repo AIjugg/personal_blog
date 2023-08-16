@@ -100,7 +100,7 @@ class UserService
             throw new CommonException(ErrorCodes::ADD_USER_WRONG);
         }
 
-        return [];
+        return ['uid' => $res];
     }
 
 
