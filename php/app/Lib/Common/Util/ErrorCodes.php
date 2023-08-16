@@ -30,6 +30,7 @@ class ErrorCodes
     const USERNAME_WRONG = 13004;
     const ADD_USER_WRONG = 13005;
     const EDIT_USER_WRONG = 13006;
+    const USER_TOKEN_STORAGE_WRONG = 13007;
 
     private static $codeMap = [
         self::PARAM_ERROR => '参数错误',
@@ -47,7 +48,8 @@ class ErrorCodes
         self::USER_EXIST => '用户名已存在',
         self::USERNAME_WRONG => '用户名不规范请使用纯字母',
         self::ADD_USER_WRONG => '创建用户失败',
-        self::EDIT_USER_WRONG => '编辑用户失败'
+        self::EDIT_USER_WRONG => '编辑用户失败',
+        self::USER_TOKEN_STORAGE_WRONG => 'token存储失败',
     ];
 
 

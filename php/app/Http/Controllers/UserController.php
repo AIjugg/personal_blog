@@ -33,11 +33,17 @@ class UserController extends BaseController
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
-            $res = (new UserService())->loginByAccount($input['username'], $input['password']);
+            $userService = new UserService();
+            $uid = $userService->loginByAccount($input['username'], $input['password']);
 
+            // 更新用户信息
+            $updateData = [
+                'ip' => $request->ip(),
+                'last_login' => date('Y-m-d H:i:s', time())
+            ];
+            $userService->editUser($uid, $updateData);
 
-
-            $result = ApiResponse::buildResponse($res);
+            $result = ApiResponse::buildResponse(['uid' => $uid, 'username' => $input['username']]);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
         }
