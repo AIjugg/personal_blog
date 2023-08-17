@@ -19,23 +19,19 @@
       </el-header>
       <el-main>
         <el-row :gutter="20">
-          <el-col :span="4"><div class="grid-content"></div></el-col>
-          <el-col :span="8">
-            <div class="grid-content" style="width: 600px">
-              <el-image :src="src" style="width: 600px; height: 400px"></el-image>
-              <div style="margin:100px 0 0 0">
+          <el-col :span="14">
+            <div class="grid-content">
+              <el-image :src="src" style="max-width:800px"></el-image>
+              <div style="margin:100px 0 0 0;">
                 <el-card class="box-card" shadow="hover">
                   <div class="text item">
-                    <span style="font-size: 15px;
-    font-weight: 600;
-    color:black;
-    font-family: STKaiti">最新博客</span>
+                    <span style="font-size: 15px;font-weight: 600;color:black;font-family: STKaiti">最新博客</span>
                   </div>
                 </el-card>
               </div>
             </div>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="10">
             <div class="grid-content" style="margin: 200px 0 0 0">
               <span style="font-size: 40px;
     font-weight: 600;

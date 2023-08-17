@@ -62,20 +62,13 @@ class UserService
         unset($user['password']);
 
         // 存储登录token
-        $res = $this->loginUtil->setUserToken($user);
+        $res = $this->storageLogin($user);
 
         if (!$res) {
             throw new CommonException(ErrorCodes::USER_TOKEN_STORAGE_WRONG);
         }
 
         return $user['id'];
-    }
-
-
-    // 存储用户登录token，能不能做成依赖倒置
-    public function storageLogin($uid)
-    {
-
     }
 
 
@@ -143,8 +136,22 @@ class UserService
     }
 
 
-    public function checkUserLogin()
+    // 存储用户登录token，做成依赖倒置，方便以后更改存储方式
+    public function storageLogin($user)
     {
+        return $this->loginUtil->setUserToken($user);
+    }
 
+
+    /**
+     * 检查
+     * @param $token
+     * @return array
+     */
+    public function checkUserLogin($token)
+    {
+        $userinfo = $this->loginUtil->getUserinfoByToken($token);
+
+        return $userinfo;
     }
 }

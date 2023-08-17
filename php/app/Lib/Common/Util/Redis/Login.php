@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Redis;
 use App\Lib\Common\Util\GenerateRandom;
 use App\Lib\Common\Util\LoginBase;
 
+/**
+ * Redis方法 @see \Illuminate\Redis\Connections\PhpRedisConnection
+ * Class Login
+ * @package App\Lib\Common\Util\Redis
+ */
 class Login extends LoginBase
 {
     const USERKEY_PREFIX = 'user';

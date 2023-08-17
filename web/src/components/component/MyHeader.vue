@@ -11,9 +11,8 @@
                  <el-col :span="4"><div class="grid-content"></div></el-col>
                  <el-col :span="4"><el-button type="text"><router-link to="/">HOME</router-link></el-button></el-col>
                  <el-col :span="4"><el-button type="text"><router-link to="/blog">BLOG</router-link></el-button></el-col>
-                 <el-col :span="4"><el-button type="text"><router-link to="/message">RECORD</router-link></el-button></el-col>
+                 <el-col :span="5"><el-button type="text"><router-link to="/message">RECORD</router-link></el-button></el-col>
                  <el-col :span="4"><el-button type="text"><router-link to="/message">NOTES</router-link></el-button></el-col>
-                 <el-col :span="4"><div class="grid-content"></div></el-col>
                </el-row>
              </el-col>
              <el-col :span="6"><el-button type="text"><router-link to="/message">LOGIN</router-link></el-button></el-col>
