@@ -20,6 +20,7 @@ Route::group(['prefix' => 'blog'], function () {
     Route::get('/blog-type-list', 'BlogController@listBlogType');
     Route::post('/del-blog-type', 'BlogController@deleteBlogType');
     Route::get('/get-blog-detail', 'BlogController@getBlogDetail');
+    Route::get('/blog-list', 'BlogController@getBlogList');
 
 });
 

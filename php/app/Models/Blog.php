@@ -18,17 +18,19 @@ class Blog extends Model
     /**
      * 获取博客列表
      * @param $condition
-     * @param $sort
-     * @param $offset
-     * @param $limit
+     * @param $sortArr
+     * @param $pageSet
      * @return array
      */
-    public function getBlog($condition, $sort, $offset, $limit)
+    public function getBlog($condition, $sortArr, $pageSet)
     {
         $blog = DB::table($this->table);
 
         if (!empty($condition['uid'])) {
             $blog->where('uid', $condition['uid']);
+        }
+        if (!empty($condition['title'])) {
+            $blog->where('title', 'like', '%' . $condition['title'] . '%');
         }
         if (!empty($condition['blog_id'])) {
             $where = is_array($condition['blog_id']) ? 'whereIn' : 'where';
@@ -38,20 +40,48 @@ class Blog extends Model
             $blog->where('state', $condition['state']);
         }
 
-        if (!empty($sort['sort_field']) && !empty($sort['sort_direction'])) {
-            $blog->orderBy($sort['sort_field'], $sort['sort_direction']);
+        if (!empty($sortArr['sort_field']) && !empty($sortArr['sort_direction'])) {
+            $blog->orderBy($sortArr['sort_field'], $sortArr['sort_direction']);
         } else {
             $blog->orderBy('top', 'desc')
                 ->orderBy('created_at', 'desc');
         }
 
-
-        if (!empty($page) && !empty($pageSize)) {
-            $blog->offset($offset)
-                ->limit($limit);
+        if (isset($pageSet['offset']) && !empty($pageSet['limit'])) {
+            $blog->offset($pageSet['offset'])
+                ->limit($pageSet['limit']);
         }
 
         $result = $blog->get()->toArray();
+
+        return $result;
+    }
+
+
+    /**
+     * 统计博客数量
+     * @param $condition
+     * @return integer
+     */
+    public function countBlog($condition)
+    {
+        $blog = DB::table($this->table);
+
+        if (!empty($condition['uid'])) {
+            $blog->where('uid', $condition['uid']);
+        }
+        if (!empty($condition['title'])) {
+            $blog->where('title', 'like', '%' . $condition['title'] . '%');
+        }
+        if (!empty($condition['blog_id'])) {
+            $where = is_array($condition['blog_id']) ? 'whereIn' : 'where';
+            $blog->$where('blog_id', $condition['blog_id']);
+        }
+        if (!empty($condition['state'])) {
+            $blog->where('state', $condition['state']);
+        }
+
+        $result = $blog->count();
 
         return $result;
     }

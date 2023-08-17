@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Lib\Common\Util\CommonException;
 use App\Lib\Common\Util\ErrorCodes;
+use App\Lib\Common\Util\Helper;
 use App\Services\BlogService;
 use App\Services\BlogTypeService;
 use Illuminate\Http\Request;
@@ -195,11 +196,11 @@ class BlogController extends BaseController
     public function getBlogList(Request $request)
     {
         try {
-            $input = $request->only(['title','description','state','page','pagesize','sort_filed','sort_direction']);
+            $input = $request->only(['word','page','pagesize','sort_filed','sort_direction']);
 
             // 验证参数
             $validate = Validator::make($input, [
-                'title' => 'string',
+                'word' => 'string',
                 'state' => ['nullable', Rule::in([1, 2])]
             ]);
 
@@ -209,23 +210,19 @@ class BlogController extends BaseController
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
-            $data = [
-                'blog_id' => $input['blog_id'],
-                'title' => $input['title'],
-                'description' => $input['description'],
-                'image' => $input['image'],
-                'state' => $input['state'],
-                'top' => $input['top'],
-                'content_simple' => $input['content_simple'],
-                'content' => $input['content']
-            ];
+            $condition = [];
+            if (!empty($input['word'])) {
+                $condition['title'] = trim($input['word']);
+            }
 
-            // 获取登录用户的信息
-            $uid = 1;
+            $sortArr = Helper::sortStandard($input);
+            $pageSet = Helper::pageStandard($input);
 
-            $res = (new BlogService())->editBlog($uid, $data);
+            $blogService = new BlogService();
+            $list = $blogService->listBlog($condition, $sortArr, $pageSet);
+            $total = $blogService->countBlog($condition);
 
-            $result = ApiResponse::buildResponse($res);
+            $result = ApiResponse::buildResponse(['list' => $list, 'total' => $total]);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
         }

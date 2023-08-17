@@ -118,4 +118,24 @@ class BlogService
             throw $e;
         }
     }
+
+
+    public function listBlog($condition, $sortArr = [], $pageSet = [])
+    {
+        $result = (new Blog())->getBlog($condition, $sortArr, $pageSet);
+
+        if (empty($result)) {
+            throw new CommonException(ErrorCodes::BLOG_NOT_EXIST);
+        } else {
+            return $result;
+        }
+    }
+
+
+    public function countBlog($condition)
+    {
+        $total = (new Blog())->countBlog($condition);
+
+        return $total;
+    }
 }
