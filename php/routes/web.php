@@ -19,6 +19,8 @@ Route::get('/home', 'IndexController@index')->name('home');
 Route::group(['prefix' => 'blog'], function () {
     Route::get('/blog-type-list', 'BlogController@listBlogType');
     Route::post('/del-blog-type', 'BlogController@deleteBlogType');
+    Route::post('/add-blog-type', 'BlogController@addBlogType');
+    Route::post('/edit-blog-type', 'BlogController@editBlogType');
     Route::get('/get-blog-detail', 'BlogController@getBlogDetail');
     Route::get('/blog-list', 'BlogController@getBlogList');
 

@@ -66,6 +66,75 @@ class BlogController extends BaseController
 
 
     /**
+     * 新增博客分类
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws CommonException
+     */
+    public function addBlogType(Request $request)
+    {
+        $input = $request->only(['type_name']);
+
+        // 验证参数
+        $validate = Validator::make($input, [
+            'type_name' => ['required', 'string'],
+        ]);
+
+        if ($validate->fails()) {
+            $errorMsg = $validate->errors()->first();
+
+            throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+        }
+
+        $typeName = $input['type_name'];
+
+        try {
+            $data = (new BlogTypeService())->addBlogType($typeName);
+            $result = ApiResponse::buildResponse($data);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
+
+
+    /**
+     * 编辑博客分类
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws CommonException
+     */
+    public function editBlogType(Request $request)
+    {
+        $input = $request->only(['type_id','type_name']);
+
+        // 验证参数
+        $validate = Validator::make($input, [
+            'type_id' => ['required', 'integer'],
+            'type_name' => ['required', 'string'],
+        ]);
+
+        if ($validate->fails()) {
+            $errorMsg = $validate->errors()->first();
+
+            throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+        }
+
+        $typeId = $input['type_id'];
+        $typeName = $input['type_name'];
+
+        try {
+            $data = (new BlogTypeService())->editBlogType($typeId,$typeName);
+            $result = ApiResponse::buildResponse($data);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
+
+    /**
      * 获取博客详情
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -201,7 +270,10 @@ class BlogController extends BaseController
             // 验证参数
             $validate = Validator::make($input, [
                 'word' => 'string',
-                'state' => ['nullable', Rule::in([1, 2])]
+                'state' => ['nullable', Rule::in([1, 2])],
+                'sort_filed' => ['nullable', Rule::in(['created_at', 'like', 'pageviews'])],
+                'page' => 'nullable|integer',
+                'pagesize' => 'nullable|integer',
             ]);
 
             if ($validate->fails()) {

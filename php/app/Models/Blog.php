@@ -24,27 +24,33 @@ class Blog extends Model
      */
     public function getBlog($condition, $sortArr, $pageSet)
     {
-        $blog = DB::table($this->table);
+        $blog = DB::table($this->table, 'b');
 
         if (!empty($condition['uid'])) {
-            $blog->where('uid', $condition['uid']);
+            $blog->where('b.uid', $condition['uid']);
         }
         if (!empty($condition['title'])) {
-            $blog->where('title', 'like', '%' . $condition['title'] . '%');
+            $blog->where('b.title', 'like', '%' . $condition['title'] . '%');
         }
         if (!empty($condition['blog_id'])) {
             $where = is_array($condition['blog_id']) ? 'whereIn' : 'where';
-            $blog->$where('blog_id', $condition['blog_id']);
+            $blog->$where('b.blog_id', $condition['blog_id']);
         }
         if (!empty($condition['state'])) {
-            $blog->where('state', $condition['state']);
+            $blog->where('b.state', $condition['state']);
+        }
+        if (!empty($condition['type_id'])) {
+            $where = is_array($condition['type_id']) ? 'whereIn' : 'where';
+
+            $blog->join('blog_type_relation as br', 'br.blog_id', '=', 'b.blog_id')
+                ->$where('br.type_id', $condition['type_id']);
         }
 
         if (!empty($sortArr['sort_field']) && !empty($sortArr['sort_direction'])) {
             $blog->orderBy($sortArr['sort_field'], $sortArr['sort_direction']);
         } else {
-            $blog->orderBy('top', 'desc')
-                ->orderBy('created_at', 'desc');
+            $blog->orderBy('b.top', 'desc')
+                ->orderBy('b.created_at', 'desc');
         }
 
         if (isset($pageSet['offset']) && !empty($pageSet['limit'])) {
@@ -94,7 +100,7 @@ class Blog extends Model
      */
     public function addBlog($data)
     {
-        $data['created_at'] = date('Y-m-d H:i:s', time());
+        $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s', time());
         $res = DB::table($this->table)->insert($data);
 
         return $res;
@@ -108,7 +114,7 @@ class Blog extends Model
      */
     public function addBlogGetId($data)
     {
-        $data['created_at'] = date('Y-m-d H:i:s', time());
+        $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s', time());
 
         $blogId = DB::table($this->table)->insertGetId($data);
 

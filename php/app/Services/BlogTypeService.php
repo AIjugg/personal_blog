@@ -43,4 +43,53 @@ class BlogTypeService
         }
         return [];
     }
+
+
+    /**
+     * 新增博客分类
+     * @param $typeName
+     * @return array
+     * @throws CommonException
+     */
+    public function addBlogType($typeName)
+    {
+        if (empty($typeName)) {
+            throw new CommonException(ErrorCodes::BLOG_TYPE_NAME_EMPTY);
+        }
+
+        $data = [
+            'type_name' => $typeName
+        ];
+
+        $blogType = new BlogType();
+        $res = $blogType->addBlogType($data);
+
+        if (empty($res)) {
+            throw new CommonException(ErrorCodes::BLOG_TYPE_ADD_FAIL);
+        }
+        return ['type_id' => $res];
+    }
+
+
+    /**
+     * 编辑博客分类
+     * @param $typeId
+     * @param $typeName
+     * @return array
+     * @throws CommonException
+     */
+    public function editBlogType($typeId, $typeName)
+    {
+        $data = [
+            'type_name' => $typeName
+        ];
+
+        $blogType = new BlogType();
+        $res = $blogType->editBlogType($typeId, $data);
+
+        if (empty($res)) {
+            throw new CommonException(ErrorCodes::BLOG_TYPE_ADD_FAIL);
+        }
+        return [];
+    }
 }

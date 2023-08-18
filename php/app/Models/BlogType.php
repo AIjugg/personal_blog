@@ -48,4 +48,37 @@ class BlogType extends Model
 
         return $result;
     }
+
+
+    /**
+     * 增加博客类型
+     * @param $data
+     * @return int
+     */
+    public function addBlogType($data)
+    {
+        $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s', time());
+
+        $result = DB::table($this->table)
+            ->insertGetId($data);
+
+        return $result;
+    }
+
+
+    /**
+     * 编辑博客分类
+     * @param $typeId
+     * @param $data
+     * @return int
+     */
+    public function editBlogType($typeId, $data)
+    {
+        $data['updated_at'] = date('Y-m-d H:i:s', time());
+        $result = DB::table($this->table)
+            ->where('type_id', $typeId)
+            ->update($data);
+
+        return $result;
+    }
 }
