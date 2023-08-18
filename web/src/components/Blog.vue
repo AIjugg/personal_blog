@@ -84,14 +84,14 @@ export default {
   data () {
     return {
       typeId: sessionStorage.getItem('blogTypeId') ? sessionStorage.getItem('blogTypeId') : 0,
-      sortBy: sessionStorage.getItem('blogSortBy') ? sessionStorage.getItem('blogSortBy') : 'createTimeDesc',
+      sortBy: sessionStorage.getItem('blogSortBy') ? sessionStorage.getItem('blogSortBy') : 'created_at',
       sortList: [
         {
-          'key': 'createTimeDesc',
+          'key': 'created_at',
           'label': '最新日志'
         },
         {
-          'key': 'createTimeAsc',
+          'key': 'updated_at',
           'label': '最早日志'
         },
         {
@@ -127,10 +127,12 @@ export default {
       sessionStorage.setItem('blogWord', this.word)
       sessionStorage.setItem('blogSortBy', this.sortBy)
       sessionStorage.setItem('blogPage', this.page)
-      this.$http.get(this.baseUrl + '/blog/blog-list', {params: { typeId: this.typeId,
+      this.$http.get(this.baseUrl + '/blog/blog-list', {params: { type_id: this.typeId,
         word: this.word,
-        sortBy: this.sortBy,
-        page: this.page
+        sort_filed: this.sortBy,
+        sort_direction: 'desc',
+        page: this.page,
+        pagesize: 10
       }}).then((res) => {
         this.list = res.data.data.list
         this.list.forEach(function (ele) {

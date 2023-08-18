@@ -269,7 +269,7 @@ class BlogController extends BaseController
 
             // 验证参数
             $validate = Validator::make($input, [
-                'word' => 'string',
+                'word' => 'nullable|string',
                 'type_id' => 'nullable',
                 'state' => ['nullable', Rule::in([1, 2])],
                 'sort_filed' => ['nullable', Rule::in(['created_at', 'like', 'pageviews'])],
