@@ -265,11 +265,12 @@ class BlogController extends BaseController
     public function getBlogList(Request $request)
     {
         try {
-            $input = $request->only(['word','page','pagesize','sort_filed','sort_direction']);
+            $input = $request->only(['word','type_id','page','pagesize','sort_filed','sort_direction']);
 
             // 验证参数
             $validate = Validator::make($input, [
                 'word' => 'string',
+                'type_id' => 'nullable',
                 'state' => ['nullable', Rule::in([1, 2])],
                 'sort_filed' => ['nullable', Rule::in(['created_at', 'like', 'pageviews'])],
                 'page' => 'nullable|integer',
@@ -285,6 +286,9 @@ class BlogController extends BaseController
             $condition = [];
             if (!empty($input['word'])) {
                 $condition['title'] = trim($input['word']);
+            }
+            if (!empty($input['type_id'])) {
+                $condition['type_id'] = $input['type_id'];
             }
 
             $sortArr = Helper::sortStandard($input);
