@@ -301,4 +301,70 @@ class BlogController extends BaseController
 
         return response()->json($result);
     }
+
+
+    /**
+     * 博客关联分类
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function relationBlogType(Request $request)
+    {
+        try {
+            $input = $request->only(['blog_id','type_id']);
+
+            // 验证参数
+            $validate = Validator::make($input, [
+                'blog_id' => ['required', 'integer'],
+                'type_id' => ['required', 'integer']
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            $res = (new BlogTypeService())->relationBlogType($input['blog_id'], $input['type_id']);
+
+            $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
+
+
+    /**
+     * 删除博客的分类
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delRelationBlogType(Request $request)
+    {
+        try {
+            $input = $request->only(['blog_id','type_id']);
+
+            // 验证参数
+            $validate = Validator::make($input, [
+                'blog_id' => ['required', 'integer'],
+                'type_id' => ['required', 'integer']
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            $res = (new BlogTypeService())->delRelationBlogType($input['blog_id'], $input['type_id']);
+
+            $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
 }

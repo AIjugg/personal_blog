@@ -11,6 +11,7 @@ namespace App\Services;
 use App\Lib\Common\Util\CommonException;
 use App\Models\BlogType;
 use App\Lib\Common\Util\ErrorCodes;
+use App\Models\BlogTypeRelation;
 
 
 class BlogTypeService
@@ -89,6 +90,50 @@ class BlogTypeService
 
         if (empty($res)) {
             throw new CommonException(ErrorCodes::BLOG_TYPE_ADD_FAIL);
+        }
+        return [];
+    }
+
+
+    /**
+     * 关联博客和分类
+     * @param $blogId
+     * @param $typeId
+     * @return array
+     * @throws CommonException
+     */
+    public function relationBlogType($blogId, $typeId)
+    {
+        $data = [
+            'type_id' => $typeId,
+            'blog_id' => $blogId
+        ];
+        $res = (new BlogTypeRelation())->addBlogTypeRelation($data);
+
+        if (empty($res)) {
+            throw new CommonException(ErrorCodes::BLOG_TYPE_RELATION_FAIL);
+        }
+        return [];
+    }
+
+
+    /**
+     * 删除博客的分类
+     * @param $blogId
+     * @param $typeId
+     * @return array
+     * @throws CommonException
+     */
+    public function delRelationBlogType($blogId, $typeId)
+    {
+        $condition = [
+            'type_id' => $typeId,
+            'blog_id' => $blogId
+        ];
+        $res = (new BlogTypeRelation())->deleteBlogTypeRelation($condition);
+
+        if (empty($res)) {
+            throw new CommonException(ErrorCodes::BLOG_TYPE_RELATION_DELETE_FAIL);
         }
         return [];
     }

@@ -25,6 +25,8 @@ class ErrorCodes
      const BLOG_TYPE_NAME_EMPTY = 12007;
      const BLOG_TYPE_ADD_FAIL = 12008;
      const BLOG_TYPE_EDIT_FAIL = 12009;
+     const BLOG_TYPE_RELATION_FAIL = 12010;
+    const BLOG_TYPE_RELATION_DELETE_FAIL = 12011;
 
      // 用户
     const USER_PWD_WRONG = 13001;
@@ -48,6 +50,8 @@ class ErrorCodes
         self::BLOG_TYPE_NAME_EMPTY => '博客分类名非空',
         self::BLOG_TYPE_ADD_FAIL => '博客分类增加失败',
         self::BLOG_TYPE_EDIT_FAIL => '博客分类编辑失败',
+        self::BLOG_TYPE_RELATION_FAIL => '博客关联分类失败',
+        self::BLOG_TYPE_RELATION_DELETE_FAIL => '删除博客关联分类失败',
 
         self::USER_PWD_WRONG => '用户密码错误',
         self::USER_PWD_REPEAT_WRONG => '两次密码不一致',

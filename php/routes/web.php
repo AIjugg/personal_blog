@@ -24,6 +24,9 @@ Route::group(['prefix' => 'blog'], function () {
     Route::get('/get-blog-detail', 'BlogController@getBlogDetail');
     Route::get('/blog-list', 'BlogController@getBlogList');
 
+    Route::post('/relation-blog-type', 'BlogController@relationBlogType');
+    Route::post('/del-relation-blog-type', 'BlogController@delRelationBlogType');
+
 });
 
 Route::group(['prefix' => 'user'], function () {
