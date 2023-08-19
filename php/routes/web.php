@@ -27,11 +27,15 @@ Route::group(['prefix' => 'blog'], function () {
     Route::post('/relation-blog-type', 'BlogController@relationBlogType');
     Route::post('/del-relation-blog-type', 'BlogController@delRelationBlogType');
 
-    Route::post('/add-blog-draft', 'BlogController@addBlogDraft');
-    Route::post('/edit-blog-draft', 'BlogController@editBlogDraft');
-    Route::post('/del-blog-draft', 'BlogController@delBlogDraft');
-    Route::get('/list-blog-draft', 'BlogController@listBlogDraft');
+});
 
+Route::group(['middleware' => ['check_login']], function () {
+    Route::group(['prefix' => 'blog'], function () {
+        Route::post('/add-blog-draft', 'BlogController@addBlogDraft');
+        Route::post('/edit-blog-draft', 'BlogController@editBlogDraft');
+        Route::post('/del-blog-draft', 'BlogController@delBlogDraft');
+        Route::get('/list-blog-draft', 'BlogController@listBlogDraft');
+    });
 });
 
 Route::group(['prefix' => 'user'], function () {

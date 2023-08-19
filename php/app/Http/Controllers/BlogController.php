@@ -537,7 +537,11 @@ class BlogController extends BaseController
             $pageSet = Helper::pageStandard($input);
 
             // 获取用户id
-            $uid = 1;
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+            $uid = $userInfo['id'];
 
             $condition = ['uid' => $uid];
             if (!empty($input['blog_id'])) {

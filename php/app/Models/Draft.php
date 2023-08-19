@@ -22,14 +22,16 @@ class Draft extends Model
      */
     protected function getDraftQuery($condition)
     {
-        $draftQuery = DB::table($this->table)->where('is_deleted', 0);
+        $draftQuery = DB::table($this->table, 'd')
+            ->leftJoin('blog as b', 'b.blog_id', '=', 'd.blog_id')
+            ->where('d.is_deleted', 0);
 
         if (!empty($condition['blog_id'])) {
             $where = is_array($condition['blog_id']) ? 'whereIn' : 'where';
-            $draftQuery->$where('blog_id', $condition['blog_id']);
+            $draftQuery->$where('d.blog_id', $condition['blog_id']);
         }
         if (!empty($condition['uid'])) {
-            $draftQuery->where('uid', $condition['uid']);
+            $draftQuery->where('d.uid', $condition['uid']);
         }
 
         return $draftQuery;
@@ -38,12 +40,12 @@ class Draft extends Model
 
     public function getDraft($condition, $sortArr, $pageSet)
     {
-        $blogQuery = $this->getDraftQuery($condition);
+        $blogQuery = $this->getDraftQuery($condition)->select(['d.draft_id','d.blog_id','b.title','d.created_at','d.updated_at']);
 
         if (!empty($sortArr['sort_field']) && !empty($sortArr['sort_direction'])) {
-            $blogQuery->orderBy($sortArr['sort_field'], $sortArr['sort_direction']);
+            $blogQuery->orderBy('d.' . $sortArr['sort_field'], $sortArr['sort_direction']);
         } else {
-            $blogQuery->orderBy('created_at', 'desc');
+            $blogQuery->orderBy('d.created_at', 'desc');
         }
 
         if (isset($pageSet['offset']) && !empty($pageSet['limit'])) {
@@ -150,5 +152,19 @@ class Draft extends Model
         $res = $draftQuery->update($data);
 
         return $res;
+    }
+
+
+    /**
+     * 获取草稿详情
+     * @param $draftId
+     * @return array
+     */
+    public function getDraftDetail($draftId)
+    {
+        $draft = DB::table($this->table)->where('draft_id', $draftId)
+            ->get()->first();
+
+        return (array)$draft;
     }
 }

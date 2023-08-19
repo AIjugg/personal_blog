@@ -39,6 +39,7 @@ class ErrorCodes
     const ADD_USER_WRONG = 13005;
     const EDIT_USER_WRONG = 13006;
     const USER_TOKEN_STORAGE_WRONG = 13007;
+    const USER_NOT_LOGIN = 13008;
 
     private static $codeMap = [
         self::PARAM_ERROR => '参数错误',
@@ -66,6 +67,7 @@ class ErrorCodes
         self::ADD_USER_WRONG => '创建用户失败',
         self::EDIT_USER_WRONG => '编辑用户失败',
         self::USER_TOKEN_STORAGE_WRONG => 'token存储失败',
+        self::USER_NOT_LOGIN => '用户尚未登录',
     ];
 
 
