@@ -29,7 +29,9 @@ Route::group(['prefix' => 'blog'], function () {
 
     Route::post('/add-blog-draft', 'BlogController@addBlogDraft');
     Route::post('/edit-blog-draft', 'BlogController@editBlogDraft');
-    Route::post('/delete-blog-draft', 'BlogController@deleteBlogDraft');
+    Route::post('/del-blog-draft', 'BlogController@delBlogDraft');
+    Route::get('/list-blog-draft', 'BlogController@listBlogDraft');
+
 });
 
 Route::group(['prefix' => 'user'], function () {

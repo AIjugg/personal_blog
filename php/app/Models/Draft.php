@@ -28,6 +28,9 @@ class Draft extends Model
             $where = is_array($condition['blog_id']) ? 'whereIn' : 'where';
             $draftQuery->$where('blog_id', $condition['blog_id']);
         }
+        if (!empty($condition['uid'])) {
+            $draftQuery->where('uid', $condition['uid']);
+        }
 
         return $draftQuery;
     }
@@ -110,6 +113,9 @@ class Draft extends Model
         if (!empty($condition['draft_id'])) {
             $draftQuery->where('draft_id', $condition['draft_id']);
         }
+        if (!empty($condition['uid'])) {
+            $draftQuery->where('uid', $condition['uid']);
+        }
 
         $data['updated_at'] = date('Y-m-d H:i:s', time());
         $res = $draftQuery->update($data);
@@ -132,6 +138,9 @@ class Draft extends Model
         }
         if (!empty($condition['blog_id'])) {
             $draftQuery->where('blog_id', $condition['blog_id']);
+        }
+        if (!empty($condition['uid'])) {
+            $draftQuery->where('uid', $condition['uid']);
         }
 
         $data = [

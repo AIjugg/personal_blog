@@ -23,7 +23,8 @@ class DraftService
     {
         $draftData = [
             'blog_id' => $data['blog_id'],
-            'draft' => $data['draft']
+            'draft' => $data['draft'],
+            'uid' => $data['uid']
         ];
 
         // 先插入博客获取博客Id
@@ -45,7 +46,7 @@ class DraftService
      */
     public function editDraft($condition, $data)
     {
-        if (empty($condition['draft_id'])) {
+        if (empty($condition['draft_id']) || empty($condition['uid'])) {
             throw new CommonException(ErrorCodes::PARAM_ERROR);
         }
 

@@ -284,7 +284,8 @@ class BlogController extends BaseController
                 'word' => 'nullable|string',
                 'type_id' => 'nullable',
                 'state' => ['nullable', Rule::in([1, 2])],
-                'sort_filed' => ['nullable', Rule::in(['created_at', 'like', 'pageviews'])],
+                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageviews'])],
+                'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
                 'pagesize' => 'nullable|integer',
             ]);
@@ -406,8 +407,16 @@ class BlogController extends BaseController
 
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
+            // 用户登录
+            $uid = 1;
 
-            $res = (new DraftService())->addDraft($input);
+            $data = [
+                'uid' => $uid,
+                'blog_id' => $input['blog_id'],
+                'draft' => $input['draft']
+            ];
+
+            $res = (new DraftService())->addDraft($data);
 
             $result = ApiResponse::buildResponse($res);
         } catch (\Exception $e) {
@@ -439,8 +448,14 @@ class BlogController extends BaseController
 
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
+            // 用户登录
+            $uid = 1;
+            $condition = [
+                'uid' => $uid,
+                'draft_id' => $input['draft_id']
+            ];
 
-            $res = (new DraftService())->editDraft(['draft_id' => $input['draft_id']], ['draft' => $input['draft']]);
+            $res = (new DraftService())->editDraft($condition, ['draft' => $input['draft']]);
 
             $result = ApiResponse::buildResponse($res);
         } catch (\Exception $e) {
@@ -456,7 +471,7 @@ class BlogController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteBlogDraft(Request $request)
+    public function delBlogDraft(Request $request)
     {
         try {
             $input = $request->only(['draft_id', 'blog_id']);
@@ -473,9 +488,67 @@ class BlogController extends BaseController
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
-            $res = (new DraftService())->deleteDraft($input);
+            // 用户登录
+            $uid = 1;
+            $condition = ['uid' => $uid];
+            if (!empty($input['draft_id'])) {
+                $condition['draft_id'] = $input['draft_id'];
+            }
+            if (!empty($input['blog_id'])) {
+                $condition['blog_id'] = $input['blog_id'];
+            }
+
+            $res = (new DraftService())->deleteDraft($condition);
 
             $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
+
+
+    /**
+     * 查看博客草稿
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function listBlogDraft(Request $request)
+    {
+        try {
+            $input = $request->only(['blog_id','page','pagesize','sort_filed','sort_direction']);
+
+            // 验证参数
+            $validate = Validator::make($input, [
+                'blog_id' => ['nullable', 'integer'],
+                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at'])],
+                'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
+                'page' => 'nullable|integer',
+                'pagesize' => 'nullable|integer',
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+            $sortArr = Helper::sortStandard($input);
+            $pageSet = Helper::pageStandard($input);
+
+            // 获取用户id
+            $uid = 1;
+
+            $condition = ['uid' => $uid];
+            if (!empty($input['blog_id'])) {
+                $condition['blog_id'] = $input['blog_id'];
+            }
+
+            $draftService = new DraftService();
+            $list = $draftService->listDraft($condition,$sortArr,$pageSet);
+            $total = $draftService->countDraft($condition);
+
+            $result = ApiResponse::buildResponse(['list' => $list, 'total' => $total]);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
         }
