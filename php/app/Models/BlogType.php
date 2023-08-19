@@ -29,9 +29,25 @@ class BlogType extends Model
     public function getBlogType()
     {
         $result = DB::table($this->table)
+            ->select(['type_id','type_name'])
+            ->where('is_deleted', 0)
             ->get()->toArray();
 
         return $result;
+    }
+
+
+    /**
+     * 类型数量
+     * @return integer
+     */
+    public function countBlogType()
+    {
+        $total = DB::table($this->table)
+            ->where('is_deleted', 0)
+            ->count();
+
+        return $total;
     }
 
 

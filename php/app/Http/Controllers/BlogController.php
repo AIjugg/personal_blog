@@ -21,11 +21,22 @@ use Illuminate\Routing\Controller as BaseController;
 
 class BlogController extends BaseController
 {
+
+    /**
+     * 分类列表
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function listBlogType(Request $request)
     {
-        $data = (new BlogTypeService())->listBlogType();
-
-        $result = ApiResponse::buildResponse($data);
+        try {
+            $typeService = new BlogTypeService();
+            $list = $typeService->listBlogType();
+            $total = $typeService->countBlogType();
+            $result = ApiResponse::buildResponse(['list' => $list, 'total' => $total]);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
 
         return response()->json($result);
     }

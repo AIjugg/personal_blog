@@ -24,6 +24,14 @@ class BlogTypeService
     }
 
 
+    public function countBlogType()
+    {
+        $res = (new BlogType())->countBlogType();
+
+        return $res;
+    }
+
+
     /**
      * @param $typeId
      * @return array|bool
