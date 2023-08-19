@@ -22,6 +22,8 @@ class UserService
 {
     protected $loginUtil;
 
+    protected $loginKey = 'cy_login';
+
     public function __construct()
     {
         $this->loginUtil = new Login();
@@ -157,7 +159,7 @@ class UserService
         $session->migrate(true);
 
         $cookie = App::make('cookie');
-        $cookie->queue('rem', $json, 10080);
+        $cookie->queue($this->loginKey, $json, 10080);
 
         return true;
     }
@@ -176,34 +178,30 @@ class UserService
     }
 
 
+    /**
+     * 利用cookie session原理的登录方式
+     * @return array|mixed
+     */
     public function checkUserLogin()
     {
         $cookie = App::make('cookie');
         $request = App::make('request');
 
-        $remInfo = [];
-        $rem = $cookie->queued('rem');
-        if ($rem) {
-            if ($rem instanceof Cookie) {
-                $rem = $rem->getValue();
-                $remInfo = json_decode($rem, true);
+        $userInfo = [];
+        $cookieJson = $cookie->queued($this->loginKey);
+        if ($cookieJson) {
+            if ($cookieJson instanceof Cookie) {
+                $cookieJson = $cookieJson->getValue();
+                $userInfo = json_decode($cookieJson, true);
             }
         } else {
-            $rem = $request->cookie('rem');
-            if ($rem) {
-                $remInfo = json_decode($rem, true);
+            $cookieJson = $request->cookie($this->loginKey);
+            if ($cookieJson) {
+                $userInfo = json_decode($cookieJson, true);
             }
         }
 
-        $request->offsetSet('user_info', $remInfo);
-        return $remInfo;
-
-
-        $session = App::make('session');
-        $data = $session->get('rem');
-        if ($data) {
-            return json_decode($data, true);
-        }
-        return false;
+        $request->offsetSet('user_info', $userInfo);
+        return $userInfo;
     }
 }

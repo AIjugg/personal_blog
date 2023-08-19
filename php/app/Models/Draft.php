@@ -163,6 +163,7 @@ class Draft extends Model
     public function getDraftDetail($draftId)
     {
         $draft = DB::table($this->table)->where('draft_id', $draftId)
+            ->where('is_deleted', 0)
             ->get()->first();
 
         return (array)$draft;

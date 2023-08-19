@@ -11,15 +11,13 @@ namespace App\Http\Middleware;
 use App\Services\UserService;
 use Closure;
 use App\Lib\Common\Util\ApiResponse;
-use Illuminate\Support\Facades\App;
 
 class CheckLogin
 {
     public function handle($request, Closure $next)
     {
         try {
-            $remberInfo = (new UserService())->checkUserLogin();
-
+            $userInfo = (new UserService())->checkUserLogin();
 
             return $next($request);
         } catch (\Exception $e) {
