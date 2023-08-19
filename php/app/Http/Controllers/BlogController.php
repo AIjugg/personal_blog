@@ -13,6 +13,7 @@ use App\Lib\Common\Util\ErrorCodes;
 use App\Lib\Common\Util\Helper;
 use App\Services\BlogService;
 use App\Services\BlogTypeService;
+use App\Services\DraftService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -374,6 +375,105 @@ class BlogController extends BaseController
             }
 
             $res = (new BlogTypeService())->delRelationBlogType($input['blog_id'], $input['type_id']);
+
+            $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
+
+
+    /**
+     * 新增草稿
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addBlogDraft(Request $request)
+    {
+        try {
+            $input = $request->only(['blog_id','draft']);
+
+            // 验证参数
+            $validate = Validator::make($input, [
+                'blog_id' => ['required', 'integer'],
+                'draft' => ['required', 'string']
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            $res = (new DraftService())->addDraft($input);
+
+            $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
+
+
+    /**
+     * 编辑草稿
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function editBlogDraft(Request $request)
+    {
+        try {
+            $input = $request->only(['draft_id','draft']);
+
+            // 验证参数
+            $validate = Validator::make($input, [
+                'draft_id' => ['required', 'integer'],
+                'draft' => ['required', 'string']
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            $res = (new DraftService())->editDraft(['draft_id' => $input['draft_id']], ['draft' => $input['draft']]);
+
+            $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
+
+
+    /**
+     * 删除草稿
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteBlogDraft(Request $request)
+    {
+        try {
+            $input = $request->only(['draft_id', 'blog_id']);
+
+            // 验证参数
+            $validate = Validator::make($input, [
+                'draft_id' => ['nullable', 'integer'],
+                'blog_id' => ['nullable', 'integer']
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            $res = (new DraftService())->deleteDraft($input);
 
             $result = ApiResponse::buildResponse($res);
         } catch (\Exception $e) {

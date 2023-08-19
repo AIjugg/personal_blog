@@ -16,17 +16,20 @@ class ErrorCodes
     const UNKNOWN_ERROR = 10002;
 
     // 博客
-     const BLOG_NOT_EXIST = 12001;
-     const BLOG_ADD_FAIL = 12002;
-     const BLOG_EDIT_FAIL = 12003;
-     const BLOG_TYPE_DELETE_FAIL = 12004;
-     const BLOG_CONTENT_ADD_FAIL = 12005;
-     const BLOG_CONTENT_EDIT_FAIL = 12006;
-     const BLOG_TYPE_NAME_EMPTY = 12007;
-     const BLOG_TYPE_ADD_FAIL = 12008;
-     const BLOG_TYPE_EDIT_FAIL = 12009;
-     const BLOG_TYPE_RELATION_FAIL = 12010;
+    const BLOG_NOT_EXIST = 12001;
+    const BLOG_ADD_FAIL = 12002;
+    const BLOG_EDIT_FAIL = 12003;
+    const BLOG_TYPE_DELETE_FAIL = 12004;
+    const BLOG_CONTENT_ADD_FAIL = 12005;
+    const BLOG_CONTENT_EDIT_FAIL = 12006;
+    const BLOG_TYPE_NAME_EMPTY = 12007;
+    const BLOG_TYPE_ADD_FAIL = 12008;
+    const BLOG_TYPE_EDIT_FAIL = 12009;
+    const BLOG_TYPE_RELATION_FAIL = 12010;
     const BLOG_TYPE_RELATION_DELETE_FAIL = 12011;
+    const DRAFT_ADD_FAIL = 12012;
+    const DRAFT_EDIT_FAIL = 12013;
+    const DRAFT_DELETE_FAIL = 12014;
 
      // 用户
     const USER_PWD_WRONG = 13001;
@@ -52,6 +55,9 @@ class ErrorCodes
         self::BLOG_TYPE_EDIT_FAIL => '博客分类编辑失败',
         self::BLOG_TYPE_RELATION_FAIL => '博客关联分类失败',
         self::BLOG_TYPE_RELATION_DELETE_FAIL => '删除博客关联分类失败',
+        self::DRAFT_ADD_FAIL => '新增草稿失败',
+        self::DRAFT_EDIT_FAIL => '编辑草稿失败',
+        self::DRAFT_DELETE_FAIL => '删除草稿失败',
 
         self::USER_PWD_WRONG => '用户密码错误',
         self::USER_PWD_REPEAT_WRONG => '两次密码不一致',

@@ -22,7 +22,7 @@ class Blog extends Model
      */
     protected function getBlogQuery($condition)
     {
-        $blogQuery = DB::table($this->table, 'b');
+        $blogQuery = DB::table($this->table, 'b')->where('b.is_deleted', 0);
 
         if (!empty($condition['uid'])) {
             $blogQuery->where('b.uid', $condition['uid']);
@@ -126,7 +126,7 @@ class Blog extends Model
             $blogQuery->where('blog_id', $condition['blog_id']);
         }
         if (!empty($condition['uid'])) {
-            $blogQuery->where('blog_id', $condition['uid']);
+            $blogQuery->where('uid', $condition['uid']);
         }
 
         $data['updated_at'] = date('Y-m-d H:i:s', time());
