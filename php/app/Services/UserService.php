@@ -14,9 +14,11 @@ use App\Lib\Common\Util\GenerateRandom;
 use App\Lib\Common\Util\Redis\Login;
 use App\Models\User;
 use App\Lib\Common\Constant\SystemEnum;
+use Illuminate\Session\Store;
 use Symfony\Component\HttpFoundation\Cookie;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 
 class UserService
 {
@@ -24,9 +26,14 @@ class UserService
 
     protected $loginKey = 'cy_login';
 
+    protected $expireTime;
+
     public function __construct()
     {
         $this->loginUtil = new Login();
+
+        // 取了session过期时间
+        $this->expireTime = config('session')['lifetime'] ?? 120;
     }
 
 
@@ -34,6 +41,7 @@ class UserService
      * 获取用户实例
      * @param $username
      * @param int $state
+     * @param array $selectField
      * @return array
      */
     public function getUserByName($username, $state = SystemEnum::USER_STATE_NORMAL, $selectField = [])
@@ -66,8 +74,9 @@ class UserService
         }
         unset($user['password']);
 
-        // 存储session登录token，cookie会自动返回给客户端
-        $res = $this->storageLogin($user);
+        // session存储登录信息，cookie返回给客户端
+        $session = App::make('session');
+        $res = $this->storageLogin($user, $session);
 
         if (!$res) {
             throw new CommonException(ErrorCodes::USER_TOKEN_STORAGE_WRONG);
@@ -148,18 +157,25 @@ class UserService
     }
 
 
-    public function storageLogin($user)
+    /**
+     * 存储用户登录信息到session，并且set-cookie返回给浏览器
+     * @param $user
+     * @param Store $session
+     * @return bool
+     */
+    public function storageLogin($user, $session)
     {
-        $session = App::make('session');
-
-        $token = GenerateRandom::generateRandom();
         $json = json_encode($user, JSON_UNESCAPED_UNICODE);
 
-        $session->put($token, $json);
+        // 将用户信息存储到session
+        $session->put($this->loginKey, $json);
+        // 刷新session_id，不然其他用户登录也是同一个session_id
         $session->migrate(true);
 
         $cookie = App::make('cookie');
-        $cookie->queue($this->loginKey, $json, 10080);
+
+        // 这就等于set-cookie操作
+        $cookie->queue($this->loginKey, $json, $this->expireTime);
 
         return true;
     }
@@ -180,12 +196,13 @@ class UserService
 
     /**
      * 利用cookie session原理的登录方式
+     * @param Request $request
      * @return array|mixed
      */
-    public function checkUserLogin()
+    public function checkUserLogin(Request $request)
     {
-        $cookie = App::make('cookie');
-        $request = App::make('request');
+        $cookie = $request->cookie();
+//        $request = App::make('request');
 
         $userInfo = [];
         $cookieJson = $cookie->queued($this->loginKey);
@@ -203,5 +220,21 @@ class UserService
 
         $request->offsetSet('user_info', $userInfo);
         return $userInfo;
+    }
+
+
+    public function clearLogin($user)
+    {
+        $session = App::make('session');
+
+        // 这个token怎么拿
+        $token = '';
+
+        $session->remove($token);
+
+//        $cookie = App::make('cookie');
+//        $cookie->queue($this->loginKey, $json, 10080);
+
+        return true;
     }
 }
