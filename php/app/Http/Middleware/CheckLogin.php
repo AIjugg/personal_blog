@@ -8,6 +8,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Lib\Common\Util\CommonException;
+use App\Lib\Common\Util\ErrorCodes;
 use App\Services\UserService;
 use Closure;
 use App\Lib\Common\Util\ApiResponse;
@@ -18,6 +20,10 @@ class CheckLogin
     {
         try {
             $userInfo = (new UserService())->checkUserLogin();
+
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
 
             return $next($request);
         } catch (\Exception $e) {

@@ -64,6 +64,12 @@ class BlogController extends BaseController
             throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
         }
 
+        // 获取登录用户的信息
+        $userInfo = $request->offsetGet('user_info');
+        if (empty($userInfo)) {
+            throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+        }
+
         $typeId = $input['type_id'];
 
         try {
@@ -96,6 +102,12 @@ class BlogController extends BaseController
             $errorMsg = $validate->errors()->first();
 
             throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+        }
+
+        // 获取登录用户的信息
+        $userInfo = $request->offsetGet('user_info');
+        if (empty($userInfo)) {
+            throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
         }
 
         $typeName = $input['type_name'];
@@ -131,6 +143,12 @@ class BlogController extends BaseController
             $errorMsg = $validate->errors()->first();
 
             throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+        }
+
+        // 获取登录用户的信息
+        $userInfo = $request->offsetGet('user_info');
+        if (empty($userInfo)) {
+            throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
         }
 
         $typeId = $input['type_id'];
@@ -205,7 +223,11 @@ class BlogController extends BaseController
             ];
 
             // 获取登录用户的信息
-            $uid = 1;
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+            $uid = $userInfo['id'];
 
             $res = (new BlogService())->addBlog($uid, $data);
 
@@ -256,7 +278,11 @@ class BlogController extends BaseController
             ];
 
             // 获取登录用户的信息
-            $uid = 1;
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+            $uid = $userInfo['id'];
 
             $res = (new BlogService())->editBlog($uid, $data);
 
@@ -342,6 +368,13 @@ class BlogController extends BaseController
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
+            // 用户登录
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+
+
             $res = (new BlogTypeService())->relationBlogType($input['blog_id'], $input['type_id']);
 
             $result = ApiResponse::buildResponse($res);
@@ -373,6 +406,12 @@ class BlogController extends BaseController
                 $errorMsg = $validate->errors()->first();
 
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            // 用户登录
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
             }
 
             $res = (new BlogTypeService())->delRelationBlogType($input['blog_id'], $input['type_id']);
@@ -407,8 +446,12 @@ class BlogController extends BaseController
 
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
-            // 用户登录
-            $uid = 1;
+            // 获取用户id
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+            $uid = $userInfo['id'];
 
             $data = [
                 'uid' => $uid,
@@ -448,8 +491,13 @@ class BlogController extends BaseController
 
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
-            // 用户登录
-            $uid = 1;
+            // 获取用户id
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+            $uid = $userInfo['id'];
+
             $condition = [
                 'uid' => $uid,
                 'draft_id' => $input['draft_id']
@@ -488,8 +536,13 @@ class BlogController extends BaseController
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
-            // 用户登录
-            $uid = 1;
+            // 获取用户id
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+            $uid = $userInfo['id'];
+
             $condition = ['uid' => $uid];
             if (!empty($input['draft_id'])) {
                 $condition['draft_id'] = $input['draft_id'];

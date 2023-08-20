@@ -18,14 +18,9 @@ Route::get('/home', 'IndexController@index')->name('home');
 
 Route::group(['prefix' => 'blog'], function () {
     Route::get('/blog-type-list', 'BlogController@listBlogType');
-    Route::post('/del-blog-type', 'BlogController@deleteBlogType');
-    Route::post('/add-blog-type', 'BlogController@addBlogType');
-    Route::post('/edit-blog-type', 'BlogController@editBlogType');
+
     Route::get('/get-blog-detail', 'BlogController@getBlogDetail');
     Route::get('/blog-list', 'BlogController@getBlogList');
-
-    Route::post('/relation-blog-type', 'BlogController@relationBlogType');
-    Route::post('/del-relation-blog-type', 'BlogController@delRelationBlogType');
 
 });
 
@@ -35,6 +30,13 @@ Route::group(['middleware' => ['check_login']], function () {
         Route::post('/edit-blog-draft', 'BlogController@editBlogDraft');
         Route::post('/del-blog-draft', 'BlogController@delBlogDraft');
         Route::get('/list-blog-draft', 'BlogController@listBlogDraft');
+
+        Route::post('/relation-blog-type', 'BlogController@relationBlogType');
+        Route::post('/del-relation-blog-type', 'BlogController@delRelationBlogType');
+
+        Route::post('/del-blog-type', 'BlogController@deleteBlogType');
+        Route::post('/add-blog-type', 'BlogController@addBlogType');
+        Route::post('/edit-blog-type', 'BlogController@editBlogType');
     });
 });
 
