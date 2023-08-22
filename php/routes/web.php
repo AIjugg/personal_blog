@@ -37,7 +37,13 @@ Route::group(['middleware' => ['check_login']], function () {
         Route::post('/del-blog-type', 'BlogController@deleteBlogType');
         Route::post('/add-blog-type', 'BlogController@addBlogType');
         Route::post('/edit-blog-type', 'BlogController@editBlogType');
+
     });
+
+    Route::group(['prefix' => 'user'], function () {
+        Route::post('/logout', 'UserController@logoutByAccount');
+    });
+
 });
 
 Route::group(['prefix' => 'user'], function () {

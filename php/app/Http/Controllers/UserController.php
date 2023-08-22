@@ -107,4 +107,21 @@ class UserController extends BaseController
     {
 
     }
+
+
+    /**
+     * 登出
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logoutByAccount(Request $request)
+    {
+        try {
+            $res = (new UserService())->logoutByAccount();
+            $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+        return response()->json($result);
+    }
 }
