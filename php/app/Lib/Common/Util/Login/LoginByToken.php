@@ -6,18 +6,17 @@
  * Time: 20:47
  */
 
-namespace App\Lib\Common\Util\Redis;
+namespace App\Lib\Common\Util\Login;
 
 use Illuminate\Support\Facades\Redis;
 use App\Lib\Common\Util\GenerateRandom;
-use App\Lib\Common\Util\LoginBase;
 
 /**
  * Redis方法 @see \Illuminate\Redis\Connections\PhpRedisConnection
  * Class Login
  * @package App\Lib\Common\Util\Redis
  */
-class Login extends LoginBase
+class LoginByToken
 {
     const USERKEY_PREFIX = 'user';
 
@@ -28,7 +27,7 @@ class Login extends LoginBase
      * @param array $userinfo
      * @return mixed
      */
-    public function setUserToken(array $userinfo)
+    public function storageLogin(array $userinfo)
     {
         $token = GenerateRandom::generateRandom();
 
@@ -40,7 +39,7 @@ class Login extends LoginBase
     }
 
 
-    public function getUserinfoByToken($token)
+    public function checkLogin($token)
     {
         $value = Redis::get($token);
         if (!empty($value)) {
@@ -73,7 +72,7 @@ class Login extends LoginBase
      * @param $token
      * @return bool
      */
-    public function delToken($token)
+    public function clearLogin($token)
     {
         Redis::del($token);
 

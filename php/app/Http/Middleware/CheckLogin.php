@@ -10,10 +10,10 @@ namespace App\Http\Middleware;
 
 use App\Lib\Common\Util\CommonException;
 use App\Lib\Common\Util\ErrorCodes;
-use App\Services\UserService;
 use Closure;
 use App\Lib\Common\Util\ApiResponse;
 use Illuminate\Support\Facades\App;
+use App\Lib\Common\Util\Login\LoginAccount;
 
 class CheckLogin
 {
@@ -22,7 +22,7 @@ class CheckLogin
         try {
             $session = App::make('session');
             $cookie = App::make('cookie');
-            $userInfo = (new UserService())->checkUserLogin($request,$session,$cookie);
+            $userInfo = (new LoginAccount())->checkLogin($request,$session,$cookie);
 
             if (empty($userInfo)) {
                 throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
