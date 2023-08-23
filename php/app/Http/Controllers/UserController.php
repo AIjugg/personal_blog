@@ -66,8 +66,7 @@ class UserController extends BaseController
             // 验证参数
             $validate = Validator::make($input, [
                 'username' => ['required', 'string'],
-                'password' => ['required', 'string'],
-                'password2' => ['required', 'string']
+                'password' => ['required', 'string']
             ]);
 
             if ($validate->fails()) {
@@ -75,9 +74,7 @@ class UserController extends BaseController
 
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
-            if ($input['password'] != $input['password2']) {
-                throw new CommonException(ErrorCodes::USER_PWD_REPEAT_WRONG);
-            }
+
             //$username = trim($input['username']);
             $username = $input['username'];
             $pattern = '/^[A-Za-z_]\w+$/';
