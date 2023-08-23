@@ -47,6 +47,26 @@ class UserService
 
 
     /**
+     * 获取用户实例
+     * @param int $uid
+     * @param int $state
+     * @param array $selectField
+     * @return array
+     */
+    public function getUserByUid($uid, $state = SystemEnum::USER_STATE_NORMAL, $selectField = [])
+    {
+        $condition = ['id' => $uid];
+        if (!empty($state)) {
+            $condition['state'] = $state;
+        }
+
+        $user = (new User())->getUserByCondition($condition, $selectField);
+
+        return $user;
+    }
+
+
+    /**
      * 账号密码登录，存储token
      * @param $username
      * @param $password
@@ -55,24 +75,24 @@ class UserService
      */
     public function loginByAccount($username, $password)
     {
-        $user = $this->getUserByName($username, SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','password','nickname','state','last_login']);
+        $userInfo = $this->getUserByName($username, SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','password','state','last_login']);
 
         // 验证密码
-        if (!EncryptHelper::verifyPasswordBcrypt($password, $user['password'])) {
+        if (!EncryptHelper::verifyPasswordBcrypt($password, $userInfo['password'])) {
             throw new CommonException(ErrorCodes::USER_PWD_WRONG);
         }
-        unset($user['password']);
+        unset($userInfo['password']);
 
         // session存储登录信息，cookie返回给客户端
         $session = App::make('session');
         $cookie = App::make('cookie');
-        $res = (new LoginAccount())->storageLogin($user, $session, $cookie);
+        $res = (new LoginAccount())->storageLogin($userInfo, $session, $cookie);
 
         if (!$res) {
             throw new CommonException(ErrorCodes::USER_TOKEN_STORAGE_WRONG);
         }
 
-        return $user['id'];
+        return $userInfo['id'];
     }
 
 
@@ -90,6 +110,7 @@ class UserService
         $userData = [
             'username' => $username,
             'password' => $encryption,
+            'nickname' => $username
         ];
 
         $res = (new User())->addUser($userData);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Lib\Common\Constant\SystemEnum;
 use App\Lib\Common\Util\ApiResponse;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -43,7 +44,9 @@ class UserController extends BaseController
             ];
             $userService->editUser($uid, $updateData);
 
-            $result = ApiResponse::buildResponse(['uid' => $uid, 'username' => $input['username']]);
+            $userInfo = $userService->getUserByUid($uid, SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','nickname','profile_photo','sex','birthday','signature','state']);
+
+            $result = ApiResponse::buildResponse(['userinfo' => $userInfo]);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
         }
@@ -119,6 +122,32 @@ class UserController extends BaseController
         try {
             $res = (new UserService())->logoutByAccount();
             $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+        return response()->json($result);
+    }
+
+
+    /**
+     * 获取用户信息
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserInfo(Request $request)
+    {
+        try {
+            // 获取登录用户的信息
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+
+            $userService = new UserService();
+
+            $userInfo = $userService->getUserByUid($userInfo['id'], SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','nickname','profile_photo','sex','birthday','signature','state']);
+
+            $result = ApiResponse::buildResponse(['userinfo' => $userInfo]);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
         }

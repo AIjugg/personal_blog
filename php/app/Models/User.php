@@ -30,6 +30,8 @@ class User
             });
         }
 
+        $query->where('is_deleted', 0);
+
         if (!empty($condition['state'])) {
             $query->where('state', $condition['state']);
         }

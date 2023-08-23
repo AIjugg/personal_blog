@@ -42,6 +42,7 @@ Route::group(['middleware' => ['check_login']], function () {
 
     Route::group(['prefix' => 'user'], function () {
         Route::post('/logout', 'UserController@logoutByAccount');
+        Route::get('/get-userinfo', 'UserController@getUserInfo');
     });
 
 });
