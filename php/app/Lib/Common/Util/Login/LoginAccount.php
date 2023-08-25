@@ -53,22 +53,22 @@ class LoginAccount
 
     /**
      * 利用cookie session原理的登录方式
-     * @param Request $request
      * @param Store $session
      * @param CookieJar $cookie
      * @return array|mixed
      */
-    public function checkLogin($request, $session, $cookie)
+    public function checkLogin($session, $cookie)
     {
-//        $request = App::make('request');
 //        $cookie = App::make('cookie');
 //        $session = App::make('session');
 
         $json = $session->get($this->loginKey);
-        $userInfo = json_decode($json, true);
+        if (!empty($json)) {
+            $userInfo = json_decode($json, true);
+        }
 
-        $request->offsetSet('user_info', $userInfo);
-        return $userInfo;
+        return $userInfo ?? [];
+
 
         // 在找不到相应session时，是否需要根据cookie再生成session？
 //        $userInfo = [];

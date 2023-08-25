@@ -150,4 +150,68 @@ class UserController extends BaseController
         }
         return response()->json($result);
     }
+
+
+    /**
+     * 账号密码登录返回token
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function loginByAccountToken(Request $request)
+    {
+        $input = $request->only(['username', 'password']);
+        try {
+            // 验证参数
+            $validate = Validator::make($input, [
+                'username' => ['required', 'string'],
+                'password' => ['required', 'string']
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            $userService = new UserService();
+            $res = $userService->loginByAccountToken($input['username'], $input['password']);
+
+            // 更新用户信息
+            $updateData = [
+                'ip' => $request->ip(),
+                'last_login' => date('Y-m-d H:i:s', time())
+            ];
+            $userService->editUser($res['uid'], $updateData);
+
+            $userInfo = $userService->getUserByUid($res['uid'], SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','nickname','profile_photo','sex','birthday','signature','state']);
+
+            $result = ApiResponse::buildResponse(['userinfo' => $userInfo, 'access_token' => $res['access_token']]);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+        return response()->json($result);
+    }
+
+
+
+    /**
+     * 登出
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logoutByAccountToken(Request $request)
+    {
+        try {
+            $accessTokenHeader = $request->header('Authorization');
+            if (!empty($accessTokenHeader)) {
+                $accessToken = substr($accessTokenHeader, 7);
+            }
+            $res = (new UserService())->logoutByAccountToken($accessToken ?? '');
+            $result = ApiResponse::buildResponse($res);
+
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+        return response()->json($result);
+    }
 }

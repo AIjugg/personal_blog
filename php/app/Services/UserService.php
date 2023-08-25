@@ -10,6 +10,7 @@ namespace App\Services;
 
 use App\Lib\Common\Util\CommonException;
 use App\Lib\Common\Util\ErrorCodes;
+use App\Lib\Common\Util\Login\LoginByToken;
 use App\Models\User;
 use App\Lib\Common\Constant\SystemEnum;
 use Illuminate\Support\Facades\App;
@@ -152,5 +153,54 @@ class UserService
         }
 
         return [];
+    }
+
+
+    /**
+     * 用户账号密码登录，返回access_token
+     * @param $username
+     * @param $password
+     * @return array
+     * @throws \Exception
+     */
+    public function loginByAccountToken($username, $password)
+    {
+        try {
+            $userInfo = $this->getUserByName($username, SystemEnum::USER_STATE_NORMAL, ['id', 'username', 'email', 'mobile', 'password', 'state', 'last_login']);
+
+            // 验证密码
+            if (!EncryptHelper::verifyPasswordBcrypt($password, $userInfo['password'])) {
+                throw new CommonException(ErrorCodes::USER_PWD_WRONG);
+            }
+            unset($userInfo['password']);
+
+            // 获取token
+            $token = (new LoginByToken())->storageLogin($userInfo);
+
+            return ['access_token' => $token, 'uid' => $userInfo['id']];
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+
+    /**
+     * 登出
+     * @param $token
+     * @return array
+     * @throws \Exception
+     */
+    public function logoutByAccountToken($token)
+    {
+        try {
+            if (empty($token)) {
+                throw new CommonException(ErrorCodes::TOKEN_NOT_EXIST);
+            }
+            (new LoginByToken())->clearLogin($token);
+
+            return [];
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 }

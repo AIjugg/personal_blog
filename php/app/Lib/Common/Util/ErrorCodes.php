@@ -14,6 +14,8 @@ class ErrorCodes
     // 常规
     const PARAM_ERROR = 10001;
     const UNKNOWN_ERROR = 10002;
+    const REDIS_SAVE_ERROR = 10003;
+    const REDIS_DEL_ERROR = 10004;
 
     // 博客
     const BLOG_NOT_EXIST = 12001;
@@ -40,10 +42,13 @@ class ErrorCodes
     const EDIT_USER_WRONG = 13006;
     const USER_TOKEN_STORAGE_WRONG = 13007;
     const USER_NOT_LOGIN = 13008;
+    const TOKEN_NOT_EXIST = 13009;
 
     private static $codeMap = [
         self::PARAM_ERROR => '参数错误',
         self::UNKNOWN_ERROR => '未知错误',
+        self::REDIS_SAVE_ERROR => 'redis保存失败',
+        self::REDIS_DEL_ERROR => 'redis删除失败',
 
         self::BLOG_NOT_EXIST => '博客不存在',
         self::BLOG_ADD_FAIL => '创建博客失败',
@@ -68,6 +73,7 @@ class ErrorCodes
         self::EDIT_USER_WRONG => '编辑用户失败',
         self::USER_TOKEN_STORAGE_WRONG => 'token存储失败',
         self::USER_NOT_LOGIN => '用户尚未登录',
+        self::TOKEN_NOT_EXIST => 'token不存在',
     ];
 
 

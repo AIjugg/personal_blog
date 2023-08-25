@@ -8,6 +8,8 @@
 
 namespace App\Lib\Common\Util\Login;
 
+use App\Lib\Common\Util\CommonException;
+use App\Lib\Common\Util\ErrorCodes;
 use Illuminate\Support\Facades\Redis;
 use App\Lib\Common\Util\GenerateRandom;
 
@@ -25,7 +27,8 @@ class LoginByToken
     /**
      * 存储token
      * @param array $userinfo
-     * @return mixed
+     * @return bool|string
+     * @throws CommonException
      */
     public function storageLogin(array $userinfo)
     {
@@ -33,15 +36,19 @@ class LoginByToken
 
         $value = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
         $res = Redis::set(self::USERKEY_PREFIX . $token, $value);
+        if (!$res) {
+            throw new CommonException(ErrorCodes::REDIS_SAVE_ERROR);
+        }
+
         Redis::expire(self::USERKEY_PREFIX . $token, self::EXPIRE_TIME);
 
-        return $res;
+        return $token;
     }
 
 
     public function checkLogin($token)
     {
-        $value = Redis::get($token);
+        $value = Redis::get(self::USERKEY_PREFIX . $token);
         if (!empty($value)) {
             $userinfo = json_decode($value, true);
         }
@@ -67,15 +74,19 @@ class LoginByToken
         return true;
     }
 
+
     /**
      * 登出
      * @param $token
-     * @return bool
+     * @return mixed
+     * @throws CommonException
      */
     public function clearLogin($token)
     {
-        Redis::del($token);
-
-        return true;
+        $res = Redis::del($token);
+        if (!$res) {
+            throw new CommonException(ErrorCodes::REDIS_DEL_ERROR);
+        }
+        return $res;
     }
 }
