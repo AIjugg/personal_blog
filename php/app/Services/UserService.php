@@ -28,20 +28,20 @@ class UserService
 
 
     /**
-     * 获取用户实例
+     * 获取一个用户实例
      * @param $username
      * @param int $state
      * @param array $selectField
      * @return array
      */
-    public function getUserByName($username, $state = SystemEnum::USER_STATE_NORMAL, $selectField = [])
+    public function getOneUserByName($username, $state = SystemEnum::USER_STATE_NORMAL, $selectField = [])
     {
         $condition = ['username' => $username];
         if (!empty($state)) {
             $condition['state'] = $state;
         }
 
-        $user = (new User())->getUserByCondition($condition, $selectField);
+        $user = (new User())->getOneUserByCondition($condition, $selectField);
 
         return $user;
     }
@@ -49,7 +49,27 @@ class UserService
 
     /**
      * 获取用户实例
-     * @param int $uid
+     * @param int|array $uid
+     * @param int $state
+     * @param array $selectField
+     * @return array
+     */
+    public function getOneUserByUid($uid, $state = SystemEnum::USER_STATE_NORMAL, $selectField = [])
+    {
+        $condition = ['id' => $uid];
+        if (!empty($state)) {
+            $condition['state'] = $state;
+        }
+
+        $user = (new User())->getOneUserByCondition($condition, $selectField);
+
+        return $user;
+    }
+
+
+    /**
+     * 获取用户实例
+     * @param int|array $uid
      * @param int $state
      * @param array $selectField
      * @return array
@@ -76,7 +96,7 @@ class UserService
      */
     public function loginByAccount($username, $password)
     {
-        $userInfo = $this->getUserByName($username, SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','password','state','last_login']);
+        $userInfo = $this->getOneUserByName($username, SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','password','state','last_login']);
 
         // 验证密码
         if (!EncryptHelper::verifyPasswordBcrypt($password, $userInfo['password'])) {
@@ -166,7 +186,7 @@ class UserService
     public function loginByAccountToken($username, $password)
     {
         try {
-            $userInfo = $this->getUserByName($username, SystemEnum::USER_STATE_NORMAL, ['id', 'username', 'email', 'mobile', 'password', 'state', 'last_login']);
+            $userInfo = $this->getOneUserByName($username, SystemEnum::USER_STATE_NORMAL, ['id', 'username', 'email', 'mobile', 'password', 'state', 'last_login']);
 
             // 验证密码
             if (!EncryptHelper::verifyPasswordBcrypt($password, $userInfo['password'])) {

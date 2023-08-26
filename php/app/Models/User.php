@@ -8,18 +8,19 @@ class User
 {
     protected $table = 'user';
 
+
     /**
-     * 获取用户
+     *
      * @param $condition
-     * @param $selectField
-     * @return array
+     * @return \Illuminate\Database\Query\Builder
      */
-    public function getUserByCondition($condition, $selectField = [])
+    public function getUserQuery($condition)
     {
         $query = DB::table($this->table);
 
         if (!empty($condition['id'])) {
-            $query->where('id', $condition['id']);
+            $where = is_array($condition['id']) ? 'whereIn' : 'where';
+            $query->$where('id', $condition['id']);
         }
         if (!empty($condition['username'])) {
             $username = $condition['username'];
@@ -36,6 +37,20 @@ class User
             $query->where('state', $condition['state']);
         }
 
+        return $query;
+    }
+
+
+    /**
+     * 获取一个用户
+     * @param $condition
+     * @param $selectField
+     * @return array
+     */
+    public function getOneUserByCondition($condition, $selectField = [])
+    {
+        $query = $this->getUserQuery($condition);
+
         if (!empty($selectField)) {
             $query->select($selectField);
         }
@@ -44,6 +59,28 @@ class User
 
         return (array)$user;
     }
+
+
+    /**
+     * 获取用户
+     * @param $condition
+     * @param $selectField
+     * @return array
+     */
+    public function getUserByCondition($condition, $selectField = [])
+    {
+        $query = $this->getUserQuery($condition);
+
+        if (!empty($selectField)) {
+            $query->select($selectField);
+        }
+
+        $user = $query->get()->map(function ($value) { return (array)$value; })
+            ->toArray();
+
+        return $user;
+    }
+
 
 
     /**

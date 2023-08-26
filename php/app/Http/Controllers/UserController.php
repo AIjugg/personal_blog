@@ -44,7 +44,7 @@ class UserController extends BaseController
             ];
             $userService->editUser($uid, $updateData);
 
-            $userInfo = $userService->getUserByUid($uid, SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','nickname','profile_photo','sex','birthday','signature','state']);
+            $userInfo = $userService->getOneUserByUid($uid, SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','nickname','profile_photo','sex','birthday','signature','state']);
 
             $result = ApiResponse::buildResponse(['userinfo' => $userInfo]);
         } catch (\Exception $e) {
@@ -82,7 +82,7 @@ class UserController extends BaseController
                 throw new CommonException(ErrorCodes::USERNAME_WRONG);
             }
 
-            $user = (new UserService())->getUserByName($username);
+            $user = (new UserService())->getOneUserByName($username);
             if (!empty($user)) {
                 throw new CommonException(ErrorCodes::USER_EXIST);
             }
@@ -142,7 +142,7 @@ class UserController extends BaseController
 
             $userService = new UserService();
 
-            $userInfo = $userService->getUserByUid($userInfo['id'], SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','nickname','profile_photo','sex','birthday','signature','state']);
+            $userInfo = $userService->getOneUserByUid($userInfo['id'], SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','nickname','profile_photo','sex','birthday','signature','state']);
 
             $result = ApiResponse::buildResponse(['userinfo' => $userInfo]);
         } catch (\Exception $e) {
@@ -183,7 +183,7 @@ class UserController extends BaseController
             ];
             $userService->editUser($res['uid'], $updateData);
 
-            $userInfo = $userService->getUserByUid($res['uid'], SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','nickname','profile_photo','sex','birthday','signature','state']);
+            $userInfo = $userService->getOneUserByUid($res['uid'], SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','nickname','profile_photo','sex','birthday','signature','state']);
 
             $result = ApiResponse::buildResponse(['userinfo' => $userInfo, 'access_token' => $res['access_token']]);
         } catch (\Exception $e) {

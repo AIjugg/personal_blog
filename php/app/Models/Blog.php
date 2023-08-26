@@ -64,7 +64,8 @@ class Blog extends Model
                 ->limit($pageSet['limit']);
         }
 
-        $result = $blogQuery->get()->toArray();
+        $result = $blogQuery->get()->map(function ($value) { return (array)$value; })
+            ->toArray();
         return $result;
     }
 

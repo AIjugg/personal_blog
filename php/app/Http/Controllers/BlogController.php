@@ -14,6 +14,7 @@ use App\Lib\Common\Util\Helper;
 use App\Services\BlogService;
 use App\Services\BlogTypeService;
 use App\Services\DraftService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -177,7 +178,11 @@ class BlogController extends BaseController
 
         try {
             $data = (new BlogService())->getBlogDetail($blogId);
-            $result = ApiResponse::buildResponse($data);
+            $authorInfo = (new UserService())->getOneUserByUid($data['uid']);
+            $data['nickname'] = $authorInfo['nickname'] ?? '';
+            $data['profile_photo'] = $authorInfo['profile_photo'] ?? '';
+
+            $result = ApiResponse::buildResponse(['detail' => $data]);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
         }
@@ -336,6 +341,16 @@ class BlogController extends BaseController
             $blogService = new BlogService();
             $list = $blogService->listBlog($condition, $sortArr, $pageSet);
             $total = $blogService->countBlog($condition);
+
+            // 加上博客作者的信息
+            $authorIds = array_unique(array_column($list, 'uid'));
+            $authors = (new UserService())->getUserByUid($authorIds);
+            $authorsUidKey = array_column($authors, null, 'id');
+
+            foreach ($list as $k=>$v) {
+                $list[$k]['nickname'] = $authorsUidKey[$v['uid']]['nickname'] ?? '无名';
+                $list[$k]['profile_photo'] = $authorsUidKey[$v['uid']]['profile_photo'] ?? '';
+            }
 
             $result = ApiResponse::buildResponse(['list' => $list, 'total' => $total]);
         } catch (\Exception $e) {

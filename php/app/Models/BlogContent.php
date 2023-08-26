@@ -37,7 +37,7 @@ class BlogContent extends Model
     public function getBlogAndContent($blogId)
     {
         $blogDetail = DB::table('blog', 'b')->join('blog_content as bc', 'b.blog_id', '=', 'bc.blog_id')
-            ->select(['b.blog_id', 'b.uid', 'b.title', 'b.like', 'b.comment', 'b.pageviews', 'bc.content'])
+            ->select(['b.blog_id', 'b.uid', 'b.title', 'b.like', 'b.comment', 'b.pageviews', 'bc.content', 'b.created_at'])
             ->where('b.blog_id', $blogId)
             ->first();
 
