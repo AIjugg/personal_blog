@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { getToken } from '@/plugin/login'
+import { loginByAccount } from '@/plugin/login'
 import SlideVerify from '@/components/component/SlideVerify'
 export default {
   components: {
@@ -114,7 +114,7 @@ export default {
       let registerUrl = ''
       let params = {}
       if (this.method === 'normal') {
-        registerUrl = this.baseUrl + '/register/register'
+        registerUrl = this.baseUrl + '/user/register'
         params = { 'username': this.username, 'password': this.password }
       } else if (this.method === 'email') {
         registerUrl = this.baseUrl + '/register/email-register'
@@ -131,11 +131,11 @@ export default {
       this.$http.post(registerUrl, params, {
         emulateJSON: true
       }).then((res) => {
-        if (res.data.code === '0') {
-          getToken(_self)
+        if (res.data.status.code === 0) {
+          loginByAccount(_self)
         } else {
           console.log(res.data)
-          this.error = res.data.msg
+          this.error = res.data.status.msg
         }
       }, (res) => {
         this.error = '服务器连接错误'
@@ -170,7 +170,7 @@ export default {
       return true
     },
     /**
-     * 发送验证码
+     * 发送手机验证码
      */
     sendCode () {
       if (!this.usernameCheck()) {

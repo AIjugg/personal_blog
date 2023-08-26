@@ -45,7 +45,7 @@ export default {
   },
   data () {
     return {
-      id: this.$route.params.id,
+      blog_id: this.$route.params.blog_id,
       title: '',
       content: '',
       types: [],
@@ -73,8 +73,8 @@ export default {
     },
     blogDetail () {
       let _self = this
-      this.$http.get(this.baseUrl + '/blog/blog-detail', {params: {blogId: this.id}}).then((res) => {
-        if (res.data.code === '0') {
+      this.$http.get(this.baseUrl + '/blog/get-blog-detail', {params: {blog_id: this.blog_id}}).then((res) => {
+        if (res.data.status.code === 0) {
           this.title = res.data.data.detail.title
           this.likeNum = res.data.data.detail.like
           this.commentNum = res.data.data.detail.comment
@@ -86,7 +86,7 @@ export default {
           this.types = res.data.data.detail.type
           document.getElementById('blogContent').innerHTML = this.content
         } else {
-          tipWarning(_self, res.data.code, res.data.msg)
+          tipWarning(_self, res.data.status.code, res.data.status.msg)
         }
       }, (res) =>
         console.log(res)

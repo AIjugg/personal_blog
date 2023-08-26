@@ -1,99 +1,100 @@
 <template>
-  <div>
-    <el-row>
-      <el-col :span="4"><div class="grid-content"></div></el-col>
-      <el-col :span="16">
-        <div class="grid-content">
-          <el-container class="container-bg">
-            <el-header style="height:120px">
-              <div style="margin: 20px 0 20px 0">
+  
+    <div>
+      <el-row>
+        <el-col :span="4"><div class="grid-content"></div></el-col>
+        <el-col :span="16">
+          <div class="grid-content">
+            <el-container class="container-bg" style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
+              <el-header style="height:120px">
+                <div style="margin: 20px 0 20px 0">
+                  <el-col :span="4"><div class="grid-content"></div></el-col>
+                  <el-col :span="16">
+                    <div>
+                      <Input v-model="word" @on-enter="blogList" @on-click="blogList" icon="md-paper-plane" style="width: 100%" enter-button placeholder="关键词搜索..." on-enter="blogList" />
+                    </div>
+                  </el-col>
+                  <el-col :span="4"><div class="grid-content"></div></el-col>
+                </div>
                 <el-col :span="4"><div class="grid-content"></div></el-col>
                 <el-col :span="16">
-                  <div>
-                    <Input v-model="word" @on-enter="blogList" @on-click="blogList" icon="md-paper-plane" style="width: 100%" enter-button placeholder="关键词搜索..." on-enter="blogList" />
+                  <div class="select-gap">
+                    <div class="select-style">
+                      <p>排序</p>
+                    </div>
+                    <div class="select-style">
+                      <Select v-model="sortBy" size="small" style="width:100px">
+                        <Option v-for="sort in sortList" :value="sort.key" :key="sort.key">{{ sort.label }}</Option>
+                      </Select>
+                    </div>
+                    <div class="select-style">
+                      <p>分类</p>
+                    </div>
+                    <div class="select-style">
+                      <Select v-model="typeId" size="small" style="width:100px">
+                        <Option v-for="type in typeLists" :value="type.id" :key="type.id">{{ type.label }}</Option>
+                      </Select>
+                    </div>
                   </div>
                 </el-col>
                 <el-col :span="4"><div class="grid-content"></div></el-col>
-              </div>
-              <el-col :span="4"><div class="grid-content"></div></el-col>
-              <el-col :span="16">
-                <div class="select-gap">
-                  <div class="select-style">
-                    <p>排序</p>
-                  </div>
-                  <div class="select-style">
-                    <Select v-model="sortBy" size="small" style="width:100px">
-                      <Option v-for="sort in sortList" :value="sort.key" :key="sort.key">{{ sort.label }}</Option>
-                    </Select>
-                  </div>
-                  <div class="select-style">
-                    <p>分类</p>
-                  </div>
-                  <div class="select-style">
-                    <Select v-model="typeId" size="small" style="width:100px">
-                      <Option v-for="type in typeLists" :value="type.id" :key="type.id">{{ type.label }}</Option>
-                    </Select>
-                  </div>
-                </div>
-              </el-col>
-              <el-col :span="4"><div class="grid-content"></div></el-col>
-            </el-header>
-            <el-main>
-              <List item-layout="vertical">
-                <ListItem v-for="item in list" :key="item.title">
-                  <div class="blog-item">
-                    <div @click="blogDetail(item.id)">
-                      <div style="padding-bottom: 40px">
-                        <div class="blog-top" v-show="item.top == '2'">
-                          <Tag color="gold">置顶</Tag>
+              </el-header>
+              <el-main>
+                <List item-layout="vertical">
+                  <ListItem v-for="item in list" :key="item.title">
+                    <div class="blog-item">
+                      <div @click="blogDetail(item.blog_id)">
+                        <div style="padding-bottom: 40px">
+                          <div class="blog-top" v-show="item.top == '2'">
+                            <Tag color="gold">置顶</Tag>
+                          </div>
+                          <div class="blog-title">
+                            <h3>{{ item.title }}</h3>
+                          </div>
+                          <div>
+                            <div v-for="type_id in item.types" :key="type_id" class="blog-type">
+                              <Tag color="error"> {{ types[type_id] }} </Tag>
+                            </div>
+                          </div>
                         </div>
-                        <div class="blog-title">
-                          <h3>{{ item.title }}</h3>
-                        </div>
-                        <div>
-                          <div v-for="type_id in item.types" :key="type_id" class="blog-type">
-                            <Tag color="error"> {{ types[type_id] }} </Tag>
+                        <div style="clear:both">
+                          <div class="blog-image">
+                            <img :src="imgUrl(item.image)" height="125" width="200">
+                          </div>
+                          <div class="blog-description">
+                            <p align="left">{{ item.description }}</p>
                           </div>
                         </div>
                       </div>
-                      <div style="clear:both">
-                        <div class="blog-image">
-                          <img :src="imgUrl(item.image)" height="125" width="200">
+                      <br>
+                      <div class="blog-messagebox">
+                        <div class="blog-message">
+                          <Icon type="ios-chatbubbles-outline" /> {{ item.comment }}
                         </div>
-                        <div class="blog-description">
-                          <p align="left">{{ item.description }}</p>
+                        <div class="blog-message">
+                          <Icon type="ios-thumbs-up-outline" /> {{ item.like }}
+                        </div>
+                        <div class="blog-message">
+                          <Icon type="ios-eye-outline" /> {{ item.pageviews }}
+                        </div>
+                        <div class="blog-message">
+                          <Icon type="ios-clock-outline" /> {{ item.created_at }}
+                        </div>
+                        <div class="blog-message">
+                          <Avatar :src="imgUrl(item.profile_photo)" size="small" />{{ item.nickname }}
                         </div>
                       </div>
                     </div>
-                    <br>
-                    <div class="blog-messagebox">
-                      <div class="blog-message">
-                        <Icon type="ios-chatbubbles-outline" /> {{ item.comment }}
-                      </div>
-                      <div class="blog-message">
-                        <Icon type="ios-thumbs-up-outline" /> {{ item.like }}
-                      </div>
-                      <div class="blog-message">
-                        <Icon type="ios-eye-outline" /> {{ item.pageviews }}
-                      </div>
-                      <div class="blog-message">
-                        <Icon type="ios-clock-outline" /> {{ item.created_at }}
-                      </div>
-                      <div class="blog-message">
-                        <Avatar :src="imgUrl(item.profile_photo)" size="small" />{{ item.nickname }}
-                      </div>
-                    </div>
-                  </div>
-                </ListItem>
-                <Page :current="page" :total="total" size="small" show-elevator :style="{padding: '30px'}" @on-change="changePage" />
-              </List>
-            </el-main>
-          </el-container>
-        </div>
-      </el-col>
-      <el-col :span="4"><div class="grid-content"></div></el-col>
-    </el-row>
-  </div>
+                  </ListItem>
+                  <Page :current="page" :total="total" size="small" show-elevator :style="{padding: '30px'}" @on-change="changePage" />
+                </List>
+              </el-main>
+            </el-container>
+          </div>
+        </el-col>
+        <el-col :span="4"><div class="grid-content"></div></el-col>
+      </el-row>
+    </div>
 </template>
 <script>
 export default {
@@ -194,7 +195,7 @@ export default {
       this.list = this.blogList()
     },
     blogDetail (blogId) {
-      this.$router.push({name: 'blog-detail', params: {id: blogId}})
+      this.$router.push({name: 'blog-detail', params: {blog_id: blogId}})
     }
   }
 }

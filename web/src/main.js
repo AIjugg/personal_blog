@@ -27,12 +27,13 @@ Vue.prototype.baseUrl = globalApi.baseURL
 
 // 统一处理登录token
 Vue.http.interceptors.push((request, next) => {
-  request.headers.set('Authorization', localStorage.getItem('userToken'))
+  let access_token = localStorage.getItem('accessToken');
+  request.headers.set('Authorization', 'Bearer ' + access_token)
   next((response) => {
     if (response.data.status === 200) {
-      if (response.data.data.code !== '0') {
-        switch (response.data.data.code) {
-          case '2008':
+      if (response.data.status.code !== 0) {
+        switch (response.data.status.code) {
+          case 13008:
           {
             router.push('/login/login')
             break

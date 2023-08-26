@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { getToken } from '@/plugin/login'
+  import { loginByAccount } from '@/plugin/login'
 
 export default {
   data () {
@@ -41,7 +41,7 @@ export default {
         return false
       }
       let _self = this
-      getToken(_self)
+      loginByAccount(_self)
     }
   }
 }

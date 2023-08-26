@@ -1,21 +1,20 @@
 /**
  * 获取登录token
  */
-export function getToken (_self) {
-  _self.$http.post(_self.baseUrl + '/connect/login', {username: _self.username, password: _self.password}, {
+export function loginByAccount(_self) {
+  _self.$http.post(_self.baseUrl + '/user/login-token', { username: _self.username, password: _self.password}, {
     emulateJSON: true
   }).then((result) => {
-    if (result.data.code === '0') {
-      let token = result.data.data.token
-      // console.log(token)
-      localStorage.setItem('userToken', token)
+    if (result.data.status.code === 0) {
+      console.log(result.data.data)
       localStorage.setItem('isLogin', 1)
+      localStorage.setItem('accessToken', result.data.data.access_token)
       localStorage.removeItem('nickname')
       localStorage.removeItem('profilePhoto')
       _self.$router.push('/home')
     } else {
       console.log(result.data)
-      _self.error = result.data.msg
+      _self.error = result.data.status.msg
     }
   }, (result) => {
     _self.error = '登录失败'
@@ -63,8 +62,8 @@ export function userInfo (_self, callback) {
   let islogin = localStorage.getItem('isLogin')
   if (islogin) {
     if (!localStorage.getItem('profilePhoto')) {
-      _self.$http.get(_self.baseUrl + '/user/user-info').then((res) => {
-        if (res.data.code === '0') {
+      _self.$http.get(_self.baseUrl + '/user/get-userinfo').then((res) => {
+        if (res.data.status.code === 0) {
           localStorage.setItem('nickname', res.data.data.userinfo.nickname)
           localStorage.setItem('profilePhoto', res.data.data.userinfo.profile_photo)
           callback(_self)
