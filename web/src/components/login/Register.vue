@@ -131,11 +131,11 @@ export default {
       this.$http.post(registerUrl, params, {
         emulateJSON: true
       }).then((res) => {
-        if (res.data.status.code === 0) {
+        if (res.data.code === 0) {
           loginByAccount(_self)
         } else {
           console.log(res.data)
-          this.error = res.data.status.msg
+          this.error = res.data.msg
         }
       }, (res) => {
         this.error = '服务器连接错误'

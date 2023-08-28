@@ -166,7 +166,7 @@ export default {
     },
     typeList () {
       this.$http.get(this.baseUrl + '/blog/blog-type-list').then((res) => {
-        if (res.data.status.code === 0) {
+        if (res.data.code === 0) {
           this.types = []
           this.typeLists = []
           if (res.data.data.list.length === 0) {

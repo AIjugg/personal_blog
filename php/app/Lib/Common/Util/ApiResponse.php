@@ -15,10 +15,8 @@ class ApiResponse
     {
         $result = [
             'data' => $data,
-            'status' => [
-                'msg' => $msg,
-                'code' => $code
-            ]
+            'msg' => $msg,
+            'code' => $code
         ];
 
         if (getenv('APP_DEBUG')) {
@@ -51,10 +49,8 @@ class ApiResponse
 
         return [
             'data' => $data,
-            'status' => [
-                'msg' => $msg,
-                'code' => $code
-            ]
+            'msg' => $msg,
+            'code' => $code
         ];
     }
 }

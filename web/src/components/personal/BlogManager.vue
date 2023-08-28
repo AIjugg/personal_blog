@@ -136,7 +136,7 @@ export default {
       sessionStorage.setItem('editWord', this.word)
       sessionStorage.setItem('editSortBy', this.sortBy)
       sessionStorage.setItem('editPage', this.page)
-      this.$http.get(this.baseUrl + '/blog/admin-blog-list', {params: { typeId: this.typeId,
+      this.$http.get(this.baseUrl + '/blog/blog-list', {params: { type_id: this.typeId,
         word: this.word,
         sortBy: this.sortBy,
         page: this.page

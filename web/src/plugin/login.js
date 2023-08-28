@@ -5,7 +5,7 @@ export function loginByAccount(_self) {
   _self.$http.post(_self.baseUrl + '/user/login-token', { username: _self.username, password: _self.password}, {
     emulateJSON: true
   }).then((result) => {
-    if (result.data.status.code === 0) {
+    if (result.data.code === 0) {
       console.log(result.data.data)
       localStorage.setItem('isLogin', 1)
       localStorage.setItem('accessToken', result.data.data.access_token)
@@ -14,7 +14,7 @@ export function loginByAccount(_self) {
       _self.$router.push('/home')
     } else {
       console.log(result.data)
-      _self.error = result.data.status.msg
+      _self.error = result.data.msg
     }
   }, (result) => {
     _self.error = '登录失败'
@@ -24,7 +24,7 @@ export function loginByAccount(_self) {
 }
 
 export function tipWarning (_self, code, msg) {
-  if (code === '4001') {
+  if (code === 4001) {
     _self.tipContent = '您尚未登录，2秒后跳转登录页面'
   } else {
     _self.tipContent = msg
@@ -63,7 +63,7 @@ export function userInfo (_self, callback) {
   if (islogin) {
     if (!localStorage.getItem('profilePhoto')) {
       _self.$http.get(_self.baseUrl + '/user/get-userinfo').then((res) => {
-        if (res.data.status.code === 0) {
+        if (res.data.code === 0) {
           localStorage.setItem('nickname', res.data.data.userinfo.nickname)
           localStorage.setItem('profilePhoto', res.data.data.userinfo.profile_photo)
           callback(_self)

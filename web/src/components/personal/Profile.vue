@@ -80,15 +80,15 @@ export default {
       sexList: [
         {
           label: '男',
-          value: '1'
+          value: 1
         },
         {
           label: '女',
-          value: '2'
+          value: 2
         },
         {
           label: '未知',
-          value: '3'
+          value: 3
         }
       ],
       fileType: {
@@ -112,8 +112,8 @@ export default {
       return url
     },
     userInfo () {
-      this.$http.get(this.baseUrl + '/user/user-info').then((res) => {
-        if (res.data.code === '0') {
+      this.$http.get(this.baseUrl + '/user/get-userinfo').then((res) => {
+        if (res.data.code === 0) {
           this.nickname = res.data.data.userinfo.nickname
           this.oriProfilePhoto = res.data.data.userinfo.profile_photo
           this.profilePhoto = this.oriProfilePhoto

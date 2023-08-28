@@ -42,6 +42,9 @@ class Helper
     public static function pageStandard($input)
     {
         $pageSet = [];
+        if (empty($input['pagesize'])) {
+            $input['pagesize'] = 10;
+        }
 
         if (!empty($input['pagesize'])) {
             $pageSet['limit'] = $input['pagesize'];

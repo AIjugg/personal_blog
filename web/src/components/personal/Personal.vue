@@ -51,19 +51,19 @@ export default {
     return {
       authList: {
         'user-edit': 1,
-        'setting': 0,
-        'blog-edit': 0,
-        'user-list': 0
+        'setting': 1,
+        'blog-edit': 1,
+        'user-list': 1
       }
     }
   },
   mounted () {
-    this.auth()
+    //this.auth()
   },
   methods: {
     auth () {
       this.$http.get(this.baseUrl + '/user/auth-list').then((res) => {
-        if (res.data.code === '0') {
+        if (res.data.code === 0) {
           this.authList = res.data.data.authList
         } else {
           console.log(res.data)
