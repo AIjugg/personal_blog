@@ -95,7 +95,7 @@ a{
 }
 #personal .ivu-layout-header {
   background: #1f1f1f;
-  background-image: url("/static/setting/stars.jpg");
+  background-image: url("/static/background/star.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   padding: 0;

@@ -14,21 +14,27 @@
       <div>
         <div class="type-style">
           <div class="type-input">
-            <Input v-model="newType" placeholder="新增类型名" size="small" maxlength="30" style="width: 300px" />
+            <el-input v-model="newType" placeholder="新增类型名"></el-input>
           </div>
           <div class="type-btn">
-            <Button type="info" size="small" @click="editType(0, newType)">新增</Button>
+            <el-button type="primary" @click="addType(newType)">新增</el-button>
           </div>
         </div>
         <Divider />
         <List item-layout="vertical">
-          <ListItem v-for="type in list" :key="type.id">
+          <ListItem v-for="type in list" :key="type.type_id">
             <div class="type-style">
               <div class="type-input">
-                <Input v-model="type.type" placeholder="类型名" size="small" maxlength="30" style="width: 300px" />
+                <el-input v-model="type.type_name" placeholder="类型名"></el-input>
               </div>
               <div class="type-btn">
-                <Button type="warning" size="small" @click="editType(type.id, type.type)">编辑</Button>
+                <el-button type="primary" @click="editType(type.type_id, type.type_name)">保存</el-button>
+              </div>
+              <div class="type-btn">
+                <el-button type="warning" @click="delType(type.type_id)">删除</el-button>
+              </div>
+              <div class="type-btn">
+                <el-button type="danger" @click="forceDelType(type.type_id)">强制删除</el-button>
               </div>
             </div>
           </ListItem>
@@ -54,13 +60,61 @@ export default {
   mounted: function () {
     this.typeList()
   },
-  methods: {
+    methods: {
+      addType(type) {
+        let _self = this
+        this.$http.post(this.baseUrl + '/blog/add-blog-type', { type_name: type }, {
+          emulateJSON: true
+        }).then((result) => {
+          if (result.data.code === 0) {
+            // tipWarning(_self, '-1', '编辑成功！')
+            this.reload()
+          } else {
+            tipWarning(_self, result.data.code, result.data.msg)
+            console.log(result.data)
+          }
+        }, (result) => {
+          console.log(result)
+        })
+      },
     editType (id, type) {
       let _self = this
-      this.$http.post(this.baseUrl + '/blog/type-edit', {type: type, id: id}, {
+      this.$http.post(this.baseUrl + '/blog/edit-blog-type', {type_name: type, type_id: id}, {
         emulateJSON: true
       }).then((result) => {
-        if (result.data.code === '0') {
+        if (result.data.code === 0) {
+          // tipWarning(_self, '-1', '编辑成功！')
+          this.reload()
+        } else {
+          tipWarning(_self, result.data.code, result.data.msg)
+          console.log(result.data)
+        }
+      }, (result) => {
+        console.log(result)
+      })
+    },
+    delType(id) {
+      let _self = this
+      this.$http.post(this.baseUrl + '/blog/del-blog-type', { type_id: id }, {
+        emulateJSON: true
+      }).then((result) => {
+        if (result.data.code === 0) {
+          // tipWarning(_self, '-1', '编辑成功！')
+          this.reload()
+        } else {
+          tipWarning(_self, result.data.code, result.data.msg)
+          console.log(result.data)
+        }
+      }, (result) => {
+        console.log(result)
+      })
+    },
+    forceDelType(id) {
+      let _self = this
+      this.$http.post(this.baseUrl + '/blog/del-blog-type', { type_id: id, if_force: true }, {
+        emulateJSON: true
+      }).then((result) => {
+        if (result.data.code === 0) {
           // tipWarning(_self, '-1', '编辑成功！')
           this.reload()
         } else {
@@ -72,8 +126,8 @@ export default {
       })
     },
     typeList () {
-      this.$http.get(this.baseUrl + '/blog/type-list').then((res) => {
-        if (res.data.code === '0') {
+      this.$http.get(this.baseUrl + '/blog/blog-type-list').then((res) => {
+        if (res.data.code === 0) {
           this.list = res.data.data.list
         }
       }, (res) =>

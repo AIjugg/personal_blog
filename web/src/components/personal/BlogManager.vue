@@ -138,8 +138,10 @@ export default {
       sessionStorage.setItem('editPage', this.page)
       this.$http.get(this.baseUrl + '/blog/blog-list', {params: { type_id: this.typeId,
         word: this.word,
-        sortBy: this.sortBy,
-        page: this.page
+        sort_filed: this.sortBy,
+        sort_direction: 'desc',
+        page: this.page,
+        pagesize: 10
       }}).then((res) => {
         this.list = res.data.data.list
         this.list.forEach(function (ele) {

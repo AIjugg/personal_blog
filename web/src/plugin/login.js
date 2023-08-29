@@ -6,7 +6,6 @@ export function loginByAccount(_self) {
     emulateJSON: true
   }).then((result) => {
     if (result.data.code === 0) {
-      console.log(result.data.data)
       localStorage.setItem('isLogin', 1)
       localStorage.setItem('accessToken', result.data.data.access_token)
       localStorage.removeItem('nickname')
@@ -24,7 +23,7 @@ export function loginByAccount(_self) {
 }
 
 export function tipWarning (_self, code, msg) {
-  if (code === 4001) {
+  if (code === 13008) {
     _self.tipContent = '您尚未登录，2秒后跳转登录页面'
   } else {
     _self.tipContent = msg

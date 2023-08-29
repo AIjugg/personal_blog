@@ -134,15 +134,52 @@ class BlogTypeService
      */
     public function delRelationBlogType($blogId, $typeId)
     {
-        $condition = [
-            'type_id' => $typeId,
-            'blog_id' => $blogId
-        ];
+        $condition = [];
+
+        if (!empty($blogId)) {
+            $condition['blog_id'] = $blogId;
+        }
+
+        if (!empty($typeId)) {
+            $condition['type_id'] = $typeId;
+        }
+
+        if (empty($condition)) {
+            return [];
+        }
         $res = (new BlogTypeRelation())->deleteBlogTypeRelation($condition);
 
         if (empty($res)) {
             throw new CommonException(ErrorCodes::BLOG_TYPE_RELATION_DELETE_FAIL);
         }
         return [];
+    }
+
+
+    /**
+     * 获取博客分类关联关系
+     * @param int $typeId
+     * @param int $blogId
+     * @return array
+     */
+    public function getRelationBlogType($typeId = 0, $blogId = 0)
+    {
+        $condition = [];
+
+        if (!empty($typeId)) {
+            $condition['type_id'] = $typeId;
+        }
+
+        if (!empty($blogId)) {
+            $condition['blog_id'] = $blogId;
+        }
+
+        if (empty($condition)) {
+            return [];
+        }
+
+        $res = (new BlogTypeRelation())->getBlogTypeRelation($condition);
+
+        return $res;
     }
 }

@@ -72,7 +72,7 @@ export default {
 </script>
 <style scoped>
   .el-container {
-    background-image: url('../../assets/sun.jpg');
+    background-image: url('/static/background/sun.jpg');
     background-repeat: no-repeat;
     background-size: 100%;
     height: 800px;

@@ -52,7 +52,7 @@ class BlogController extends BaseController
      */
     public function deleteBlogType(Request $request)
     {
-        $input = $request->only(['type_id']);
+        $input = $request->only(['type_id', 'if_force']);
 
         // 验证参数
         $validate = Validator::make($input, [
@@ -72,9 +72,22 @@ class BlogController extends BaseController
         }
 
         $typeId = $input['type_id'];
+        // 是否强制删除
+        $ifForce = $input['if_force'] ?? false;
 
         try {
-            $data = (new BlogTypeService())->deleteBlogType($typeId);
+            $typeService = new BlogTypeService();
+
+            $relations = $typeService->getRelationBlogType($typeId);
+
+            if (!$ifForce && !empty($relations)) {
+                throw new CommonException(ErrorCodes::BLOG_TYPE_RELATION_EXIST);
+            }
+            if ($ifForce && !empty($relations)) {
+                $typeService->delRelationBlogType(0, $typeId);
+            }
+
+            $data = $typeService->deleteBlogType($typeId);
             $result = ApiResponse::buildResponse($data);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
@@ -82,6 +95,7 @@ class BlogController extends BaseController
 
         return response()->json($result);
     }
+
 
 
     /**
@@ -627,4 +641,8 @@ class BlogController extends BaseController
 
         return response()->json($result);
     }
+
+
+
+
 }

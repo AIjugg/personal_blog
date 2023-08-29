@@ -37,9 +37,41 @@ class BlogTypeRelation extends Model
      */
     public function deleteBlogTypeRelation($condition)
     {
-        $res = DB::table($this->table)->where('type_id', $condition['type_id'])
-            ->where('blog_id', $condition['blog_id'])
-            ->delete();
+        $query = DB::table($this->table);
+
+        if (!empty($condition['type_id'])) {
+            $query->where('type_id', $condition['type_id']);
+        }
+
+        if (!empty($condition['blog_id'])) {
+            $query->where('blog_id', $condition['blog_id']);
+        }
+
+        $res = $query->update(['is_deleted' => 1]);
+
+        return $res;
+    }
+
+
+    /**
+     * 获取博客分类关联关系
+     * @param $condition
+     * @return array
+     */
+    public function getBlogTypeRelation($condition)
+    {
+        $query = DB::table($this->table);
+
+        if (!empty($condition['type_id'])) {
+            $query->where('type_id', $condition['type_id']);
+        }
+
+        if (!empty($condition['blog_id'])) {
+            $query->where('blog_id', $condition['blog_id']);
+        }
+
+        $res = $query->where('is_deleted', 0)
+            ->get()->toArray();
 
         return $res;
     }

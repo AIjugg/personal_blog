@@ -60,7 +60,7 @@ class BlogType extends Model
     {
         $result = DB::table($this->table)
             ->where('type_id', $typeId)
-            ->delete();
+            ->update(['is_deleted' => 1]);
 
         return $result;
     }
