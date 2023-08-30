@@ -30,6 +30,7 @@ Route::group(['middleware' => ['check_login']], function () {
         Route::post('/edit-blog-draft', 'BlogController@editBlogDraft');
         Route::post('/del-blog-draft', 'BlogController@delBlogDraft');
         Route::get('/list-blog-draft', 'BlogController@listBlogDraft');
+        Route::get('/detail-blog-draft', 'BlogController@getDraftDetail');
 
         Route::post('/relation-blog-type', 'BlogController@relationBlogType');
         Route::post('/del-relation-blog-type', 'BlogController@delRelationBlogType');

@@ -361,9 +361,15 @@ class BlogController extends BaseController
             $authors = (new UserService())->getUserByUid($authorIds);
             $authorsUidKey = array_column($authors, null, 'id');
 
+            // todo 加上博客的分类
+            $blogIds = array_column($list, 'blog_id');
+            $blogTypes = (new BlogTypeService())->blogRelationType($blogIds);
+
             foreach ($list as $k=>$v) {
                 $list[$k]['nickname'] = $authorsUidKey[$v['uid']]['nickname'] ?? '无名';
                 $list[$k]['profile_photo'] = $authorsUidKey[$v['uid']]['profile_photo'] ?? '';
+
+                $list[$k]['types'] = isset($blogTypes[$v['blog_id']]) ? $blogTypes[$v['blog_id']] : [];
             }
 
             $result = ApiResponse::buildResponse(['list' => $list, 'total' => $total]);
@@ -551,12 +557,11 @@ class BlogController extends BaseController
     public function delBlogDraft(Request $request)
     {
         try {
-            $input = $request->only(['draft_id', 'blog_id']);
+            $input = $request->only(['draft_id']);
 
             // 验证参数
             $validate = Validator::make($input, [
-                'draft_id' => ['nullable', 'integer'],
-                'blog_id' => ['nullable', 'integer']
+                'draft_id' => ['required', 'integer'],
             ]);
 
             if ($validate->fails()) {
@@ -576,9 +581,6 @@ class BlogController extends BaseController
             if (!empty($input['draft_id'])) {
                 $condition['draft_id'] = $input['draft_id'];
             }
-            if (!empty($input['blog_id'])) {
-                $condition['blog_id'] = $input['blog_id'];
-            }
 
             $res = (new DraftService())->deleteDraft($condition);
 
@@ -592,18 +594,17 @@ class BlogController extends BaseController
 
 
     /**
-     * 查看博客草稿
+     * 查看用户的博客草稿
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function listBlogDraft(Request $request)
     {
         try {
-            $input = $request->only(['blog_id','page','pagesize','sort_filed','sort_direction']);
+            $input = $request->only(['page','pagesize','sort_filed','sort_direction']);
 
             // 验证参数
             $validate = Validator::make($input, [
-                'blog_id' => ['nullable', 'integer'],
                 'sort_filed' => ['nullable', Rule::in(['created_at','updated_at'])],
                 'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
@@ -626,9 +627,6 @@ class BlogController extends BaseController
             $uid = $userInfo['id'];
 
             $condition = ['uid' => $uid];
-            if (!empty($input['blog_id'])) {
-                $condition['blog_id'] = $input['blog_id'];
-            }
 
             $draftService = new DraftService();
             $list = $draftService->listDraft($condition,$sortArr,$pageSet);
@@ -643,6 +641,44 @@ class BlogController extends BaseController
     }
 
 
+    /**
+     * 获取草稿详情
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDraftDetail(Request $request)
+    {
+        try {
+            $input = $request->only(['draft_id']);
 
+            // 验证参数
+            $validate = Validator::make($input, [
+                'draft_id' => 'required|integer'
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            // 获取用户id
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+
+            $condition = ['uid' => $userInfo['id'], 'draft_id' => $input['draft_id']];
+
+            $draftService = new DraftService();
+            $detail = $draftService->detailDraft($condition);
+
+            $result = ApiResponse::buildResponse(['detail' => $detail]);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
 
 }

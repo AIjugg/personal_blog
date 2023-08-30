@@ -23,13 +23,8 @@ class Draft extends Model
     protected function getDraftQuery($condition)
     {
         $draftQuery = DB::table($this->table, 'd')
-            ->leftJoin('blog as b', 'b.blog_id', '=', 'd.blog_id')
             ->where('d.is_deleted', 0);
 
-        if (!empty($condition['blog_id'])) {
-            $where = is_array($condition['blog_id']) ? 'whereIn' : 'where';
-            $draftQuery->$where('d.blog_id', $condition['blog_id']);
-        }
         if (!empty($condition['uid'])) {
             $draftQuery->where('d.uid', $condition['uid']);
         }
@@ -40,7 +35,7 @@ class Draft extends Model
 
     public function getDraft($condition, $sortArr, $pageSet)
     {
-        $blogQuery = $this->getDraftQuery($condition)->select(['d.draft_id','d.blog_id','b.title','d.created_at','d.updated_at']);
+        $blogQuery = $this->getDraftQuery($condition)->select(['d.draft_id','b.title','d.created_at','d.updated_at']);
 
         if (!empty($sortArr['sort_field']) && !empty($sortArr['sort_direction'])) {
             $blogQuery->orderBy('d.' . $sortArr['sort_field'], $sortArr['sort_direction']);
@@ -138,9 +133,6 @@ class Draft extends Model
         if (!empty($condition['draft_id'])) {
             $draftQuery->where('draft_id', $condition['draft_id']);
         }
-        if (!empty($condition['blog_id'])) {
-            $draftQuery->where('blog_id', $condition['blog_id']);
-        }
         if (!empty($condition['uid'])) {
             $draftQuery->where('uid', $condition['uid']);
         }
@@ -157,13 +149,21 @@ class Draft extends Model
 
     /**
      * 获取草稿详情
-     * @param $draftId
+     * @param array $condition
      * @return array
      */
-    public function getDraftDetail($draftId)
+    public function getDraftDetail($condition)
     {
-        $draft = DB::table($this->table)->where('draft_id', $draftId)
-            ->where('is_deleted', 0)
+        $query = DB::table($this->table)->select(['draft_id','title','uid','draft','created_at','updated_at']);
+
+        if (!empty($condition['draft_id'])) {
+            $query->where('draft_id', $condition['draft_id']);
+        }
+        if (!empty($condition['uid'])) {
+            $query->where('uid', $condition['uid']);
+        }
+
+        $draft = $query->where('is_deleted', 0)
             ->get()->first();
 
         return (array)$draft;

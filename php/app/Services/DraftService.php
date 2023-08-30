@@ -68,7 +68,7 @@ class DraftService
      */
     public function deleteDraft($condition)
     {
-        if (empty($condition['blog_id']) && empty($condition['draft_id'])) {
+        if (empty($condition['draft_id'])) {
             throw new CommonException(ErrorCodes::PARAM_ERROR);
         }
 
@@ -102,5 +102,16 @@ class DraftService
         $total = (new Draft())->countDraft($condition);
 
         return $total;
+    }
+
+
+    /**
+     * 草稿详情
+     * @param $condition
+     * @return array
+     */
+    public function detailDraft($condition)
+    {
+        return (new Draft())->getDraftDetail($condition);
     }
 }

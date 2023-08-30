@@ -67,11 +67,37 @@ class BlogTypeRelation extends Model
         }
 
         if (!empty($condition['blog_id'])) {
-            $query->where('blog_id', $condition['blog_id']);
+            $where = is_array($condition['blog_id']) ? "whereIn" : "where";
+
+            $query->$where('blog_id', $condition['blog_id']);
         }
 
         $res = $query->where('is_deleted', 0)
             ->get()->toArray();
+
+        return $res;
+    }
+
+
+
+    /**
+     * 获取博客分类关联关系
+     * @param $condition
+     * @return array
+     */
+    public function blogTypeRelation($condition)
+    {
+        $query = DB::table($this->table, 'r')->select(['r.relation_id','r.blog_id','r.type_id','t.type_name']);
+
+        if (!empty($condition['blog_id'])) {
+            $where = is_array($condition['blog_id']) ? "whereIn" : "where";
+
+            $query->$where('r.blog_id', $condition['blog_id']);
+        }
+
+        $res = $query->leftJoin('blog_type as t', 't.type_id', '=', 'r.type_id')
+            ->where('r.is_deleted', 0)
+            ->get()->map(function ($value) { return (array)$value; })->toArray();
 
         return $res;
     }

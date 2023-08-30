@@ -159,7 +159,7 @@ class BlogTypeService
     /**
      * 获取博客分类关联关系
      * @param int $typeId
-     * @param int $blogId
+     * @param int|array $blogId
      * @return array
      */
     public function getRelationBlogType($typeId = 0, $blogId = 0)
@@ -181,5 +181,33 @@ class BlogTypeService
         $res = (new BlogTypeRelation())->getBlogTypeRelation($condition);
 
         return $res;
+    }
+
+
+    /**
+     * 获取博客分类
+     * @param array $blogId
+     * @return array
+     */
+    public function blogRelationType(array $blogId)
+    {
+        if (empty($blogId)) {
+            return [];
+        }
+
+        $res = (new BlogTypeRelation())->blogTypeRelation(['blog_id' => $blogId]);
+
+        $types = [];
+        if (!empty($res)) {
+            foreach ($res as $v) {
+                $types[$v['blog_id']][] = [
+                    'type_id' => $v['type_id'],
+                    'type_name' => $v['type_name']
+                ];
+            }
+        }
+
+        return $types;
+
     }
 }
