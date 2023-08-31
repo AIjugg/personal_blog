@@ -84,7 +84,7 @@ class UserController extends BaseController
 
             $user = (new UserService())->getOneUserByName($username);
             if (!empty($user)) {
-                throw new CommonException(ErrorCodes::USER_EXIST);
+                throw new CommonException(ErrorCodes::USERNAME_EXIST);
             }
 
             $res = (new UserService())->registerByAccount($username, $input['password']);

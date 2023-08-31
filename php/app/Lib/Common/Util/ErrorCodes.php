@@ -37,13 +37,14 @@ class ErrorCodes
      // 用户
     const USER_PWD_WRONG = 13001;
     const USER_PWD_REPEAT_WRONG = 13002;
-    const USER_EXIST = 13003;
+    const USERNAME_EXIST = 13003;
     const USERNAME_WRONG = 13004;
     const ADD_USER_WRONG = 13005;
     const EDIT_USER_WRONG = 13006;
     const USER_TOKEN_STORAGE_WRONG = 13007;
     const USER_NOT_LOGIN = 13008;
     const TOKEN_NOT_EXIST = 13009;
+    const USER_NOT_EXIST = 13010;
 
     private static $codeMap = [
         self::PARAM_ERROR => '参数错误',
@@ -69,13 +70,14 @@ class ErrorCodes
 
         self::USER_PWD_WRONG => '用户密码错误',
         self::USER_PWD_REPEAT_WRONG => '两次密码不一致',
-        self::USER_EXIST => '用户名已存在',
+        self::USERNAME_EXIST => '用户名已存在',
         self::USERNAME_WRONG => '用户名不规范请使用纯字母',
         self::ADD_USER_WRONG => '创建用户失败',
         self::EDIT_USER_WRONG => '编辑用户失败',
         self::USER_TOKEN_STORAGE_WRONG => 'token存储失败',
         self::USER_NOT_LOGIN => '用户尚未登录',
         self::TOKEN_NOT_EXIST => 'token不存在',
+        self::USER_NOT_EXIST => '用户不存在'
     ];
 
 

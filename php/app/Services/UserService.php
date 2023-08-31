@@ -63,6 +63,12 @@ class UserService
 
         $user = (new User())->getOneUserByCondition($condition, $selectField);
 
+        foreach ($user as $k => $v) {
+            if (empty($v)) {
+                $user[$k] = '';
+            }
+        }
+
         return $user;
     }
 
@@ -97,6 +103,10 @@ class UserService
     public function loginByAccount($username, $password)
     {
         $userInfo = $this->getOneUserByName($username, SystemEnum::USER_STATE_NORMAL, ['id','username','email','mobile','password','state','last_login']);
+
+        if (empty($userInfo)) {
+            throw new CommonException(ErrorCodes::USER_NOT_EXIST);
+        }
 
         // 验证密码
         if (!EncryptHelper::verifyPasswordBcrypt($password, $userInfo['password'])) {
