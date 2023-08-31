@@ -196,6 +196,10 @@ class BlogController extends BaseController
             $data['nickname'] = $authorInfo['nickname'] ?? '';
             $data['profile_photo'] = $authorInfo['profile_photo'] ?? '';
 
+            // 加上博客的分类
+            $blogType = (new BlogTypeService())->blogRelationType($blogId);
+            $data['types'] = $blogType[$blogId];
+
             $result = ApiResponse::buildResponse(['detail' => $data]);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
@@ -329,7 +333,7 @@ class BlogController extends BaseController
                 'word' => 'nullable|string',
                 'type_id' => 'nullable',
                 'state' => ['nullable', Rule::in([1, 2])],
-                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageviews'])],
+                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
                 'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
                 'pagesize' => 'nullable|integer',
@@ -361,7 +365,7 @@ class BlogController extends BaseController
             $authors = (new UserService())->getUserByUid($authorIds);
             $authorsUidKey = array_column($authors, null, 'id');
 
-            // todo 加上博客的分类
+            // 加上博客的分类
             $blogIds = array_column($list, 'blog_id');
             $blogTypes = (new BlogTypeService())->blogRelationType($blogIds);
 

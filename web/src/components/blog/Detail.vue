@@ -14,7 +14,7 @@
         </div>
         <div class="type-list">
           <div v-for="type in types" :key="type" class="blog-type">
-            <Tag color="error"> {{ type }} </Tag>
+            <Tag color="error"> {{ type.type_name }} </Tag>
           </div>
         </div>
         <div class="blog-content">
@@ -74,7 +74,7 @@ export default {
     blogDetail () {
       let _self = this
       this.$http.get(this.baseUrl + '/blog/get-blog-detail', {params: {blog_id: this.blog_id}}).then((res) => {
-        if (res.data.status.code === 0) {
+        if (res.data.code === 0) {
           this.title = res.data.data.detail.title
           this.likeNum = res.data.data.detail.like
           this.commentNum = res.data.data.detail.comment
@@ -83,7 +83,7 @@ export default {
           this.content = res.data.data.detail.content
           this.nickname = res.data.data.detail.nickname
           this.profilePhoto = res.data.data.detail.profile_photo
-          this.types = res.data.data.detail.type
+          this.types = res.data.data.detail.types
           document.getElementById('blogContent').innerHTML = this.content
         } else {
           tipWarning(_self, res.data.status.code, res.data.status.msg)

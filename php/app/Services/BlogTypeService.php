@@ -189,7 +189,7 @@ class BlogTypeService
      * @param array $blogId
      * @return array
      */
-    public function blogRelationType(array $blogId)
+    public function blogRelationType($blogId)
     {
         if (empty($blogId)) {
             return [];

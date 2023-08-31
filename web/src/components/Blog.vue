@@ -45,15 +45,15 @@
                     <div class="blog-item">
                       <div @click="blogDetail(item.blog_id)">
                         <div style="padding-bottom: 40px">
-                          <div class="blog-top" v-show="item.top == '2'">
+                          <div class="blog-top" v-show="item.top == 2">
                             <Tag color="gold">置顶</Tag>
                           </div>
                           <div class="blog-title">
                             <h3>{{ item.title }}</h3>
                           </div>
                           <div>
-                            <div v-for="type_id in item.types" :key="type_id" class="blog-type">
-                              <Tag color="error"> {{ types[type_id] }} </Tag>
+                            <div v-for="type in item.types" :key="type_id" class="blog-type">
+                              <Tag color="error"> {{ type.type_name }} </Tag>
                             </div>
                           </div>
                         </div>
@@ -124,7 +124,6 @@ export default {
       total: 0,
       list: [],
       page: sessionStorage.getItem('blogPage') ? parseInt(sessionStorage.getItem('blogPage')) : 1,
-      types: [],
       typeLists: []
     }
   },
@@ -152,13 +151,6 @@ export default {
         pagesize: 10
       }}).then((res) => {
         this.list = res.data.data.list
-        this.list.forEach(function (ele) {
-          if (ele.typeIds !== null) {
-            ele.types = ele.typeIds.split(',')
-          } else {
-            ele.types = []
-          }
-        })
         this.total = parseInt(res.data.data.total)
       }, (res) =>
         console.log(res)
@@ -167,13 +159,11 @@ export default {
     typeList () {
       this.$http.get(this.baseUrl + '/blog/blog-type-list').then((res) => {
         if (res.data.code === 0) {
-          this.types = []
           this.typeLists = []
           if (res.data.data.list.length === 0) {
             return false
           }
           for (let i = 0; i < res.data.data.list.length; i++) {
-            this.types[res.data.data.list[i].type_id] = res.data.data.list[i].type_name
             this.typeLists.push({
               'id': res.data.data.list[i].type_id,
               'label': res.data.data.list[i].type_name

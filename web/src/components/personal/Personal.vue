@@ -53,7 +53,7 @@ export default {
         'user-edit': 1,
         'setting': 1,
         'blog-edit': 1,
-        'user-list': 1
+        'user-list': 0
       }
     }
   },

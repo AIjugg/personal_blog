@@ -34,21 +34,21 @@
             <div class="blog-item">
               <div @click="blogEdit(item.id)">
                 <div style="padding-bottom: 40px">
-                  <div class="blog-top" v-show="item.top == '2'">
+                  <div class="blog-top" v-show="item.top == 2">
                     <Tag color="gold">置顶</Tag>
                   </div>
                   <div class="blog-title">
                     <h3>{{ item.title }}</h3>
                   </div>
                   <div>
-                    <div v-for="type_id in item.types" :key="type_id" class="blog-type">
-                      <Tag color="error"> {{ types[type_id] }} </Tag>
+                    <div v-for="type in item.types" class="blog-type">
+                      <Tag color="error"> {{ type.type_name }} </Tag>
                     </div>
                   </div>
-                  <div class="blog-state" v-show="item.state == '1'">
-                    <Tag color="blue">正常</Tag>
+                  <div class="blog-state" v-show="item.state == 1">
+                    <Tag color="blue">正常展示</Tag>
                   </div>
-                  <div class="blog-state" v-show="item.state == '2'">
+                  <div class="blog-state" v-show="item.state == 2">
                     <Tag color="blue">隐藏</Tag>
                   </div>
                 </div>
@@ -99,11 +99,11 @@ export default {
       sortBy: sessionStorage.getItem('editSortBy') ? sessionStorage.getItem('editSortBy') : 'createTimeDesc',
       sortList: [
         {
-          'key': 'createTimeDesc',
+          'key': 'updated_at',
           'label': '最新日志'
         },
         {
-          'key': 'createTimeAsc',
+          'key': 'created_at',
           'label': '最早日志'
         },
         {
@@ -144,13 +144,6 @@ export default {
         pagesize: 10
       }}).then((res) => {
         this.list = res.data.data.list
-        this.list.forEach(function (ele) {
-          if (ele.typeIds !== null) {
-            ele.types = ele.typeIds.split(',')
-          } else {
-            ele.types = []
-          }
-        })
         this.total = parseInt(res.data.data.total)
       }, (res) =>
         console.log(res)
@@ -161,21 +154,19 @@ export default {
       this.list = this.blogList()
     },
     blogEdit (blogId) {
-      this.$router.push({name: 'blog-edit', params: {id: blogId}})
+      this.$router.push({name: 'blog-edit', params: {blog_id: blogId}})
     },
     typeList () {
-      this.$http.get(this.baseUrl + '/blog/type-list').then((res) => {
-        if (res.data.code === '0') {
-          this.types = []
+      this.$http.get(this.baseUrl + '/blog/blog-type-list').then((res) => {
+        if (res.data.code === 0) {
           this.typeLists = []
           if (res.data.data.list.length === 0) {
             return false
           }
           for (let i = 0; i < res.data.data.list.length; i++) {
-            this.types[res.data.data.list[i].id] = res.data.data.list[i].type
             this.typeLists.push({
-              'id': res.data.data.list[i].id,
-              'label': res.data.data.list[i].type
+              'id': res.data.data.list[i].type_id,
+              'label': res.data.data.list[i].type_name
             })
           }
           this.typeLists.unshift({
