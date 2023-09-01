@@ -210,93 +210,37 @@ class BlogController extends BaseController
 
 
     /**
-     * 创建博客
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function addBlog(Request $request)
-    {
-        try {
-            $input = $request->only(['title','description','image','state','top','content_simple','content']);
-
-            // 验证参数
-            $validate = Validator::make($input, [
-                'title' => ['required', 'string'],
-                'description' => ['required','string'],
-                'state' => ['required', Rule::in([1, 2])],
-                'top' => ['required', Rule::in([1, 2])],
-                'content_simple' => ['required', 'string'],
-                'content' => ['required']
-            ]);
-
-            if ($validate->fails()) {
-                $errorMsg = $validate->errors()->first();
-
-                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
-            }
-
-            $data = [
-                'title' => $input['title'],
-                'description' => $input['description'],
-                'image' => $input['image'],
-                'state' => $input['state'],
-                'top' => $input['top'],
-                'content_simple' => $input['content_simple'],
-                'content' => $input['content']
-            ];
-
-            // 获取登录用户的信息
-            $userInfo = $request->offsetGet('user_info');
-            if (empty($userInfo)) {
-                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
-            }
-            $uid = $userInfo['id'];
-
-            $res = (new BlogService())->addBlog($uid, $data);
-
-            $result = ApiResponse::buildResponse($res);
-        } catch (\Exception $e) {
-            $result = ApiResponse::buildThrowableResponse($e);
-        }
-
-        return response()->json($result);
-    }
-
-
-    /**
-     * 编辑博客
+     * 编辑博客|新增博客
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function editBlog(Request $request)
     {
         try {
-            $input = $request->only(['blog_id','title','description','image','state','top','content_simple','content']);
+            $input = $request->only(['blog_id','title','description','image','state','top','content']);
 
             // 验证参数
             $validate = Validator::make($input, [
-                'blog_id' => ['required', 'integer'],
-                'title' => ['required', 'string'],
+                'blog_id' => ['nullable', 'integer'],
+                'image' => 'nullable|string',
+                'title' => 'required|string|max:50',
                 'description' => ['required','string'],
                 'state' => ['required', Rule::in([1, 2])],
                 'top' => ['required', Rule::in([1, 2])],
-                'content_simple' => ['required', 'string']
+                'content' => ['required']
             ]);
 
             if ($validate->fails()) {
                 $errorMsg = $validate->errors()->first();
-
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
             $data = [
-                'blog_id' => $input['blog_id'],
                 'title' => $input['title'],
                 'description' => $input['description'],
-                'image' => $input['image'],
+                'image' => $input['image'] ?? '',
                 'state' => $input['state'],
                 'top' => $input['top'],
-                'content_simple' => $input['content_simple'],
                 'content' => $input['content']
             ];
 
@@ -307,7 +251,13 @@ class BlogController extends BaseController
             }
             $uid = $userInfo['id'];
 
-            $res = (new BlogService())->editBlog($uid, $data);
+            $blogService = new BlogService();
+            if (!empty($input['blog_id'])) {
+                $data['blog_id'] = $input['blog_id'];
+                $res = $blogService->editBlog($uid, $data);
+            } else {
+                $res = $blogService->addBlog($uid, $data);
+            }
 
             $result = ApiResponse::buildResponse($res);
         } catch (\Exception $e) {
@@ -464,19 +414,25 @@ class BlogController extends BaseController
     }
 
 
+
     /**
-     * 新增草稿
+     * 新增|编辑草稿
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addBlogDraft(Request $request)
+    public function editBlogDraft(Request $request)
     {
         try {
-            $input = $request->only(['blog_id','draft']);
+            $input = $request->only(['draft_id','title','description','image','state','top','draft']);
 
             // 验证参数
             $validate = Validator::make($input, [
-                'blog_id' => ['required', 'integer'],
+                'draft_id' => ['nullable', 'integer'],
+                'image' => 'nullable|string',
+                'title' => 'required|string|max:50',
+                'description' => ['required','string'],
+                'top' => ['required', Rule::in([1, 2])],
+                'state' => ['required', Rule::in([1, 2])],
                 'draft' => ['required', 'string']
             ]);
 
@@ -493,56 +449,22 @@ class BlogController extends BaseController
             $uid = $userInfo['id'];
 
             $data = [
-                'uid' => $uid,
-                'blog_id' => $input['blog_id'],
-                'draft' => $input['draft']
+                'title' => $input['title'],
+                'description' => $input['description'],
+                'image' => $input['image'] ?? '',
+                'state' => $input['state'],
+                'top' => $input['top'],
+                'draft' => $input['draft'],
             ];
 
-            $res = (new DraftService())->addDraft($data);
-
-            $result = ApiResponse::buildResponse($res);
-        } catch (\Exception $e) {
-            $result = ApiResponse::buildThrowableResponse($e);
-        }
-
-        return response()->json($result);
-    }
-
-
-    /**
-     * 编辑草稿
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function editBlogDraft(Request $request)
-    {
-        try {
-            $input = $request->only(['draft_id','draft']);
-
-            // 验证参数
-            $validate = Validator::make($input, [
-                'draft_id' => ['required', 'integer'],
-                'draft' => ['required', 'string']
-            ]);
-
-            if ($validate->fails()) {
-                $errorMsg = $validate->errors()->first();
-
-                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            if (!empty($input['draft_id'])) {
+                $res = (new DraftService())->editDraft(['uid' => $uid, 'draft_id' => $input['draft_id']], $data);
+            } else {
+                $data['uid'] = $uid;
+                $res = (new DraftService())->addDraft($data);
             }
-            // 获取用户id
-            $userInfo = $request->offsetGet('user_info');
-            if (empty($userInfo)) {
-                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
-            }
-            $uid = $userInfo['id'];
 
-            $condition = [
-                'uid' => $uid,
-                'draft_id' => $input['draft_id']
-            ];
 
-            $res = (new DraftService())->editDraft($condition, ['draft' => $input['draft']]);
 
             $result = ApiResponse::buildResponse($res);
         } catch (\Exception $e) {

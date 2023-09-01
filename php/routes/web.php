@@ -26,7 +26,6 @@ Route::group(['prefix' => 'blog'], function () {
 
 Route::group(['middleware' => ['check_login']], function () {
     Route::group(['prefix' => 'blog'], function () {
-        Route::post('/add-blog-draft', 'BlogController@addBlogDraft');
         Route::post('/edit-blog-draft', 'BlogController@editBlogDraft');
         Route::post('/del-blog-draft', 'BlogController@delBlogDraft');
         Route::get('/list-blog-draft', 'BlogController@listBlogDraft');
@@ -38,6 +37,8 @@ Route::group(['middleware' => ['check_login']], function () {
         Route::post('/del-blog-type', 'BlogController@deleteBlogType');
         Route::post('/add-blog-type', 'BlogController@addBlogType');
         Route::post('/edit-blog-type', 'BlogController@editBlogType');
+
+        Route::post('/edit-blog', 'BlogController@editBlog');  // 新增、编辑博客
 
     });
 

@@ -48,7 +48,6 @@ class BlogService
             'description' => $data['description'],
             'image' => $data['image'],
             'state' => $data['state'],
-            'content_simple' => $data['content_simple']
         ];
 
         try {
@@ -60,7 +59,7 @@ class BlogService
             }
 
             $blogContent = [
-                'blog_id' => $data['blog_id'],
+                'blog_id' => $blogId,
                 'content' => $data['content']
             ];
 
@@ -82,10 +81,11 @@ class BlogService
 
 
     /**
+     * 编辑博客
      * @param $uid
      * @param $data
      * @return array
-     * @throws CommonException
+     * @throws \Exception
      */
     public function editBlog($uid, $data)
     {
@@ -109,9 +109,7 @@ class BlogService
                     throw new CommonException(ErrorCodes::BLOG_CONTENT_EDIT_FAIL);
                 }
             }
-
             DB::commit();
-
             return [];
         } catch (\Exception $e) {
             DB::rollBack();
@@ -120,6 +118,14 @@ class BlogService
     }
 
 
+    /**
+     * 博客列表
+     * @param $condition
+     * @param array $sortArr
+     * @param array $pageSet
+     * @return array
+     * @throws CommonException
+     */
     public function listBlog($condition, $sortArr = [], $pageSet = [])
     {
         $result = (new Blog())->getBlog($condition, $sortArr, $pageSet);

@@ -21,14 +21,8 @@ class DraftService
      */
     public function addDraft($data)
     {
-        $draftData = [
-            'blog_id' => $data['blog_id'],
-            'draft' => $data['draft'],
-            'uid' => $data['uid']
-        ];
-
         // 先插入博客获取博客Id
-        $draftId = (new Draft())->addDraftGetId($draftData);
+        $draftId = (new Draft())->addDraftGetId($data);
         if (empty($draftId)) {
             throw new CommonException(ErrorCodes::DRAFT_ADD_FAIL);
         }
@@ -50,7 +44,7 @@ class DraftService
             throw new CommonException(ErrorCodes::PARAM_ERROR);
         }
 
-        $res = (new Draft())->editBlogDraft($condition, ['draft' => $data['draft']]);
+        $res = (new Draft())->editBlogDraft($condition, $data);
 
         if (empty($res)) {
             throw new CommonException(ErrorCodes::DRAFT_EDIT_FAIL);
