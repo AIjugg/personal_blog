@@ -60,23 +60,23 @@ export default {
   mounted: function () {
     this.typeList()
   },
-    methods: {
-      addType(type) {
-        let _self = this
-        this.$http.post(this.baseUrl + '/blog/add-blog-type', { type_name: type }, {
-          emulateJSON: true
-        }).then((result) => {
-          if (result.data.code === 0) {
-            // tipWarning(_self, '-1', '编辑成功！')
-            this.reload()
-          } else {
-            tipWarning(_self, result.data.code, result.data.msg)
-            console.log(result.data)
-          }
-        }, (result) => {
-          console.log(result)
-        })
-      },
+  methods: {
+    addType (type) {
+      let _self = this
+      this.$http.post(this.baseUrl + '/blog/add-blog-type', { type_name: type }, {
+        emulateJSON: true
+      }).then((result) => {
+        if (result.data.code === 0) {
+          // tipWarning(_self, '-1', '编辑成功！')
+          this.reload()
+        } else {
+          tipWarning(_self, result.data.code, result.data.msg)
+          console.log(result.data)
+        }
+      }, (result) => {
+        console.log(result)
+      })
+    },
     editType (id, type) {
       let _self = this
       this.$http.post(this.baseUrl + '/blog/edit-blog-type', {type_name: type, type_id: id}, {
@@ -93,7 +93,7 @@ export default {
         console.log(result)
       })
     },
-    delType(id) {
+    delType (id) {
       let _self = this
       this.$http.post(this.baseUrl + '/blog/del-blog-type', { type_id: id }, {
         emulateJSON: true
@@ -109,7 +109,7 @@ export default {
         console.log(result)
       })
     },
-    forceDelType(id) {
+    forceDelType (id) {
       let _self = this
       this.$http.post(this.baseUrl + '/blog/del-blog-type', { type_id: id, if_force: true }, {
         emulateJSON: true

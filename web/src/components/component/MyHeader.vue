@@ -35,29 +35,29 @@ import { userInfo } from '@/plugin/login'
 export default {
   name: 'myHeader',
   data () {
-  return {
-    login: localStorage.getItem('isLogin'),
-    nickname: localStorage.getItem('nickname'),
-    profilePhoto: localStorage.getItem('profilePhoto')
-  }
+    return {
+      login: localStorage.getItem('isLogin'),
+      nickname: localStorage.getItem('nickname'),
+      profilePhoto: localStorage.getItem('profilePhoto')
+    }
   },
   mounted: function () {
     let _self = this
     userInfo(_self, this.start)
   },
   methods: {
-    imgUrl(url) {
+    imgUrl (url) {
       if (url !== null && url.indexOf('/static/setting', 0) === -1) {
         return this.baseUrl + '/' + url
       }
       return url
     },
-    start(obj) {
+    start (obj) {
       obj.login = localStorage.getItem('isLogin')
       obj.profilePhoto = localStorage.getItem('profilePhoto') === '' ? '/static/setting/defaultheadimg.jpg' : localStorage.getItem('profilePhoto')
       obj.nickname = localStorage.getItem('nickname') === '' ? '无名' : localStorage.getItem('nickname')
     },
-    logout() {
+    logout () {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('isLogin')
       localStorage.removeItem('profilePhoto')
@@ -77,7 +77,6 @@ export default {
     background-size: 100%;
     height: 800px;
   }
-
 
 a{
   color: #f5f7f9;

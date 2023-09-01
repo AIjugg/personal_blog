@@ -41,7 +41,7 @@
                     <h3>{{ item.title }}</h3>
                   </div>
                   <div>
-                    <div v-for="type in item.types" class="blog-type">
+                    <div v-for="type in item.types" :key="type.type_id" class="blog-type">
                       <Tag color="error"> {{ type.type_name }} </Tag>
                     </div>
                   </div>

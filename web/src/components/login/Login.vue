@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import { loginByAccount } from '@/plugin/login'
+import { loginByAccount } from '@/plugin/login'
 
 export default {
   data () {

@@ -1,5 +1,4 @@
 <template>
-  
     <div>
       <el-row>
         <el-col :span="4"><div class="grid-content"></div></el-col>
@@ -52,7 +51,7 @@
                             <h3>{{ item.title }}</h3>
                           </div>
                           <div>
-                            <div v-for="type in item.types" :key="type_id" class="blog-type">
+                            <div v-for="type in item.types" :key="type.type_id" class="blog-type">
                               <Tag color="error"> {{ type.type_name }} </Tag>
                             </div>
                           </div>
@@ -191,9 +190,9 @@ export default {
 }
 </script>
 <style scoped>
-  .select-gap {
-    
-  }
+.select-gap {
+
+}
 .select-style {
   float: left;
   padding-right: 10px;

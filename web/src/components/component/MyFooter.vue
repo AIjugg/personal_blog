@@ -12,7 +12,7 @@
 </template>
 
 <script>
- import '../../plugin/fish'
+import '../../plugin/fish'
 
 export default {
   name: 'myFooter'

@@ -27,8 +27,8 @@ Vue.prototype.baseUrl = globalApi.baseURL
 
 // 统一处理登录token
 Vue.http.interceptors.push((request, next) => {
-  let access_token = localStorage.getItem('accessToken');
-  request.headers.set('Authorization', 'Bearer ' + access_token)
+  let accessToken = localStorage.getItem('accessToken')
+  request.headers.set('Authorization', 'Bearer ' + accessToken)
   next((response) => {
     if (response.status === 200) {
       if (response.data.code !== 0) {

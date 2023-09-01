@@ -1,8 +1,8 @@
 /**
  * 获取登录token
  */
-export function loginByAccount(_self) {
-  _self.$http.post(_self.baseUrl + '/user/login-token', { username: _self.username, password: _self.password}, {
+export function loginByAccount (_self) {
+  _self.$http.post(_self.baseUrl + '/user/login-token', { username: _self.username, password: _self.password }, {
     emulateJSON: true
   }).then((result) => {
     if (result.data.code === 0) {
