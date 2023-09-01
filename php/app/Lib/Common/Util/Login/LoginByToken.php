@@ -83,7 +83,7 @@ class LoginByToken
      */
     public function clearLogin($token)
     {
-        $res = Redis::del($token);
+        $res = Redis::del(self::USERKEY_PREFIX . $token);
         if (!$res) {
             throw new CommonException(ErrorCodes::REDIS_DEL_ERROR);
         }

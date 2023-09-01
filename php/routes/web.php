@@ -44,6 +44,8 @@ Route::group(['middleware' => ['check_login']], function () {
     Route::group(['prefix' => 'user'], function () {
         Route::post('/logout', 'UserController@logoutByAccount');
         Route::get('/get-userinfo', 'UserController@getUserInfo');
+
+        Route::post('/logout-token', 'UserController@logoutByAccountToken');
     });
 
 });
@@ -53,6 +55,6 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/register', 'UserController@registerByAccount');
 
     Route::post('/login-token', 'UserController@loginByAccountToken');
-    Route::post('/logout-token', 'UserController@logoutByAccountToken');
+
 
 });

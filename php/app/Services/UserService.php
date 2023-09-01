@@ -198,6 +198,10 @@ class UserService
         try {
             $userInfo = $this->getOneUserByName($username, SystemEnum::USER_STATE_NORMAL, ['id', 'username', 'email', 'mobile', 'password', 'state', 'last_login']);
 
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_EXIST);
+            }
+
             // 验证密码
             if (!EncryptHelper::verifyPasswordBcrypt($password, $userInfo['password'])) {
                 throw new CommonException(ErrorCodes::USER_PWD_WRONG);
