@@ -48,7 +48,7 @@ class Blog extends Model
     }
 
 
-    public function getBlog($condition, $sortArr, $pageSet)
+    public function getBlog($condition, $sortArr = [], $pageSet = [])
     {
         $blogQuery = $this->getBlogQuery($condition);
 

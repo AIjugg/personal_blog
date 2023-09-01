@@ -31,16 +31,26 @@ class BlogContent extends Model
 
     /**
      * 获取博客内容
-     * @param $blogId
+     * @param array $condition
+     * @param array $selectField
      * @return array
      */
-    public function getBlogAndContent($blogId)
+    public function getBlogAndContent($condition, $selectField = [])
     {
-        $blogDetail = DB::table('blog', 'b')->join('blog_content as bc', 'b.blog_id', '=', 'bc.blog_id')
-            ->select(['b.blog_id', 'b.uid', 'b.title', 'b.like', 'b.comment', 'b.pageviews', 'bc.content', 'b.created_at'])
-            ->where('b.blog_id', $blogId)
-            ->first();
+        $selectField = !empty($selectField) ? $selectField : ['b.blog_id', 'b.uid', 'b.title', 'b.like', 'b.comment', 'b.pageviews', 'bc.content', 'b.created_at'];
 
+        $query = DB::table('blog', 'b')->join('blog_content as bc', 'b.blog_id', '=', 'bc.blog_id');
+
+        if (!empty($condition['blog_id'])) {
+            $query->where('b.blog_id', $condition['blog_id']);
+        }
+
+        if (!empty($condition['uid'])) {
+            $query->where('b.uid', $condition['uid']);
+        }
+
+        $blogDetail = $query->select($selectField)
+            ->first();
         return (array)$blogDetail;
     }
 

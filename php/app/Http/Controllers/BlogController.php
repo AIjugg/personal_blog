@@ -191,7 +191,7 @@ class BlogController extends BaseController
         $blogId = $input['blog_id'];
 
         try {
-            $data = (new BlogService())->getBlogDetail($blogId);
+            $data = (new BlogService())->getBlogDetail(['blog_id' => $blogId]);
             $authorInfo = (new UserService())->getOneUserByUid($data['uid']);
             $data['nickname'] = $authorInfo['nickname'] ?? '';
             $data['profile_photo'] = $authorInfo['profile_photo'] ?? '';
@@ -336,19 +336,19 @@ class BlogController extends BaseController
 
 
     /**
-     * 博客关联分类
+     * 博客关联分类（多个），包含删除操作
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function relationBlogType(Request $request)
     {
         try {
-            $input = $request->only(['blog_id','type_id']);
+            $input = $request->only(['blog_id','type_ids']);
 
             // 验证参数
             $validate = Validator::make($input, [
                 'blog_id' => ['required', 'integer'],
-                'type_id' => ['required', 'integer']
+                'type_ids' => ['required', 'array']
             ]);
 
             if ($validate->fails()) {
@@ -363,47 +363,13 @@ class BlogController extends BaseController
                 throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
             }
 
-
-            $res = (new BlogTypeService())->relationBlogType($input['blog_id'], $input['type_id']);
-
-            $result = ApiResponse::buildResponse($res);
-        } catch (\Exception $e) {
-            $result = ApiResponse::buildThrowableResponse($e);
-        }
-
-        return response()->json($result);
-    }
-
-
-    /**
-     * 删除博客的分类
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function delRelationBlogType(Request $request)
-    {
-        try {
-            $input = $request->only(['blog_id','type_id']);
-
-            // 验证参数
-            $validate = Validator::make($input, [
-                'blog_id' => ['required', 'integer'],
-                'type_id' => ['required', 'integer']
-            ]);
-
-            if ($validate->fails()) {
-                $errorMsg = $validate->errors()->first();
-
-                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            // 博客是本人的才可以
+            $blog = (new BlogService())->getBlog(['blog_id' => $input['blog_id'], 'uid' => $userInfo['id']]);
+            if (empty($blog)) {
+                throw new CommonException(ErrorCodes::BLOG_TYPE_RELATION_FAIL);
             }
 
-            // 用户登录
-            $userInfo = $request->offsetGet('user_info');
-            if (empty($userInfo)) {
-                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
-            }
-
-            $res = (new BlogTypeService())->delRelationBlogType($input['blog_id'], $input['type_id']);
+            $res = (new BlogTypeService())->relationBlogType($input['blog_id'], $input['type_ids']);
 
             $result = ApiResponse::buildResponse($res);
         } catch (\Exception $e) {
@@ -607,4 +573,42 @@ class BlogController extends BaseController
         return response()->json($result);
     }
 
+
+    /**
+     * 管理后台获取博客详情（作者才能编辑自己的）
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function managerBlogDetail(Request $request)
+    {
+        $input = $request->only(['blog_id']);
+
+        $blogId = $input['blog_id'];
+
+        try {
+            $selectField = ['b.blog_id', 'b.uid', 'b.title','b.description','b.image', 'bc.content', 'b.created_at', 'b.state', 'b.top'];
+
+            // 获取用户id
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+            $uid = $userInfo['id'];
+
+            $data = (new BlogService())->getBlogDetail(['blog_id' => $blogId, 'uid' => $uid], $selectField);
+            $authorInfo = (new UserService())->getOneUserByUid($data['uid']);
+            $data['nickname'] = $authorInfo['nickname'] ?? '';
+            $data['profile_photo'] = $authorInfo['profile_photo'] ?? '';
+
+            // 加上博客的分类
+            $blogType = (new BlogTypeService())->blogRelationType($blogId);
+            $data['types'] = $blogType[$blogId];
+
+            $result = ApiResponse::buildResponse(['detail' => $data]);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
 }

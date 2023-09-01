@@ -154,7 +154,7 @@ class Draft extends Model
      */
     public function getDraftDetail($condition)
     {
-        $query = DB::table($this->table)->select(['draft_id','title','uid','draft','created_at','updated_at']);
+        $query = DB::table($this->table)->select(['draft_id','title','uid','description','draft','top','state','image','created_at','updated_at']);
 
         if (!empty($condition['draft_id'])) {
             $query->where('draft_id', $condition['draft_id']);

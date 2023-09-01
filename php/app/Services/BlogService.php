@@ -18,13 +18,14 @@ class BlogService
 {
     /**
      * 获取博客详情
-     * @param $blogId
+     * @param array $condition
+     * @param array $selectField
      * @return mixed
      * @throws CommonException
      */
-    public function getBlogDetail($blogId)
+    public function getBlogDetail($condition, $selectField = [])
     {
-        $result = (new BlogContent())->getBlogAndContent($blogId);
+        $result = (new BlogContent())->getBlogAndContent($condition, $selectField);
 
         if (empty($result)) {
             throw new CommonException(ErrorCodes::BLOG_NOT_EXIST);
@@ -143,5 +144,13 @@ class BlogService
         $total = (new Blog())->countBlog($condition);
 
         return $total;
+    }
+
+
+    public function getBlog($condition)
+    {
+        $result = (new Blog())->getBlog($condition);
+
+        return $result;
     }
 }

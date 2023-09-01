@@ -32,14 +32,13 @@ Route::group(['middleware' => ['check_login']], function () {
         Route::get('/detail-blog-draft', 'BlogController@getDraftDetail');
 
         Route::post('/relation-blog-type', 'BlogController@relationBlogType');
-        Route::post('/del-relation-blog-type', 'BlogController@delRelationBlogType');
 
         Route::post('/del-blog-type', 'BlogController@deleteBlogType');
         Route::post('/add-blog-type', 'BlogController@addBlogType');
         Route::post('/edit-blog-type', 'BlogController@editBlogType');
 
         Route::post('/edit-blog', 'BlogController@editBlog');  // 新增、编辑博客
-
+        Route::get('/manager-blog-detail', 'BlogController@managerBlogDetail');  // 作者查看自己的博客
     });
 
     Route::group(['prefix' => 'user'], function () {

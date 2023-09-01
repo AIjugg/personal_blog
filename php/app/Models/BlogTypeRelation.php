@@ -31,6 +31,25 @@ class BlogTypeRelation extends Model
 
 
     /**
+     * 博客关联分类
+     * @param $data
+     * @return int
+     */
+    public function addMultiBlogTypeRelation($data)
+    {
+        $now = date('Y-m-d H:i:s', time());
+
+        foreach ($data as &$v) {
+            $v['created_at'] = $v['updated_at'] = $now;
+        }
+
+        $res = DB::table($this->table)->insert($data);
+
+        return $res;
+    }
+
+
+    /**
      * 删除关联关系
      * @param $condition
      * @return int

@@ -12,6 +12,7 @@ use App\Lib\Common\Util\CommonException;
 use App\Models\BlogType;
 use App\Lib\Common\Util\ErrorCodes;
 use App\Models\BlogTypeRelation;
+use Illuminate\Support\Facades\DB;
 
 
 class BlogTypeService
@@ -104,24 +105,39 @@ class BlogTypeService
 
 
     /**
-     * 关联博客和分类
+     * 给博客关联分类
      * @param $blogId
-     * @param $typeId
+     * @param $typeIds
      * @return array
-     * @throws CommonException
+     * @throws \Exception
      */
-    public function relationBlogType($blogId, $typeId)
+    public function relationBlogType($blogId, $typeIds)
     {
-        $data = [
-            'type_id' => $typeId,
-            'blog_id' => $blogId
-        ];
-        $res = (new BlogTypeRelation())->addBlogTypeRelation($data);
-
-        if (empty($res)) {
-            throw new CommonException(ErrorCodes::BLOG_TYPE_RELATION_FAIL);
+        $data = [];
+        foreach ($typeIds as $typeId) {
+            $data[] = [
+                'type_id' => $typeId,
+                'blog_id' => $blogId
+            ];
         }
-        return [];
+        try {
+            DB::beginTransaction();
+
+            $dao = new BlogTypeRelation();
+            // 删除原来所有分类
+            $dao->deleteBlogTypeRelation(['blog_id' => $blogId]);
+
+            $res = $dao->addMultiBlogTypeRelation($data);
+
+            if (empty($res)) {
+                throw new CommonException(ErrorCodes::BLOG_TYPE_RELATION_FAIL);
+            }
+            DB::commit();
+            return [];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
 
