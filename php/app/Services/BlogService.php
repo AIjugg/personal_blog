@@ -49,6 +49,7 @@ class BlogService
             'description' => $data['description'],
             'image' => $data['image'],
             'state' => $data['state'],
+            'top' => $data['top']
         ];
 
         try {
@@ -94,18 +95,29 @@ class BlogService
             throw new CommonException(ErrorCodes::PARAM_ERROR);
         }
 
+        $blogData = [
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'image' => $data['image'],
+            'state' => $data['state'],
+            'top' => $data['top']
+        ];
+
+        $blogContent = [
+            'content' => $data['content']
+        ];
         $blogId = $data['blog_id'];
 
         try {
             DB::beginTransaction();
-            $res = (new Blog())->editBlog($data, ['uid' => $uid, 'blog_id' => $blogId]);
+            $res = (new Blog())->editBlog($blogData, ['uid' => $uid, 'blog_id' => $blogId]);
 
             if (empty($res)) {
                 throw new CommonException(ErrorCodes::BLOG_EDIT_FAIL);
             }
 
             if (!empty($data['content'])) {
-                $res2 = (new BlogContent())->editContent($blogId, $data['content']);
+                $res2 = (new BlogContent())->editContent($blogId, $blogContent);
                 if (!$res2) {
                     throw new CommonException(ErrorCodes::BLOG_CONTENT_EDIT_FAIL);
                 }

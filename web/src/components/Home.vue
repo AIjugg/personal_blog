@@ -87,7 +87,7 @@ export default {
   },
   mounted () {
     this.getDate()
-    this.getMotto()
+    // this.getMotto()
   },
   methods: {
     getDate () {

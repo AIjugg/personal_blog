@@ -72,14 +72,14 @@ class BlogContent extends Model
     /**
      * 编辑博客内容
      * @param $blogId
-     * @param $content
+     * @param array $blogContent
      * @return int
      */
-    public function editContent($blogId, $content)
+    public function editContent($blogId, $blogContent)
     {
         $data['updated_at'] = date('Y-m-d H:i:s', time());
         $res = DB::table($this->table)->where('blog_id', $blogId)
-            ->update(['content' => $content]);
+            ->update($blogContent);
 
         return $res;
     }

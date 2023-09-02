@@ -16,6 +16,10 @@ class SystemEnum
     const USER_STATE_FORBID = 3;
     const USER_STATE_CLOSED = 4;
 
+    // 博客状态 1正常 2隐藏
+    const BLOG_STATE_NORMAL = 1;
+    const BLOG_STATE_HIDE = 2;
+
 
     const USER_SEX_MALE = 1;
     const USER_SEX_FEMALE = 2;

@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Lib\Common\Constant\SystemEnum;
 use App\Lib\Common\Util\CommonException;
 use App\Lib\Common\Util\ErrorCodes;
 use App\Lib\Common\Util\Helper;
@@ -282,7 +283,6 @@ class BlogController extends BaseController
             $validate = Validator::make($input, [
                 'word' => 'nullable|string',
                 'type_id' => 'nullable',
-                'state' => ['nullable', Rule::in([1, 2])],
                 'sort_filed' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
                 'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
@@ -295,7 +295,7 @@ class BlogController extends BaseController
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
-            $condition = [];
+            $condition = ['state' => SystemEnum::BLOG_STATE_NORMAL];
             if (!empty($input['word'])) {
                 $condition['title'] = trim($input['word']);
             }
@@ -605,6 +605,79 @@ class BlogController extends BaseController
             $data['types'] = $blogType[$blogId];
 
             $result = ApiResponse::buildResponse(['detail' => $data]);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
+
+
+    /**
+     * 作者查看自己的博客列表
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function managerBlogList(Request $request)
+    {
+        try {
+            $input = $request->only(['word','type_id','page','pagesize','sort_filed','sort_direction']);
+
+            // 验证参数
+            $validate = Validator::make($input, [
+                'word' => 'nullable|string',
+                'type_id' => 'nullable',
+                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
+                'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
+                'page' => 'nullable|integer',
+                'pagesize' => 'nullable|integer',
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            // 获取用户id
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+            $uid = $userInfo['id'];
+
+            $condition = ['uid' => $uid];
+            if (!empty($input['word'])) {
+                $condition['title'] = trim($input['word']);
+            }
+            if (!empty($input['type_id'])) {
+                $condition['type_id'] = $input['type_id'];
+            }
+
+            $sortArr = Helper::sortStandard($input);
+            $pageSet = Helper::pageStandard($input);
+
+            $blogService = new BlogService();
+            $list = $blogService->listBlog($condition, $sortArr, $pageSet);
+            $total = $blogService->countBlog($condition);
+
+            // 加上博客作者的信息
+            $authorIds = array_unique(array_column($list, 'uid'));
+            $authors = (new UserService())->getUserByUid($authorIds);
+            $authorsUidKey = array_column($authors, null, 'id');
+
+            // 加上博客的分类
+            $blogIds = array_column($list, 'blog_id');
+            $blogTypes = (new BlogTypeService())->blogRelationType($blogIds);
+
+            foreach ($list as $k=>$v) {
+                $list[$k]['nickname'] = $authorsUidKey[$v['uid']]['nickname'] ?? '无名';
+                $list[$k]['profile_photo'] = $authorsUidKey[$v['uid']]['profile_photo'] ?? '';
+
+                $list[$k]['types'] = isset($blogTypes[$v['blog_id']]) ? $blogTypes[$v['blog_id']] : [];
+            }
+
+            $result = ApiResponse::buildResponse(['list' => $list, 'total' => $total]);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
         }

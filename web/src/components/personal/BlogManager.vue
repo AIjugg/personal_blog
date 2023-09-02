@@ -32,7 +32,7 @@
         <List item-layout="vertical">
           <ListItem v-for="item in list" :key="item.title">
             <div class="blog-item">
-              <div @click="blogEdit(item.id)">
+              <div @click="blogEdit(item.blog_id)">
                 <div style="padding-bottom: 40px">
                   <div class="blog-top" v-show="item.top == 2">
                     <Tag color="gold">置顶</Tag>
@@ -96,7 +96,7 @@ export default {
   data () {
     return {
       typeId: sessionStorage.getItem('editTypeId') ? sessionStorage.getItem('editTypeId') : 0,
-      sortBy: sessionStorage.getItem('editSortBy') ? sessionStorage.getItem('editSortBy') : 'createTimeDesc',
+      sortBy: sessionStorage.getItem('editSortBy') ? sessionStorage.getItem('editSortBy') : 'created_at',
       sortList: [
         {
           'key': 'updated_at',
@@ -136,7 +136,7 @@ export default {
       sessionStorage.setItem('editWord', this.word)
       sessionStorage.setItem('editSortBy', this.sortBy)
       sessionStorage.setItem('editPage', this.page)
-      this.$http.get(this.baseUrl + '/blog/blog-list', {params: { type_id: this.typeId,
+      this.$http.get(this.baseUrl + '/blog/manager-blog-list', {params: { type_id: this.typeId,
         word: this.word,
         sort_filed: this.sortBy,
         sort_direction: 'desc',
@@ -154,7 +154,7 @@ export default {
       this.list = this.blogList()
     },
     blogEdit (blogId) {
-      this.$router.push({name: 'blog-edit', params: {blog_id: blogId}})
+      this.$router.push({name: 'blog-edit', params: {blog_id: blogId, type: 'blog'}})
     },
     typeList () {
       this.$http.get(this.baseUrl + '/blog/blog-type-list').then((res) => {

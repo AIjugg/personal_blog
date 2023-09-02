@@ -39,6 +39,7 @@ Route::group(['middleware' => ['check_login']], function () {
 
         Route::post('/edit-blog', 'BlogController@editBlog');  // 新增、编辑博客
         Route::get('/manager-blog-detail', 'BlogController@managerBlogDetail');  // 作者查看自己的博客
+        Route::get('/manager-blog-list', 'BlogController@managerBlogList');  // 作者查看自己的博客
     });
 
     Route::group(['prefix' => 'user'], function () {

@@ -190,9 +190,7 @@ export default {
 }
 </script>
 <style scoped>
-.select-gap {
 
-}
 .select-style {
   float: left;
   padding-right: 10px;

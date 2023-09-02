@@ -1,49 +1,53 @@
 <template>
   <div style="min-height: 600px">
-    <Content :style="{margin: '1% 5%'}">
+    <Content>
       <Card>
         <div>
           <div>
-            <div class="title-style">
-              <h3>标题</h3>
-            </div>
-            <div class="title-input-style">
-              <Input v-model="title" maxlength="30" show-word-limit placeholder="输入标题"/>
-            </div>
-            <div style="float:left;margin-left: 10px">
-              <i-switch v-model="topSwitch" @on-change="changeTop" size="large">
-                <span slot="open">置顶</span>
-                <span slot="close">正常</span>
-              </i-switch>
-            </div>
-            <div style="float:left;margin-left: 10px">
-              <i-switch v-model="stateSwitch" @on-change="changeState" size="large">
-                <span slot="open">隐藏</span>
-                <span slot="close">正常</span>
-              </i-switch>
-            </div>
-            <div style="float:right">
-              <Button type="primary" @click="save">保存</Button>
-            </div>
+            <el-row>
+              <el-col :span="2"><div><h2>标题</h2></div></el-col>
+              <el-col :span="10">
+                <div class="title-input-style">
+                  <el-input type="text" v-model="title" maxlength="50" show-word-limit placeholder="请输入标题"></el-input>
+                </div>
+              </el-col>
+              <el-col :span="4"><div>
+              <el-switch v-model="topSwitch" @on-change="changeTop" active-text="置顶" inactive-text="不置顶"></el-switch>
+            </div></el-col>
+              <el-col :span="4"><div>
+              <el-switch v-model="stateSwitch" @on-change="changeState" active-text="展示" inactive-text="隐藏"></el-switch>
+            </div></el-col>
+            <el-col :span="4"><div>
+              <div><el-button type="primary" @click="save">保存</el-button></div>
+            </div></el-col>
+            </el-row>
           </div>
           <div class="description-style">
-            <div class="header-style">
-              <div>
-                <img :src="imgUrl(image)" class="header-img-style"/>
-              </div>
-              <br>
-              <div>
-                <a href="javascript:" class="file">修改封面
-                  <input @change="chooseImg" type="file" accept="image/png, image/jpeg" class="file">
-                </a>
-              </div>
-            </div>
-            <div class="description-title">
-              <h3>文章简介</h3>
-            </div>
-            <div class="description-input">
-              <Input v-model="description" maxlength="200" show-word-limit type="textarea" placeholder="文章简介"/>
-            </div>
+            <el-row>
+              <el-col :span="2">
+                <div>
+                  <div>
+                    <img :src="imgUrl(image)" class="header-img-style"/>
+                  </div>
+                  <br>
+                  <div>
+                    <a href="javascript:" class="file">修改封面
+                      <input @change="chooseImg" type="file" accept="image/png, image/jpeg" class="file">
+                    </a>
+                  </div>
+                </div>
+              </el-col>
+              <el-col :span="3">
+                <div class="description-title">
+                  <h3>文章简介</h3>
+                </div>
+              </el-col>
+              <el-col :span="16">
+                <div class="description-input">
+                  <el-input v-model="description" maxlength="200" show-word-limit type="textarea" :rows="6" placeholder="文章简介"/>
+                </div>
+              </el-col>
+            </el-row>
           </div>
         </div>
         <Modal :loading=true v-model="tipShow">
@@ -65,10 +69,10 @@ export default {
   name: 'App',
   data () {
     return {
-      blogId: this.$route.params.id ? this.$route.params.id : 0,
-      state: '1',
+      blogId: this.$route.params.blog_id ? this.$route.params.blog_id : 0,
+      state: 1,
       stateSwitch: false, // true 隐藏  false 正常
-      top: '1',
+      top: 1,
       topSwitch: false, // true 置顶  false 正常
       title: '',
       description: '',
@@ -116,7 +120,12 @@ export default {
     }
   },
   mounted: function () {
-    this.blogDraft(this.blogDetail)
+    if (this.$route.params.type === 'blog') {
+      this.blogDetail()
+    } else if (this.$route.params.type === 'draft') {
+      this.blogDraft()
+    }
+
     this.timer = setInterval(this.editDraft, 300000)
   },
   beforeDestroy () {
@@ -140,14 +149,14 @@ export default {
     },
     editBlog () {
       let _self = this
-      this.$http.post(this.baseUrl + '/blog/blog-edit', {id: this.blogId, title: this.title, description: this.description, image: this.image, state: this.state, content: this.content, top: this.top}, {
+      this.$http.post(this.baseUrl + '/blog/edit-blog', {blog_id: this.blogId, title: this.title, description: this.description, image: this.image, state: this.state, content: this.content, top: this.top}, {
         emulateJSON: true
       }).then((response) => {
-        if (response.data.code !== '0') {
+        if (response.data.code !== 0) {
           tipWarning(_self, response.data.code, response.data.msg)
         } else {
           this.oriImage = this.image
-          this.delDraft()
+          // this.delDraft()
           tipWarning(_self, '-1', '编辑成功！')
           this.$router.push('/personal/blog-manager')
         }
@@ -155,27 +164,22 @@ export default {
         console.log(response)
       })
     },
-    blogDetail (_self) {
+    blogDetail () {
+      let _self = this
       if (parseInt(_self.blogId) === 0) {
         return 0
       }
-      _self.$http.get(this.baseUrl + '/blog/admin-blog-detail', {params: {blogId: this.blogId}}).then((res) => {
-        if (res.data.code === '0') {
+      _self.$http.get(this.baseUrl + '/blog/manager-blog-detail', {params: {blog_id: _self.blogId}}).then((res) => {
+        if (res.data.code === 0) {
           _self.title = res.data.data.detail.title
           _self.description = res.data.data.detail.description
           _self.image = res.data.data.detail.image
           _self.oriImage = _self.image
           _self.content = res.data.data.detail.content
           _self.top = res.data.data.detail.top
-          _self.topSwitch = _self.top === '2'
+          _self.topSwitch = _self.top === 2
           _self.state = res.data.data.detail.state
-          _self.stateSwitch = _self.state === '2'
-          if (_self.draft !== '') {
-            _self.content = _self.draft
-            tipWarning(_self, '-1', '已加载草稿')
-          } else {
-            _self.draft = _self.content
-          }
+          _self.stateSwitch = _self.state === 2
         } else {
           tipWarning(_self, res.data.code, res.data.msg)
         }
@@ -183,13 +187,14 @@ export default {
         console.log(res)
       )
     },
+    // 草稿功能后面改
     blogDraft (callback) {
       let _self = this
       if (parseInt(this.blogId) === 0) {
         return 0
       }
       this.$http.get(this.baseUrl + '/blog/draft-detail', {params: {blogId: this.blogId}}).then((res) => {
-        if (res.data.code === '0') {
+        if (res.data.code === 0) {
           this.draftId = res.data.data.id
           if (this.draftId !== 0) {
             this.draft = res.data.data.draft
@@ -235,11 +240,11 @@ export default {
       })
     },
     changeState () {
-      this.state = this.stateSwitch === true ? '2' : '1'
+      this.state = this.stateSwitch === true ? 1 : 2
       console.log(this.state)
     },
     changeTop () {
-      this.top = this.topSwitch === true ? '2' : '1'
+      this.top = this.topSwitch === true ? 2 : 1
     },
     imgUrl (url) {
       if (url === '') {
@@ -334,33 +339,26 @@ export default {
   padding-top: 20px;
   clear: both;
 }
-.title-style {
-  float: left;
-}
 .title-input-style {
-  padding-left: 20px;
-  width: 40%;
-  float: left;
+  width: 100%;
 }
 .description-style {
-  clear: both;
   padding-top: 20px;
 }
 .description-input {
   float: left;
   padding-left: 20px;
-  width: 70%;
+  width: 100%;
 }
 .description-title {
-  float: left;
-}
-.header-style {
-  float: left;
-  padding-left: 10px;
-  padding-right: 50px;
+  float: right;
 }
 .header-img-style {
   width:100px;
   height:100px;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
 }
 </style>

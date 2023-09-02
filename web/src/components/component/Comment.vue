@@ -257,9 +257,6 @@ a{
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.comment-board {
-
-}
 .comment-item-gap {
   padding-left: 30px;
 }
