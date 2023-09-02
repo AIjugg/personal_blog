@@ -46,6 +46,12 @@ class ErrorCodes
     const TOKEN_NOT_EXIST = 13009;
     const USER_NOT_EXIST = 13010;
 
+    // 文件上传
+    const IMAGE_UPLOAD_FAIL = 14001;
+    const IMAGE_UPLOAD_EMPTY = 14002;
+    const IMAGE_FORMAT_WRONG = 14003;
+    const IMAGE_TOO_LARGE = 14004;
+
     private static $codeMap = [
         self::PARAM_ERROR => '参数错误',
         self::UNKNOWN_ERROR => '未知错误',
@@ -77,7 +83,13 @@ class ErrorCodes
         self::USER_TOKEN_STORAGE_WRONG => 'token存储失败',
         self::USER_NOT_LOGIN => '用户尚未登录',
         self::TOKEN_NOT_EXIST => 'token不存在',
-        self::USER_NOT_EXIST => '用户不存在'
+        self::USER_NOT_EXIST => '用户不存在',
+
+
+        self::IMAGE_UPLOAD_FAIL => '图片上传失败',
+        self::IMAGE_UPLOAD_EMPTY => '图片为空',
+        self::IMAGE_FORMAT_WRONG => '图片格式错误',
+        self::IMAGE_TOO_LARGE => '图片过大'
     ];
 
 

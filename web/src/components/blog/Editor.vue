@@ -316,16 +316,16 @@ export default {
       let _self = this
       this.$http.post(this.baseUrl + '/index/upload-img', {image: this.image, type: 'cover'}, {
         emulateJSON: true
-      }).then((result) => {
-        if (result.data.code === '0') {
-          this.image = result.data.data.imgPath
+      }).then((response) => {
+        if (response.data.code === 0) {
+          this.image = response.data.data.imgPath
           this.editBlog()
         } else {
-          console.log(result.data)
-          tipWarning(_self, result.data.code, result.data.msg)
+          console.log(response.data)
+          tipWarning(_self, response.data.code, response.data.msg)
         }
-      }, (result) => {
-        console.log(result)
+      }, (response) => {
+        console.log(response)
       })
     }
   }

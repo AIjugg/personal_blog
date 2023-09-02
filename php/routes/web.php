@@ -49,6 +49,10 @@ Route::group(['middleware' => ['check_login']], function () {
         Route::post('/logout-token', 'UserController@logoutByAccountToken');
     });
 
+
+    Route::group(['prefix' => 'index'], function () {
+        Route::post('/upload-img', 'IndexController@uploadImg');
+    });
 });
 
 Route::group(['prefix' => 'user'], function () {

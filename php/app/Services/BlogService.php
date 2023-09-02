@@ -72,7 +72,7 @@ class BlogService
             }
 
             DB::commit();
-            return [];
+            return ['blog_id' => $blogId];
         } catch (\Exception $e) {
             // 记录错误
             // log($e->getCode(), $e->getMessage());
@@ -123,7 +123,7 @@ class BlogService
                 }
             }
             DB::commit();
-            return [];
+            return ['blog_id' => $blogId];
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
