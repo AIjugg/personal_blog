@@ -37,7 +37,7 @@
                   </div>
                 </div>
               </el-col>
-              <el-col :span="3">
+              <el-col :span="2">
                 <div class="description-title">
                   <h3>文章简介</h3>
                 </div>
@@ -47,21 +47,40 @@
                   <el-input v-model="description" maxlength="200" show-word-limit type="textarea" :rows="6" placeholder="文章简介"/>
                 </div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="6">
                 <div>
                   <div>
                     <h3>分类管理</h3>
                   </div>
-                  <div>
-                    <el-tag
-                      v-for="type in types"
-                      :key="type.name"
-                      closable
-                      type="warning"
-                      @close="removeType(type)">
-                      {{type.type_name}}
-                    </el-tag>
-                  </div>
+                  <el-row>
+                    <div style="padding-top: 10px;">
+                      <div style="float: left;">
+                          <el-select v-model="newTypeId" placeholder="添加分类" size="mini">
+                          <el-option
+                            v-for="type in showTypeLists"
+                            :key="type.type_id"
+                            :label="type.type_name"
+                            :value="type.type_id">{{ type.type_name }}
+                          </el-option>
+                        </el-select>
+                      </div>
+                      <div>
+                        <el-button type="primary" plain size="mini" @click="addType">新增</el-button>
+                      </div>
+                    </div>
+                    <div style="padding-top: 10px;">
+                      <div style="float: left;">
+                        <el-tag
+                          v-for="type in types"
+                          :key="type.name"
+                          closable
+                          type="warning"
+                          @close="removeType(type)">
+                          {{type.type_name}}
+                        </el-tag>
+                      </div>
+                    </div>
+                  </el-row>
                 </div>
               </el-col>
             </el-row>
@@ -99,10 +118,13 @@ export default {
       image: '',
       oriImage: '',
       draftId: 0,
+      newTypeId: '',
       tipShow: false,
       tipContent: '',
       types: [],
       type_ids: [],
+      typeLists: [],
+      showTypeLists: [],
       fileType: {
         accept: 'image/jpeg, image/png, image/jpg'
       },
@@ -139,6 +161,7 @@ export default {
     }
   },
   mounted: function () {
+    // 加载博客还是草稿
     if (this.$route.params.type === 'blog') {
       this.blogDetail()
     } else if (this.$route.params.type === 'draft') {
@@ -208,7 +231,10 @@ export default {
         }
       }, (res) =>
         console.log(res)
-      )
+      ).then(() => {
+        // 获取分类列表
+        this.typeList()
+      })
     },
     // 草稿功能后面改
     blogDraft (callback) {
@@ -228,7 +254,10 @@ export default {
         callback(_self)
       }, (res) =>
         console.log(res)
-      )
+      ).then(() => {
+        // 获取分类列表
+        this.typeList()
+      })
     },
     getItemVal (val) {
       this.typeId = val
@@ -354,6 +383,43 @@ export default {
     removeType (type) {
       this.types.splice(this.types.indexOf(type), 1)
       this.type_ids.splice(this.type_ids.indexOf(type.type_id), 1)
+    },
+    typeList () {
+      this.$http.get(this.baseUrl + '/blog/blog-type-list').then((res) => {
+        if (res.data.code === 0) {
+          if (res.data.data.list.length === 0) {
+            return false
+          }
+          this.typeLists = res.data.data.list
+          this.showTypeList()
+        } else {
+          console.log(res.data)
+        }
+      }, (res) =>
+        console.log(res)
+      )
+    },
+    // 展示分类列表，需要过滤掉已选择的分类
+    showTypeList () {
+      this.showTypeLists = this.typeLists
+      let showTypeIds = []
+      this.showTypeLists.forEach(type => {
+        showTypeIds.push(type.type_id)
+      })
+      this.type_ids.forEach(typeId => {
+        this.showTypeLists.splice(showTypeIds.indexOf(typeId), 1)
+      })
+    },
+    addType () {
+      console.log(this.newTypeId)
+      this.type_ids.push(this.newTypeId)
+      this.typeLists.forEach(type => {
+        if (type.type_id === this.newTypeId) {
+          this.types.push(type)
+        }
+      })
+      this.showTypeList()
+      this.newTypeId = ''
     }
   }
 }
@@ -375,6 +441,7 @@ export default {
 .description-input {
   float: left;
   padding-left: 20px;
+  padding-right: 10px;
   width: 100%;
 }
 .description-title {
