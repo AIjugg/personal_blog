@@ -218,7 +218,7 @@ class BlogController extends BaseController
     public function editBlog(Request $request)
     {
         try {
-            $input = $request->only(['blog_id','title','description','image','state','top','content']);
+            $input = $request->only(['blog_id','title','description','image','state','top','content','type_ids']);
 
             // 验证参数
             $validate = Validator::make($input, [
@@ -228,7 +228,8 @@ class BlogController extends BaseController
                 'description' => ['required','string'],
                 'state' => ['required', Rule::in([1, 2])],
                 'top' => ['required', Rule::in([1, 2])],
-                'content' => ['required']
+                'content' => ['required'],
+                'type_ids' => 'nullable|array'
             ]);
 
             if ($validate->fails()) {
@@ -242,8 +243,11 @@ class BlogController extends BaseController
                 'image' => $input['image'] ?? '',
                 'state' => $input['state'],
                 'top' => $input['top'],
-                'content' => $input['content']
+                'content' => $input['content'],
             ];
+            if (isset($input['type_ids'])) {
+                $data['type_ids'] = $input['type_ids'];
+            }
 
             // 获取登录用户的信息
             $userInfo = $request->offsetGet('user_info');
@@ -602,7 +606,7 @@ class BlogController extends BaseController
 
             // 加上博客的分类
             $blogType = (new BlogTypeService())->blogRelationType($blogId);
-            $data['types'] = $blogType[$blogId];
+            $data['types'] = $blogType[$blogId] ?? [];
 
             $result = ApiResponse::buildResponse(['detail' => $data]);
         } catch (\Exception $e) {

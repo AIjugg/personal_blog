@@ -42,9 +42,26 @@
                   <h3>文章简介</h3>
                 </div>
               </el-col>
-              <el-col :span="16">
+              <el-col :span="14">
                 <div class="description-input">
                   <el-input v-model="description" maxlength="200" show-word-limit type="textarea" :rows="6" placeholder="文章简介"/>
+                </div>
+              </el-col>
+              <el-col :span="5">
+                <div>
+                  <div>
+                    <h3>分类管理</h3>
+                  </div>
+                  <div>
+                    <el-tag
+                      v-for="type in types"
+                      :key="type.name"
+                      closable
+                      type="warning"
+                      @close="removeType(type)">
+                      {{type.type_name}}
+                    </el-tag>
+                  </div>
                 </div>
               </el-col>
             </el-row>
@@ -84,6 +101,8 @@ export default {
       draftId: 0,
       tipShow: false,
       tipContent: '',
+      types: [],
+      type_ids: [],
       fileType: {
         accept: 'image/jpeg, image/png, image/jpg'
       },
@@ -126,7 +145,7 @@ export default {
       this.blogDraft()
     }
 
-    this.timer = setInterval(this.editDraft, 300000)
+    // this.timer = setInterval(this.editDraft, 300000)
   },
   beforeDestroy () {
     clearInterval(this.timer)
@@ -149,7 +168,7 @@ export default {
     },
     editBlog () {
       let _self = this
-      this.$http.post(this.baseUrl + '/blog/edit-blog', {blog_id: this.blogId, title: this.title, description: this.description, image: this.image, state: this.state, content: this.content, top: this.top}, {
+      this.$http.post(this.baseUrl + '/blog/edit-blog', {blog_id: this.blogId, title: this.title, description: this.description, image: this.image, state: this.state, content: this.content, top: this.top, type_ids: this.type_ids}, {
         emulateJSON: true
       }).then((response) => {
         if (response.data.code !== 0) {
@@ -180,6 +199,10 @@ export default {
           _self.topSwitch = _self.top === 2
           _self.state = res.data.data.detail.state
           _self.stateSwitch = _self.state === 2
+          _self.types = res.data.data.detail.types
+          _self.types.forEach(element => {
+            _self.type_ids.push(element.type_id)
+          })
         } else {
           tipWarning(_self, res.data.code, res.data.msg)
         }
@@ -300,7 +323,7 @@ export default {
       // 预览压缩后的图片
       let base64 = canvas.toDataURL('image/jpeg', size) // 压缩后质量
       this.image = base64
-      console.log(this.image)
+      // console.log(this.image)
 
       // let bytes = window.atob(base64.split(',')[1]);
       // let ab = new ArrayBuffer(bytes.length);
@@ -327,6 +350,10 @@ export default {
       }, (response) => {
         console.log(response)
       })
+    },
+    removeType (type) {
+      this.types.splice(this.types.indexOf(type), 1)
+      this.type_ids.splice(this.type_ids.indexOf(type.type_id), 1)
     }
   }
 }
@@ -361,4 +388,7 @@ export default {
   border-radius: 4px;
   min-height: 36px;
 }
+.el-tag + .el-tag {
+    margin-left: 10px;
+  }
 </style>
