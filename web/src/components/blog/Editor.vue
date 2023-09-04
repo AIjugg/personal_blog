@@ -209,6 +209,7 @@ export default {
     blogDetail () {
       let _self = this
       if (parseInt(_self.blogId) === 0) {
+        this.typeList()
         return 0
       }
       _self.$http.get(this.baseUrl + '/blog/manager-blog-detail', {params: {blog_id: _self.blogId}}).then((res) => {
