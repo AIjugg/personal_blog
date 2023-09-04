@@ -45,6 +45,7 @@ class ErrorCodes
     const USER_NOT_LOGIN = 13008;
     const TOKEN_NOT_EXIST = 13009;
     const USER_NOT_EXIST = 13010;
+    const NEW_PWD_REPEAT = 13011;
 
     // 文件上传
     const IMAGE_UPLOAD_FAIL = 14001;
@@ -73,6 +74,7 @@ class ErrorCodes
         self::DRAFT_EDIT_FAIL => '编辑草稿失败',
         self::DRAFT_DELETE_FAIL => '删除草稿失败',
         self::BLOG_TYPE_RELATION_EXIST => '分类已关联博客',
+        self::NEW_PWD_REPEAT => '新密码与旧密码一致',
 
         self::USER_PWD_WRONG => '用户密码错误',
         self::USER_PWD_REPEAT_WRONG => '两次密码不一致',

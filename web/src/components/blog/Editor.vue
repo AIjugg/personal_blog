@@ -411,7 +411,6 @@ export default {
       })
     },
     addType () {
-      console.log(this.newTypeId)
       this.type_ids.push(this.newTypeId)
       this.typeLists.forEach(type => {
         if (type.type_id === this.newTypeId) {

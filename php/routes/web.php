@@ -47,6 +47,7 @@ Route::group(['middleware' => ['check_login']], function () {
         Route::get('/get-userinfo', 'UserController@getUserInfo');
 
         Route::post('/logout-token', 'UserController@logoutByAccountToken');
+        Route::post('/reset-password', 'UserController@resetPassword');
     });
 
 

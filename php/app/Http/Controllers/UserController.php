@@ -214,4 +214,53 @@ class UserController extends BaseController
         }
         return response()->json($result);
     }
+
+
+    /**
+     * 重置密码
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resetPassword(Request $request)
+    {
+        $input = $request->only(['ori_password', 'new_password']);
+        try {
+            // 验证参数
+            $validate = Validator::make($input, [
+                'ori_password' => ['required', 'string'],
+                'new_password' => ['required', 'string']
+            ]);
+
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+            if ($input['ori_password'] == $input['new_password']) {
+                throw new CommonException(ErrorCodes::NEW_PWD_REPEAT);
+            }
+
+            // 获取用户id
+            $userInfo = $request->offsetGet('user_info');
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+            }
+            $uid = $userInfo['id'];
+
+            $userService = new UserService();
+            $res = $userService->resetPassword($uid, $input['ori_password'], $input['new_password']);
+
+            // 需要重新登录
+            $accessTokenHeader = $request->header('Authorization');
+            if (!empty($accessTokenHeader)) {
+                $accessToken = substr($accessTokenHeader, 7);
+            }
+            $userService->logoutByAccountToken($accessToken ?? '');
+
+            $result = ApiResponse::buildResponse($res);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+        return response()->json($result);
+    }
 }

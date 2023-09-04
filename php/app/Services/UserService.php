@@ -237,4 +237,40 @@ class UserService
             throw $e;
         }
     }
+
+
+    /**
+     * 重置密码
+     * @param $uid
+     * @param $oriPwd
+     * @param $newPwd
+     * @return array
+     * @throws \Exception
+     */
+    public function resetPassword($uid, $oriPwd, $newPwd)
+    {
+        try {
+            $userInfo = $this->getOneUserByUid($uid, SystemEnum::USER_STATE_NORMAL, ['id', 'username', 'email', 'mobile', 'password', 'state', 'last_login']);
+
+            if (empty($userInfo)) {
+                throw new CommonException(ErrorCodes::USER_NOT_EXIST);
+            }
+
+            // 验证密码
+            if (!EncryptHelper::verifyPasswordBcrypt($oriPwd, $userInfo['password'])) {
+                throw new CommonException(ErrorCodes::USER_PWD_WRONG);
+            }
+
+            $encryption = EncryptHelper::encryptPasswordBcrypt($newPwd);
+            $updateUserInfo = [
+                'password' => $encryption
+            ];
+
+            $this->editUser($uid, $updateUserInfo);
+
+            return [];
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }
