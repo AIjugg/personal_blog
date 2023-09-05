@@ -12,10 +12,10 @@
                 </div>
               </el-col>
               <el-col :span="4"><div>
-              <el-switch v-model="topSwitch" @on-change="changeTop" active-text="置顶" inactive-text="不置顶"></el-switch>
+              <el-switch v-model="topSwitch" @change="changeTop" active-text="置顶" inactive-text="不置顶"></el-switch>
             </div></el-col>
               <el-col :span="4"><div>
-              <el-switch v-model="stateSwitch" @on-change="changeState" active-text="展示" inactive-text="隐藏"></el-switch>
+              <el-switch v-model="stateSwitch" @change="changeState" active-text="展示" inactive-text="隐藏"></el-switch>
             </div></el-col>
             <el-col :span="4"><div>
               <div><el-button type="primary" @click="save">保存</el-button></div>
@@ -107,7 +107,7 @@ export default {
     return {
       blogId: this.$route.params.blog_id ? this.$route.params.blog_id : 0,
       state: 1,
-      stateSwitch: false, // true 隐藏  false 正常
+      stateSwitch: true, // true 隐藏  false 正常
       top: 1,
       topSwitch: false, // true 置顶  false 正常
       title: '',
@@ -222,7 +222,7 @@ export default {
           _self.top = res.data.data.detail.top
           _self.topSwitch = _self.top === 2
           _self.state = res.data.data.detail.state
-          _self.stateSwitch = _self.state === 2
+          _self.stateSwitch = _self.state === 1
           _self.types = res.data.data.detail.types
           _self.types.forEach(element => {
             _self.type_ids.push(element.type_id)
@@ -294,7 +294,6 @@ export default {
     },
     changeState () {
       this.state = this.stateSwitch === true ? 1 : 2
-      console.log(this.state)
     },
     changeTop () {
       this.top = this.topSwitch === true ? 2 : 1
