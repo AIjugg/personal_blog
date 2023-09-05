@@ -50,13 +50,12 @@ class Blog extends Model
 
     public function getBlog($condition, $sortArr = [], $pageSet = [])
     {
-        $blogQuery = $this->getBlogQuery($condition);
+        $blogQuery = $this->getBlogQuery($condition)->orderBy('b.top', 'desc');
 
         if (!empty($sortArr['sort_field']) && !empty($sortArr['sort_direction'])) {
             $blogQuery->orderBy($sortArr['sort_field'], $sortArr['sort_direction']);
         } else {
-            $blogQuery->orderBy('b.top', 'desc')
-                ->orderBy('b.created_at', 'desc');
+            $blogQuery->orderBy('b.created_at', 'desc');
         }
 
         if (isset($pageSet['offset']) && !empty($pageSet['limit'])) {

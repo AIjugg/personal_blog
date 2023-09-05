@@ -73,7 +73,7 @@ class BlogService
 
             // 博客关联分类
             if (isset($data['type_ids'])) {
-                (new BlogTypeService())->relationBlogType($data['blog_id'], $data['type_ids']);
+                (new BlogTypeService())->relationBlogType($blogId, $data['type_ids']);
             }
 
             DB::commit();

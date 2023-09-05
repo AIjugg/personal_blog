@@ -98,7 +98,7 @@ class BlogTypeService
         $res = $blogType->editBlogType($typeId, $data);
 
         if (empty($res)) {
-            throw new CommonException(ErrorCodes::BLOG_TYPE_ADD_FAIL);
+            throw new CommonException(ErrorCodes::BLOG_TYPE_EDIT_FAIL);
         }
         return [];
     }
