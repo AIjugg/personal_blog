@@ -1,8 +1,15 @@
 <template>
     <div>
-      <el-row>
-        <el-col :span="4"><div class="grid-content"></div></el-col>
-        <el-col :span="16">
+      <el-row :gutter="20">
+        <el-col :span="4">
+          <el-card class="box-card">
+            <div><span style="font-size:15px;font-weight: 600;">分类选择</span></div>
+            <div v-for="type in typeLists" :key="type.id" style="float: left; padding:10px">
+              <el-button type="primary" :plain="type.id != typeId" size="mini" @click="chooseType(type.id)">{{ type.label }}</el-button>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="20">
           <div class="grid-content">
             <el-container class="container-bg" style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
               <el-header style="height:120px">
@@ -24,14 +31,6 @@
                     <div class="select-style">
                       <Select v-model="sortBy" size="small" style="width:100px">
                         <Option v-for="sort in sortList" :value="sort.key" :key="sort.key">{{ sort.label }}</Option>
-                      </Select>
-                    </div>
-                    <div class="select-style">
-                      <p>分类</p>
-                    </div>
-                    <div class="select-style">
-                      <Select v-model="typeId" size="small" style="width:100px">
-                        <Option v-for="type in typeLists" :value="type.id" :key="type.id">{{ type.label }}</Option>
                       </Select>
                     </div>
                   </div>
@@ -91,7 +90,6 @@
             </el-container>
           </div>
         </el-col>
-        <el-col :span="4"><div class="grid-content"></div></el-col>
       </el-row>
     </div>
 </template>
@@ -170,7 +168,7 @@ export default {
           }
           this.typeLists.unshift({
             'id': 0,
-            'label': '全部'
+            'label': '不选择'
           })
         } else {
           console.log(res.data)
@@ -185,6 +183,9 @@ export default {
     },
     blogDetail (blogId) {
       this.$router.push({name: 'blog-detail', params: {blog_id: blogId}})
+    },
+    chooseType (typeId) {
+      this.typeId = typeId
     }
   }
 }

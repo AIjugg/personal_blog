@@ -19,7 +19,6 @@
       </div>
       <Page :total="total" size="small" show-elevator :style="{padding: '30px'}" @on-change="changePage"/>
     </div>
-    </Card>
   </Content>
 </template>
 
