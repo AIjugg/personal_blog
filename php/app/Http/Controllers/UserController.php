@@ -299,11 +299,13 @@ class UserController extends BaseController
 
         $data = [
             'nickname' => $input['nickname'],
-            'profile_photo' => $input['profile_photo'] ?? '',
             'sex' => $input['sex'],
             'birthday' => $input['birthday'],
             'signature' => $input['signature'],
         ];
+        if (!empty($input['profile_photo'])) {
+            $data['profile_photo'] = $input['profile_photo'];
+        }
 
         try {
             $data = (new UserService())->editUser($uid,$data);

@@ -196,7 +196,7 @@ export default {
       this.$http.post(this.baseUrl + '/index/upload-img', {image: this.profilePhoto, type: 'profilePhoto'}, {
         emulateJSON: true
       }).then((result) => {
-        if (result.data.code === '0') {
+        if (result.data.code === 0) {
           this.profilePhoto = result.data.data.imgPath
           this.editUserInfo()
         } else {
@@ -209,16 +209,16 @@ export default {
     },
     editUserInfo () {
       let _self = this
-      this.$http.post(this.baseUrl + '/user/edit-user', {
+      this.$http.post(this.baseUrl + '/user/edit-userinfo', {
         nickname: this.nickname,
-        profilePhoto: this.profilePhoto,
+        profile_photo: this.profilePhoto,
         sex: this.sex,
         birthday: this.birthday,
         signature: this.signature
       }, {
         emulateJSON: true
       }).then((result) => {
-        if (result.data.code === '0') {
+        if (result.data.code === 0) {
           this.oriProfilePhoto = this.profilePhoto
           localStorage.setItem('nickname', this.nickname)
           localStorage.setItem('profilePhoto', this.profilePhoto)
