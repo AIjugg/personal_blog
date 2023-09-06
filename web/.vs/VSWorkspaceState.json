@@ -1,10 +1,15 @@
 {
   "ExpandedNodes": [
     "",
-    "\\dist",
     "\\src",
-    "\\src\\components"
+    "\\src\\components",
+    "\\src\\components\\blog",
+    "\\src\\components\\component",
+    "\\src\\components\\login",
+    "\\src\\components\\personal",
+    "\\src\\plugin",
+    "\\src\\router",
+    "\\static"
   ],
-  "SelectedNode": "\\src\\components\\Home.vue",
   "PreviewInSolutionExplorer": false
 }

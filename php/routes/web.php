@@ -45,6 +45,8 @@ Route::group(['middleware' => ['check_login']], function () {
     Route::group(['prefix' => 'user'], function () {
         Route::post('/logout', 'UserController@logoutByAccount');
         Route::get('/get-userinfo', 'UserController@getUserInfo');
+        Route::post('/edit-userinfo', 'UserController@editUserInfo');
+
 
         Route::post('/logout-token', 'UserController@logoutByAccountToken');
         Route::post('/reset-password', 'UserController@resetPassword');

@@ -197,7 +197,6 @@ export default {
         if (response.data.code !== 0) {
           tipWarning(_self, response.data.code, response.data.msg)
         } else {
-          this.oriImage = this.image
           // this.delDraft()
           tipWarning(_self, '-1', '编辑成功！')
           this.$router.push('/personal/blog-manager')
@@ -371,6 +370,7 @@ export default {
       }).then((response) => {
         if (response.data.code === 0) {
           this.image = response.data.data.imgPath
+          this.oriImage = this.image
           this.editBlog()
         } else {
           console.log(response.data)

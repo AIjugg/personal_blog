@@ -263,4 +263,55 @@ class UserController extends BaseController
         }
         return response()->json($result);
     }
+
+
+    /**
+     * 编辑用户信息
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws CommonException
+     */
+    public function editUserInfo(Request $request)
+    {
+        $input = $request->only(['nickname','profile_photo','sex','birthday','signature']);
+
+        // 验证参数
+        $validate = Validator::make($input, [
+            'nickname' => ['required', 'string'],
+            'profile_photo' => ['nullable', 'string'],
+            'sex' => ['required', 'integer'],
+            'birthday' => ['required', 'string'],
+            'signature' => ['required', 'string'],
+        ]);
+
+        if ($validate->fails()) {
+            $errorMsg = $validate->errors()->first();
+
+            throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+        }
+
+        // 获取登录用户的信息
+        $userInfo = $request->offsetGet('user_info');
+        if (empty($userInfo)) {
+            throw new CommonException(ErrorCodes::USER_NOT_LOGIN);
+        }
+        $uid = $userInfo['id'];
+
+        $data = [
+            'nickname' => $input['nickname'],
+            'profile_photo' => $input['profile_photo'] ?? '',
+            'sex' => $input['sex'],
+            'birthday' => $input['birthday'],
+            'signature' => $input['signature'],
+        ];
+
+        try {
+            $data = (new UserService())->editUser($uid,$data);
+            $result = ApiResponse::buildResponse($data);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
+
+        return response()->json($result);
+    }
 }
