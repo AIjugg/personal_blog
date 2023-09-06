@@ -107,14 +107,6 @@ export default {
         {
           'key': 'updated_at',
           'label': '最近更新日志'
-        },
-        {
-          'key': 'like',
-          'label': '点赞最多'
-        },
-        {
-          'key': 'pageview',
-          'label': '浏览量最多'
         }
       ],
       word: sessionStorage.getItem('blogWord') ? sessionStorage.getItem('blogWord') : '',

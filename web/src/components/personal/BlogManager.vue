@@ -100,19 +100,11 @@ export default {
       sortList: [
         {
           'key': 'updated_at',
-          'label': '最新日志'
+          'label': '最近更新日志'
         },
         {
           'key': 'created_at',
-          'label': '最早日志'
-        },
-        {
-          'key': 'like',
-          'label': '点赞最多'
-        },
-        {
-          'key': 'pageview',
-          'label': '浏览量最多'
+          'label': '最新日志'
         }
       ],
       word: sessionStorage.getItem('editWord') ? sessionStorage.getItem('editWord') : '',
