@@ -18,6 +18,11 @@ use App\Lib\Common\Util\Login\LoginAccount;
 
 class CheckLogin
 {
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param Closure $next
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
     public function handle($request, Closure $next)
     {
         try {

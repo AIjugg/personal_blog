@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="6"><div class="grid-content"></div></el-col>
           <el-col :span="12">
-            <el-col :span="6"><span style="font-size: 30px; font-weight: 600; color:azure">changye博客</span></el-col>
+            <el-col :span="6"><span style="font-size: 30px; font-weight: 600; color:azure">长夜漫漫</span></el-col>
             <el-col :span="12">
               <el-row :gutter="20">
                 <el-col :span="4"><div class="grid-content"></div></el-col>
