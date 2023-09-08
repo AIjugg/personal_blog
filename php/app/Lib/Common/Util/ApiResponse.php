@@ -14,10 +14,13 @@ class ApiResponse
     public static function buildResponse(array $data = [], $code = 0, $msg = 'success')
     {
         $result = [
-            'data' => $data,
             'msg' => $msg,
             'code' => $code
         ];
+
+        if (!empty($data)) {
+            $result['data'] = $data;
+        }
 
         if (getenv('APP_DEBUG')) {
 
@@ -47,10 +50,14 @@ class ApiResponse
 
         // 日志记录
 
-        return [
-            'data' => $data,
+        $result = [
             'msg' => $msg,
             'code' => $code
         ];
+        if (!empty($data)) {
+            $result['data'] = $data;
+        }
+
+        return $result;
     }
 }
