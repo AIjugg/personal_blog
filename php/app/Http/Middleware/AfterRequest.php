@@ -63,7 +63,10 @@ class AfterRequest
         if ($content->code > 0) {
             Log::warning($message);
         } else {
-            Log::info($message);
+            // 请求超时的话，就记录下日志
+            if ($useTime > 10) {
+                Log::notice($message);
+            }
         }
         return $response;
     }
