@@ -113,6 +113,16 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        // tap数组包含一系列类，用来自定义Monolog实例
+        'changye_blog' => [
+            'driver' => 'daily',
+            'tap' => [App\Lib\Log\CustomizeLogFormatter::class],
+            'path' => storage_path('logs/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'log_max_files' => 14
+        ]
     ],
 
 ];

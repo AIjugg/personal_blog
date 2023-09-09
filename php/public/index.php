@@ -46,6 +46,11 @@ require __DIR__.'/../vendor/autoload.php';
 
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
+// 设定一个log_id用于日志追踪
+$uuid = Ramsey\Uuid\Uuid::uuid1();
+$logId = $uuid->getHex();
+define('LOG_ID', $logId);
+
 $kernel = $app->make(Kernel::class);
 
 $response = $kernel->handle(
