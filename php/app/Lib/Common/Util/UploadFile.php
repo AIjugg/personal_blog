@@ -9,6 +9,8 @@
 namespace App\Lib\Common\Util;
 
 
+use Illuminate\Support\Facades\App;
+
 class UploadFile
 {
     protected $imgPath = '/images/';
@@ -21,7 +23,7 @@ class UploadFile
      * @return array
      * @throws CommonException
      */
-    public function uploadImg($base64, $type)
+    public function uploadImgBase64($base64, $type)
     {
         if (empty($base64)) {
             throw new CommonException(ErrorCodes::IMAGE_UPLOAD_EMPTY);

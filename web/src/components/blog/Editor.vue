@@ -91,6 +91,14 @@
         </Modal>
         <div class="edit-container">
           <div>
+            <el-upload
+              v-show="false"
+              class="avatar-uploader"
+              :data='fileUpload'
+              :show-file-list="false"
+              :http-request="onUploadHandler"
+            >
+            </el-upload>
             <quill-editor style="height: 800px" v-model="content" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur($event)" @focus="onEditorFocus($event)" @change="onEditorChange($event)"></quill-editor>
           </div>
         </div>
@@ -134,23 +142,34 @@ export default {
           clipboard: {
             matchVisual: false
           },
-          toolbar: [
-            ['bold', 'italic', 'underline', 'strike'], // 加粗，斜体，下划线，删除线
-            ['blockquote', 'code-block'], // 引用，代码块
-            [{ 'header': 1 }, { 'header': 2 }], // 标题，键值对的形式；1、2表示字体大小
-            [{'list': 'ordered'}, { 'list': 'bullet' }], // 列表
-            [{'script': 'sub'}, { 'script': 'super' }], // 上下标
-            [{'indent': '-1'}, { 'indent': '+1' }], // 缩进
-            // [{ 'direction': 'rtl' }],     文本方向
-            [{ 'size': ['small', false, 'large', 'huge'] }], // 字体大小
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }], // 几级标题
-            [{ 'color': [] }, { 'background': [] }], // 字体颜色，字体背景颜色
-            [{ 'font': [] }], // 字体
-            [{ 'align': [] }], // 对齐方式
-            ['clean'], // 清除字体样式
-            // ['image','video']     上传图片、上传视频
-            ['image']
-          ]
+          toolbar: {
+            container: [
+              ['bold', 'italic', 'underline', 'strike'], // 加粗，斜体，下划线，删除线
+              ['blockquote', 'code-block'], // 引用，代码块
+              [{ 'header': 1 }, { 'header': 2 }, { 'header': 3 }, { 'header': 4 }], // 标题，键值对的形式；1、2表示字体大小
+              [{'list': 'ordered'}, { 'list': 'bullet' }], // 列表
+              [{'script': 'sub'}, { 'script': 'super' }], // 上下标
+              [{'indent': '-1'}, { 'indent': '+1' }], // 缩进
+              // [{ 'direction': 'rtl' }],     文本方向
+              [{ 'size': ['small', false, 'large', 'huge'] }], // 字体大小
+              [{ 'header': [1, 2, 3, 4, 5, 6, false] }], // 几级标题
+              [{ 'color': [] }, { 'background': [] }], // 字体颜色，字体背景颜色
+              [{ 'font': [] }], // 字体
+              [{ 'align': [] }], // 对齐方式
+              ['clean'], // 清除字体样式
+              // ['image','video']     上传图片、上传视频
+              ['image']
+            ],
+            handlers: {
+              'image': function (value) {
+                if (value) {
+                  document.querySelector('.avatar-uploader input').click()
+                } else {
+                  this.quill.format('image', false)
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -365,7 +384,7 @@ export default {
     },
     uploadImg () {
       let _self = this
-      this.$http.post(this.baseUrl + '/index/upload-img', {image: this.image, type: 'cover'}, {
+      this.$http.post(this.baseUrl + '/index/upload-img-base64', {image: this.image, type: 'cover'}, {
         emulateJSON: true
       }).then((response) => {
         if (response.data.code === 0) {
@@ -419,6 +438,34 @@ export default {
       })
       this.showTypeList()
       this.newTypeId = ''
+    },
+    uploadBlogImg (img, imgType) {
+      let _self = this
+      const formData = new FormData()
+      formData.append('file', img)
+      formData.append('type', imgType)
+      this.$http.post(this.baseUrl + '/index/upload-img', formData).then((response) => {
+        if (response.data.code !== 0) {
+          console.log(response.data)
+          tipWarning(_self, response.data.code, response.data.msg)
+        } else {
+          let imageUrl = response.data.data.path
+          // 获取光标所在位置
+          let quill = this.$refs.myQuillEditor.quill
+          let length = quill.getSelection().index
+          // 插入图片
+          quill.insertEmbed(length, 'image', imageUrl)
+          // 调整光标到最后
+          quill.setSelection(length + 1)
+          // this.content += url
+          return response.data.data.path
+        }
+      }, (response) => {
+        console.log(response)
+      })
+    },
+    async onUploadHandler (e) {
+      this.uploadBlogImg(e.file, 'blog')
     }
   }
 }
@@ -457,4 +504,7 @@ export default {
 .el-tag + .el-tag {
     margin-left: 10px;
   }
+.avatar-uploader {
+  width: 100%;
+}
 </style>

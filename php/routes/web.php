@@ -55,7 +55,8 @@ Route::group(['middleware' => ['after_request']], function () {
 
 
         Route::group(['prefix' => 'index'], function () {
-            Route::post('/upload-img', 'IndexController@uploadImg');
+            Route::post('/upload-img-base64', 'IndexController@uploadImgBase64');
+            Route::post('/upload-img', 'IndexController@uploadImage');
         });
     });
 
