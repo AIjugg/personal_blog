@@ -19,9 +19,8 @@ class Motto extends Model
     {
         $data = DB::table($this->table)->select('img','motto')
             ->orderBy("id",'desc')
-            ->limit(1)
-            ->get()->toArray();
+            ->first();
 
-        return $data;
+        return (array)$data;
     }
 }

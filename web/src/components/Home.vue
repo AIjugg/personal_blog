@@ -10,7 +10,7 @@
     font-weight: 600;
     color: azure;
     font-family: STKaiti">
-                所谓门槛，能力够了就是门，能力不够就是槛。人生的沟沟坎坎，多半是能力不足所致。
+                {{ motto }}
               </span>
             </div>
           </el-col>
@@ -23,9 +23,12 @@
             <div class="grid-content">
               <el-image :src="src" style="max-width:800px"></el-image>
               <div style="margin:100px 0 0 0;">
-                <el-card class="box-card" shadow="hover">
+                <el-card class="box-card" shadow="hover" @click.native="blogDetail()">
                   <div class="text item">
-                    <span style="font-size: 15px;font-weight: 600;color:black;font-family: STKaiti">最新博客</span>
+                    <span style="font-size: 15px;font-weight: 600;color:black;font-family: STKaiti">{{ title }}</span>
+                  </div>
+                  <div class="text item">
+                    <span style="font-size: 14px;font-weight: 500;color:black;font-family: STKaiti">{{ description }}</span>
                   </div>
                 </el-card>
               </div>
@@ -78,16 +81,20 @@ export default {
   data () {
     return {
       speed: 0,
-      year: '2020',
+      year: '2023',
       month: 'May',
       day: '10',
       list: [],
-      src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'
+      src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
+      motto: '',
+      title: '',
+      description: '',
+      blogId: 0
     }
   },
   mounted () {
     this.getDate()
-    // this.getMotto()
+    this.homeData()
   },
   methods: {
     getDate () {
@@ -96,12 +103,22 @@ export default {
       this.day = date.getDate()
       this.month = date.toDateString().split(' ')[1]
     },
-    getMotto () {
-      this.$http.get(this.baseUrl + '/index/motto').then((res) => {
-        this.list = res.data.data.list
+    homeData () {
+      this.$http.get(this.baseUrl + '/home').then((res) => {
+        this.motto = res.data.data.motto.motto
+        this.src = res.data.data.motto.img
+        this.title = res.data.data.blog.title
+        this.description = res.data.data.blog.description
+        this.blogId = res.data.data.blog.blog_id
       }, (res) =>
         console.log(res)
       )
+    },
+    blogDetail () {
+      if (this.blogId === 0) {
+        return 0
+      }
+      this.$router.push({name: 'blog-detail', params: {blog_id: this.blogId}})
     }
   }
 }
