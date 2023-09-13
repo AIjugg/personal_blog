@@ -60,7 +60,10 @@ class BlogType extends Model
     {
         $result = DB::table($this->table)
             ->where('type_id', $typeId)
-            ->update(['is_deleted' => 1]);
+            ->delete();
+
+        //使用中发现，还是直接删了算了，留着没啥用，还会因为唯一索引导致新建类型失败
+            //->update(['is_deleted' => 1]);
 
         return $result;
     }
