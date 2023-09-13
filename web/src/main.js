@@ -15,6 +15,9 @@ import VueQuillEditor from 'vue-quill-editor'
 // import 'quill/dist/quill.snow.css'
 // import 'quill/dist/quill.bubble.css'
 import globalApi from './plugin/globleApi'
+import hljs from 'highlight.js'
+// 使用样式，有多种样式可选
+import 'highlight.js/styles/agate.css'
 
 Vue.config.productionTip = false
 Vue.use(VueResource)
@@ -24,6 +27,17 @@ Vue.use(VueCookies)
 Vue.use(VueQuillEditor)
 Vue.prototype.$md5 = md5
 Vue.prototype.baseUrl = globalApi.baseURL
+Vue.directive('highlight', function (el) {
+  let blocks = el.querySelectorAll('.ql-syntax')
+  blocks.forEach(block => {
+    hljs.highlightBlock(block)
+  })
+})
+hljs.configure({ // optionally configure hljs
+  languages: ['javascript']
+})
+// 增加组定义属性，用于在代码中预处理代码格式
+Vue.prototype.hljs = hljs
 
 // 统一处理登录token
 Vue.http.interceptors.push((request, next) => {

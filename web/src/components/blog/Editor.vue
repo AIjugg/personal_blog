@@ -109,11 +109,7 @@
 
 <script>
 import {tipWarning} from '@/plugin/login.js'
-import 'highlight.js/styles/agate.css'
-import hljs from 'highlight.js'
-hljs.configure({ // optionally configure hljs
-  languages: ['javascript']
-})
+
 export default {
   name: 'App',
   data () {
@@ -177,7 +173,7 @@ export default {
           },
           syntax: {
             highlight: text => {
-              return hljs.highlightAuto(text).value // 代码高亮的配置
+              return this.hljs.highlightAuto(text).value // 代码高亮的配置
             }
           }
         }
