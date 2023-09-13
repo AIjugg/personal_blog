@@ -199,7 +199,7 @@ class BlogController extends BaseController
 
             // 加上博客的分类
             $blogType = (new BlogTypeService())->blogRelationType($blogId);
-            $data['types'] = $blogType[$blogId];
+            $data['types'] = $blogType[$blogId] ?? [];
 
             $result = ApiResponse::buildResponse(['detail' => $data]);
         } catch (\Exception $e) {

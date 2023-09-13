@@ -40,6 +40,8 @@ class ApiResponse
     {
         $code = $e->getCode();
         $msg = $e->getMessage();
+        $line = $e->getLine();
+        $filePath = $e->getFile();
 
         if (empty($code)) {
             $code = 9999;
@@ -47,12 +49,14 @@ class ApiResponse
         if (empty($msg)) {
             $msg = '系统错误';
         }
+        $errorInfo = " error_file: {$filePath}; error_line: {$line}";
 
         // 日志记录
 
         $result = [
             'msg' => $msg,
-            'code' => $code
+            'code' => $code,
+            'error_info' => $errorInfo
         ];
         if (!empty($data)) {
             $result['data'] = $data;

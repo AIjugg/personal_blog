@@ -51,6 +51,7 @@ class BlogTypeRelation extends Model
 
     /**
      * 删除关联关系
+     * 这玩意儿留着没意义
      * @param $condition
      * @return int
      */
@@ -66,7 +67,8 @@ class BlogTypeRelation extends Model
             $query->where('blog_id', $condition['blog_id']);
         }
 
-        $res = $query->update(['is_deleted' => 1]);
+        // $res = $query->update(['is_deleted' => 1]);
+        $res = $query->delete();
 
         return $res;
     }
@@ -92,7 +94,7 @@ class BlogTypeRelation extends Model
         }
 
         $res = $query->where('is_deleted', 0)
-            ->get()->toArray();
+            ->get()->map(function ($value) { return (array)$value; })->toArray();
 
         return $res;
     }

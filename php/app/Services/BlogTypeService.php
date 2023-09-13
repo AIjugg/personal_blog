@@ -113,6 +113,20 @@ class BlogTypeService
      */
     public function relationBlogType($blogId, $typeIds)
     {
+        $dao = new BlogTypeRelation();
+        // 如果跟原来一样，则不需要更新
+        $oriTypesArray = $dao->getBlogTypeRelation(['blog_id' => $blogId]);
+        if (empty($oriTypesArray)) {
+            $oriTypeIds = [];
+        } else {
+            $oriTypeIds = array_column($oriTypesArray, 'type_id');
+        }
+
+        // 新分类id跟原本一模一样，则不需要更新
+        if (count($oriTypeIds) == count($typeIds) && empty(array_diff($oriTypeIds, $typeIds))) {
+            return [];
+        }
+
         $data = [];
         foreach ($typeIds as $typeId) {
             $data[] = [
@@ -123,7 +137,6 @@ class BlogTypeService
         try {
             DB::beginTransaction();
 
-            $dao = new BlogTypeRelation();
             // 删除原来所有分类
             $dao->deleteBlogTypeRelation(['blog_id' => $blogId]);
 

@@ -49,6 +49,7 @@ class AfterRequest
             $response->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION);
             $responseContent = $response->getContent();
             $jsonData = json_decode($responseContent, true);
+            unset($jsonData['error_info']);
             $jsonData['log_id'] = LOG_ID;
             $response = (new JsonResponse())->setData($jsonData);
 
