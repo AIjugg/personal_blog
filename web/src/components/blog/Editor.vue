@@ -158,7 +158,7 @@ export default {
               [{ 'align': [] }], // 对齐方式
               ['clean'], // 清除字体样式
               // ['image','video']     上传图片、上传视频
-              ['image']
+              ['image', 'link']
             ],
             handlers: {
               'image': function (value) {
