@@ -66,13 +66,17 @@ class UserController extends BaseController
             // 验证参数
             $validate = Validator::make($input, [
                 'username' => ['required', 'string'],
-                'password' => ['required', 'string']
+                'password' => ['required', 'string'],
+                'invite_code' => ['required', 'string']
             ]);
 
             if ($validate->fails()) {
                 $errorMsg = $validate->errors()->first();
 
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+            if ($input['invite_code'] != env('INVITE_CODE')) {
+                throw new CommonException(ErrorCodes::INVITE_CODE_WRONG);
             }
 
             //$username = trim($input['username']);
@@ -281,7 +285,7 @@ class UserController extends BaseController
             'profile_photo' => ['nullable', 'string'],
             'sex' => ['required', 'integer'],
             'birthday' => ['required', 'string'],
-            'signature' => ['required', 'string'],
+            'signature' => ['nullable', 'string'],
         ]);
 
         if ($validate->fails()) {
@@ -301,7 +305,7 @@ class UserController extends BaseController
             'nickname' => $input['nickname'],
             'sex' => $input['sex'],
             'birthday' => $input['birthday'],
-            'signature' => $input['signature'],
+            'signature' => $input['signature'] ?? '',
         ];
         if (!empty($input['profile_photo'])) {
             $data['profile_photo'] = $input['profile_photo'];

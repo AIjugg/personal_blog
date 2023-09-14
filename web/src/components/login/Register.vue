@@ -4,6 +4,7 @@
       <div><Input v-model="username" maxlength="30" show-word-limit prefix="ios-contact" placeholder="用户名" style="width: 250px" /></div>
       <div style="margin: 30px"><Input v-model="password" type="password" password placeholder="密码" style="width: 250px" /></div>
       <div style="margin: 30px"><Input v-model="passwordRepeat" type="password" password placeholder="确认密码" style="width: 250px" /></div>
+      <div style="margin: 30px"><Input v-model="inviteCode" placeholder="邀请码" style="width: 250px" /></div>
       <div style="margin-top: 30px; margin-left: 208px"><slide-verify
                 ref="slideblock"
                 @again="onAgain"
@@ -53,6 +54,7 @@ export default {
       passwordRepeat: '',
       verify: false,
       code: '',
+      inviteCode: '',
       showCode: false,
       verifyCode: false,
       verifyMsg: '',
@@ -115,7 +117,7 @@ export default {
       let params = {}
       if (this.method === 'normal') {
         registerUrl = this.baseUrl + '/user/register'
-        params = { 'username': this.username, 'password': this.password }
+        params = { 'username': this.username, 'password': this.password, 'invite_code': this.inviteCode }
       } else if (this.method === 'email') {
         registerUrl = this.baseUrl + '/register/email-register'
         params = { 'email': this.username, 'password': this.password, 'code': this.code }

@@ -5,7 +5,7 @@
         <div id="jsi-flying-fish-container"></div>
       </el-header>
       <el-main>
-        <span class="layout-footer-center">我是底线@2023</span>
+        <span class="layout-footer-center">浙ICP备2023025953号</span>
       </el-main>
     </el-container>
   </div>
@@ -21,7 +21,7 @@ export default {
 <style>
   .layout-footer-center {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     text-align: center;
   }
 

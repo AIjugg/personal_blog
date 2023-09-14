@@ -16,6 +16,7 @@ class ErrorCodes
     const UNKNOWN_ERROR = 10002;
     const REDIS_SAVE_ERROR = 10003;
     const REDIS_DEL_ERROR = 10004;
+    const INVITE_CODE_WRONG = 10005;
 
     // 博客
     const BLOG_NOT_EXIST = 12001;
@@ -58,6 +59,7 @@ class ErrorCodes
         self::UNKNOWN_ERROR => '未知错误',
         self::REDIS_SAVE_ERROR => 'redis保存失败',
         self::REDIS_DEL_ERROR => 'redis删除失败',
+        self::INVITE_CODE_WRONG => '邀请码错误',
 
         self::BLOG_NOT_EXIST => '博客不存在',
         self::BLOG_ADD_FAIL => '创建博客失败',
