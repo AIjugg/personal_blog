@@ -2,10 +2,10 @@
   <div>
     <div style="margin: 30px 0 0;height: 330px">
       <div><Input v-model="username" maxlength="30" show-word-limit prefix="ios-contact" placeholder="用户名" style="width: 250px" /></div>
-      <div style="margin: 30px"><Input v-model="password" type="password" password placeholder="密码" style="width: 250px" /></div>
-      <div style="margin: 30px"><Input v-model="passwordRepeat" type="password" password placeholder="确认密码" style="width: 250px" /></div>
-      <div style="margin: 30px"><Input v-model="inviteCode" placeholder="邀请码" style="width: 250px" /></div>
-      <div style="margin-top: 30px; margin-left: 208px"><slide-verify
+      <div style="margin: 15px"><Input v-model="password" type="password" password placeholder="密码" style="width: 250px" /></div>
+      <div style="margin: 15px"><Input v-model="passwordRepeat" type="password" password placeholder="确认密码" style="width: 250px" /></div>
+      <div style="margin: 15px"><Input v-model="inviteCode" placeholder="邀请码" style="width: 250px" /></div>
+      <div style="margin-top: 20px; margin-left: 208px"><slide-verify
                 ref="slideblock"
                 @again="onAgain"
                 @fulfilled="onFulfilled"
