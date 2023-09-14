@@ -193,7 +193,7 @@ export default {
     },
     uploadImg () {
       let _self = this
-      this.$http.post(this.baseUrl + '/index/upload-img', {image: this.profilePhoto, type: 'profilePhoto'}, {
+      this.$http.post(this.baseUrl + '/index/upload-img-base64', {image: this.profilePhoto, type: 'profilePhoto'}, {
         emulateJSON: true
       }).then((result) => {
         if (result.data.code === 0) {
