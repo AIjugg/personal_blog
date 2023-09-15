@@ -436,14 +436,16 @@ export default {
       })
     },
     addType () {
-      this.type_ids.push(this.newTypeId)
-      this.typeLists.forEach(type => {
-        if (type.type_id === this.newTypeId) {
-          this.types.push(type)
-        }
-      })
-      this.showTypeList()
-      this.newTypeId = ''
+      if (this.newTypeId > 0) {
+        this.type_ids.push(this.newTypeId)
+        this.typeLists.forEach(type => {
+          if (type.type_id === this.newTypeId) {
+            this.types.push(type)
+          }
+        })
+        this.showTypeList()
+        this.newTypeId = ''
+      }
     },
     uploadBlogImg (img, imgType) {
       let _self = this
