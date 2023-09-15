@@ -37,7 +37,9 @@ class IndexController extends BaseController
 
             $condition = ['state' => SystemEnum::BLOG_STATE_NORMAL];
             $latestBlogArray = (new BlogService())->listBlog($condition, [], ['limit' => 1, 'offset' => 0]);
-            $latestBlog = $latestBlogArray[0];
+            if (!empty($latestBlogArray)) {
+                $latestBlog = $latestBlogArray[0];
+            }
 
             if (empty($latestBlog)) {
                 $latestBlog = [

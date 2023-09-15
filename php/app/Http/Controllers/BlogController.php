@@ -315,19 +315,20 @@ class BlogController extends BaseController
             $total = $blogService->countBlog($condition);
 
             // 加上博客作者的信息
-            $authorIds = array_unique(array_column($list, 'uid'));
-            $authors = (new UserService())->getUserByUid($authorIds);
-            $authorsUidKey = array_column($authors, null, 'id');
+            if (!empty($list)) {
+                $authorIds = array_unique(array_column($list, 'uid'));
+                $authors = (new UserService())->getUserByUid($authorIds);
+                $authorsUidKey = array_column($authors, null, 'id');
 
-            // 加上博客的分类
-            $blogIds = array_column($list, 'blog_id');
-            $blogTypes = (new BlogTypeService())->blogRelationType($blogIds);
-
+                // 加上博客的分类
+                $blogIds = array_column($list, 'blog_id');
+                $blogTypes = (new BlogTypeService())->blogRelationType($blogIds);
+            }
             foreach ($list as $k=>$v) {
                 $list[$k]['nickname'] = $authorsUidKey[$v['uid']]['nickname'] ?? '无名';
                 $list[$k]['profile_photo'] = $authorsUidKey[$v['uid']]['profile_photo'] ?? '';
 
-                $list[$k]['types'] = isset($blogTypes[$v['blog_id']]) ? $blogTypes[$v['blog_id']] : [];
+                $list[$k]['types'] = $blogTypes[$v['blog_id']] ?? [];
             }
 
             $result = ApiResponse::buildResponse(['list' => $list, 'total' => $total]);
