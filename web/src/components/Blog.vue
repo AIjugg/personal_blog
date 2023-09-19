@@ -178,6 +178,7 @@ export default {
     },
     chooseType (typeId) {
       this.typeId = typeId
+      this.blogList()
     }
   }
 }
