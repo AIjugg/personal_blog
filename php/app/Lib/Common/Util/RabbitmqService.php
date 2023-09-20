@@ -8,6 +8,7 @@
 
 namespace App\Lib\Common\Util;
 
+use Illuminate\Support\Facades\Log;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -45,12 +46,12 @@ class RabbitmqService
 
         //监听数据,成功
         $channel->set_ack_handler(function (AMQPMessage $message) {
-            dump("数据写入成功");
+            Log::info("数据写入成功");
         });
 
         //监听数据,失败
         $channel->set_nack_handler(function (AMQPMessage $message) {
-            dump("数据写入失败");
+            Log::info("数据写入失败");
         });
 
         //声明一个队列
@@ -107,12 +108,12 @@ class RabbitmqService
         $res = $callback($message->body);
 
         if ($res) {
-            print_r('ack验证' . PHP_EOL);
+            Log::info('ack验证');
             //ack验证，如果消费失败了，从新获取一次数据再次消费
             $channel->basic_ack($message->getDeliveryTag());
         }
 
-        print_r('ack消费完成' . PHP_EOL);
+        Log::info('ack消费完成');
 
         $channel->close();
         $connection->close();
