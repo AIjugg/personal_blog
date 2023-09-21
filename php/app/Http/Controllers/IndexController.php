@@ -134,4 +134,26 @@ class IndexController extends BaseController
         }
         return response()->json($result);
     }
+
+
+
+
+
+//    public function testQueue(Request $request)
+//    {
+//        try {
+//            $data = (new BlogService())->getBlogDetail(['blog_id' => 53]);
+//
+//            // 调度的时候会向队列推送消息
+//            // 异步操作；调度时$data数据和各种加载关系将被序列化插入到队列中
+//            // 老版本是$this->dispatch()，我用的laravel 8.x就不能这么用了，只能直接dispatch()
+//            //dispatch(new TestQueue($data));
+//            TestQueue::dispatch($data);
+//
+//            $result = ApiResponse::buildResponse([]);
+//        } catch (\Exception $e) {
+//            $result = ApiResponse::buildThrowableResponse($e);
+//        }
+//        return response()->json($result);
+//    }
 }

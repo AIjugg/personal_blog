@@ -96,26 +96,26 @@ return [
                 'queue' => [
                     'job' => VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Jobs\RabbitMQJob::class,
                 ],
-//                'exchange' => [
-//
-//                    'name' => env('RABBITMQ_EXCHANGE_NAME'),
-//
-//                    /*
-//                     * Determine if exchange should be created if it does not exist.
-//                     */
-//
-//                    'declare' => env('RABBITMQ_EXCHANGE_DECLARE', true),
-//
-//                    /*
-//                     * Read more about possible values at https://www.rabbitmq.com/tutorials/amqp-concepts.html
-//                     */
-//
-//                    'type' => env('RABBITMQ_EXCHANGE_TYPE', 'direct'),
-//                    'passive' => env('RABBITMQ_EXCHANGE_PASSIVE', false),
-//                    'durable' => env('RABBITMQ_EXCHANGE_DURABLE', true),
-//                    'auto_delete' => env('RABBITMQ_EXCHANGE_AUTODELETE', false),
-//                    'arguments' => env('RABBITMQ_EXCHANGE_ARGUMENTS'),
-//                ],
+                'exchange' => [
+
+                    'name' => env('RABBITMQ_BLOG_EXCHANGE_NAME'),
+
+                    /*
+                     * Determine if exchange should be created if it does not exist.
+                     */
+
+                    'declare' => env('RABBITMQ_EXCHANGE_DECLARE', true),
+
+                    /*
+                     * Read more about possible values at https://www.rabbitmq.com/tutorials/amqp-concepts.html
+                     */
+
+                    'type' => env('RABBITMQ_EXCHANGE_TYPE', 'direct'),
+                    'passive' => env('RABBITMQ_EXCHANGE_PASSIVE', false),
+                    'durable' => env('RABBITMQ_EXCHANGE_DURABLE', true),
+                    'auto_delete' => env('RABBITMQ_EXCHANGE_AUTODELETE', false),
+                    'arguments' => env('RABBITMQ_EXCHANGE_ARGUMENTS'),
+                ],
             ],
 
             /*

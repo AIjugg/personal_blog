@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
+
 class BlogSyncQueue implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -37,14 +38,15 @@ class BlogSyncQueue implements ShouldQueue
     }
 
     /**
+     * laravel queue 消费者
      * Execute the job.
      * @throws \Exception
+     *
+     * @see \App\Console\Commands\SyncBlogCommand
      */
     public function handle()
     {
-        RabbitmqService::pop($this->config['queue'], function ($message) {
-            print_r($message);
-        });
-        exit;
+        // 用laravel的queue使用rabbitmq问题太多，放弃了，直接写了个Command，详见\App\Console\Commands\SyncBlogCommand
+
     }
 }

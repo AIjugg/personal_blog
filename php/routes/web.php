@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/home', 'IndexController@index')->name('home');
 
 Route::group(['middleware' => ['after_request']], function () {
-
     Route::group(['prefix' => 'blog'], function () {
         Route::get('/blog-type-list', 'BlogController@listBlogType');
         Route::get('/blog-list', 'BlogController@getBlogList');
@@ -41,6 +40,8 @@ Route::group(['middleware' => ['after_request']], function () {
             Route::post('/edit-blog', 'BlogController@editBlog');  // 新增、编辑博客
             Route::get('/manager-blog-detail', 'BlogController@managerBlogDetail');  // 作者查看自己的博客
             Route::get('/manager-blog-list', 'BlogController@managerBlogList');  // 作者查看自己的博客
+
+            Route::post('/sync-blog', 'BlogController@syncBlog');  // 将本地博客数据传到消息队列中
         });
 
         Route::group(['prefix' => 'user'], function () {

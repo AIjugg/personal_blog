@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\BlogSyncQueue;
 use App\Lib\Common\Constant\SystemEnum;
 use App\Lib\Common\Util\CommonException;
 use App\Lib\Common\Util\ErrorCodes;
@@ -687,6 +688,54 @@ class BlogController extends BaseController
             $result = ApiResponse::buildThrowableResponse($e);
         }
 
+        return response()->json($result);
+    }
+
+
+    /**
+     * 将本地博客同步到云服务器（异步双写）
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function syncBlog(Request $request)
+    {
+        try {
+            $input = $request->only(['blog_id']);
+
+            // 验证参数
+            $validate = Validator::make($input, [
+                'blog_id' => ['required', 'integer'],
+            ]);
+            if ($validate->fails()) {
+                $errorMsg = $validate->errors()->first();
+                throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
+            }
+
+            $selectField = ['b.uid', 'b.title', 'b.description', 'b.image', 'b.state', 'b.top','bc.content', 'b.created_at'];
+            $blogData = (new BlogService())->getBlogDetail(['blog_id' => $input['blog_id']], $selectField);
+
+            $data = [
+                'uid' => $blogData['uid'],
+                'title' => $blogData['title'],
+                'description' => $blogData['description'],
+                'image' => $blogData['image'] ?? '',
+                'state' => $blogData['state'],
+                'top' => $blogData['top'],
+                'content' => $blogData['content'],
+            ];
+
+            $relations = (new BlogTypeService())->getRelationBlogType(0, $input['blog_id']);
+            if (!empty($relations)) {
+                $typeIds = array_column($relations, 'type_id');
+                $data['type_ids'] = $typeIds;
+            }
+
+            new BlogSyncQueue($data);
+
+            $result = ApiResponse::buildResponse([]);
+        } catch (\Exception $e) {
+            $result = ApiResponse::buildThrowableResponse($e);
+        }
         return response()->json($result);
     }
 }
