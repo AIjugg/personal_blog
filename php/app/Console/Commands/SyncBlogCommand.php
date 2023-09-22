@@ -56,8 +56,16 @@ class SyncBlogCommand extends Command
 
             try {
                 $content = $messageArr['content'];
-                $find = "http://changye.top";
-                $replace = "https://www.laoziaite.asia";
+
+                // 本地环境
+                if (getenv('APP_ENV') == 'local') {
+                    $find = "http://changye.top";
+                    $replace = "https://www.laoziaite.asia";
+                } else {  // 线上环境
+                    $replace = "http://changye.top";
+                    $find = "https://www.laoziaite.asia";
+                }
+
                 $newContent = str_replace($find, $replace, $content);
 
                 $data = [
