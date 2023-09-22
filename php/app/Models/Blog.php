@@ -105,7 +105,9 @@ class Blog extends Model
      */
     public function addBlogGetId($data)
     {
-        $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s', time());
+        if (!isset($data['created_at']) || !isset($data['updated_at'])) {
+            $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s', time());
+        }
 
         $blogId = DB::table($this->table)->insertGetId($data);
 

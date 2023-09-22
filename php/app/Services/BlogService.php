@@ -52,6 +52,13 @@ class BlogService
             'top' => $data['top']
         ];
 
+        if (isset($data['created_at'])) {
+            $blogData['created_at'] = $data['created_at'];
+        }
+        if (isset($data['updated_at'])) {
+            $blogData['updated_at'] = $data['updated_at'];
+        }
+
         try {
             DB::beginTransaction();
             // 先插入博客获取博客Id

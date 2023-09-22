@@ -75,6 +75,8 @@ class SyncBlogCommand extends Command
                     'state' => $messageArr['state'],
                     'top' => $messageArr['top'],
                     'content' => $newContent,
+                    'created_at' => $messageArr['created_at'],
+                    'updated_at' => $messageArr['updated_at'],
                 ];
                 if (isset($messageArr['type_ids'])) {
                     $data['type_ids'] = $messageArr['type_ids'];

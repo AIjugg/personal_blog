@@ -711,7 +711,7 @@ class BlogController extends BaseController
                 throw new CommonException(ErrorCodes::PARAM_ERROR, $errorMsg);
             }
 
-            $selectField = ['b.uid', 'b.title', 'b.description', 'b.image', 'b.state', 'b.top','bc.content', 'b.created_at'];
+            $selectField = ['b.uid', 'b.title', 'b.description', 'b.image', 'b.state', 'b.top','bc.content', 'b.created_at', 'b.updated_at'];
             $blogData = (new BlogService())->getBlogDetail(['blog_id' => $input['blog_id']], $selectField);
 
             $data = [
@@ -722,6 +722,8 @@ class BlogController extends BaseController
                 'state' => $blogData['state'],
                 'top' => $blogData['top'],
                 'content' => $blogData['content'],
+                'created_at' => $blogData['created_at'],
+                'updated_at' => $blogData['updated_at']
             ];
 
             $relations = (new BlogTypeService())->getRelationBlogType(0, $input['blog_id']);
