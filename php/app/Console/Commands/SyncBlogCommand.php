@@ -57,11 +57,11 @@ class SyncBlogCommand extends Command
             try {
                 $content = $messageArr['content'];
 
-                // 本地环境
-                if (getenv('APP_ENV') == 'local') {
+                // 线上环境
+                if (getenv('APP_ENV') == 'production') {
                     $find = "http://changye.top";
                     $replace = "https://www.laoziaite.asia";
-                } else {  // 线上环境
+                } else {  // 本地环境
                     $replace = "http://changye.top";
                     $find = "https://www.laoziaite.asia";
                 }
@@ -90,6 +90,7 @@ class SyncBlogCommand extends Command
                     throw new CommonException(ErrorCodes::BLOG_ADD_FAIL);
                 }
                 echo "success" . PHP_EOL;
+                return $res;
             } catch (\Exception $e) {
                 $errorMsg = 'error_line:' . $e->getLine() . ' error_msg:' . $e->getMessage();
                 Log::warning($errorMsg);
