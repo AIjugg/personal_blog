@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Lib\Common\Util\Statistic\DataStatistic;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpdateBlogViewCommand extends Command
 {
@@ -38,7 +39,14 @@ class UpdateBlogViewCommand extends Command
      */
     public function handle()
     {
-        // 更新博客浏览量
-        return DataStatistic::updateViews();
+        try {
+            // 更新博客浏览量
+            return DataStatistic::updateViews();
+        } catch (\Exception $e) {
+            $errorMsg = 'error_line:' . $e->getLine() . ' error_msg:' . $e->getMessage();
+            Log::warning($errorMsg);
+            // exit可以强制退出，不返回ack信号，避免了消息因为程序执行异常而丢失。
+            exit;
+        }
     }
 }
