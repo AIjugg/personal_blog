@@ -9,9 +9,8 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
 
-class BlogTypeRelation extends Model
+class BlogTypeRelation extends BaseModel
 {
     protected $table = 'blog_type_relation';
 

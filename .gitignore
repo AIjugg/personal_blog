@@ -9,6 +9,7 @@
 /php/.settings
 /php/.env
 /php/.bowerrc
+/php/.env.bak
 
 
 # composer vendor dir

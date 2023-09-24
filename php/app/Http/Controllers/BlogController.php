@@ -13,6 +13,7 @@ use App\Lib\Common\Constant\SystemEnum;
 use App\Lib\Common\Util\CommonException;
 use App\Lib\Common\Util\ErrorCodes;
 use App\Lib\Common\Util\Helper;
+use App\Lib\Common\Util\Statistic\DataStatistic;
 use App\Services\BlogService;
 use App\Services\BlogTypeService;
 use App\Services\DraftService;
@@ -203,6 +204,9 @@ class BlogController extends BaseController
             $data['types'] = $blogType[$blogId] ?? [];
 
             $result = ApiResponse::buildResponse(['detail' => $data]);
+
+            // 博客浏览量统计
+            DataStatistic::statisticViews($blogId);
         } catch (\Exception $e) {
             $result = ApiResponse::buildThrowableResponse($e);
         }

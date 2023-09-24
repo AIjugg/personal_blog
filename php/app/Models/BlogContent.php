@@ -8,10 +8,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class BlogContent extends Model
+class BlogContent extends BaseModel
 {
     protected $table = 'blog_content';
 

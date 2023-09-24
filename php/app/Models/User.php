@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 
-class User
+class User extends BaseModel
 {
     protected $table = 'user';
 

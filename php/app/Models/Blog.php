@@ -8,10 +8,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Blog extends Model
+class Blog extends BaseModel
 {
     protected $table = 'blog';
 
@@ -135,5 +134,20 @@ class Blog extends Model
         $res = $blogQuery->update($data);
 
         return $res;
+    }
+
+
+    /**
+     * 更新博客的浏览量
+     * todo 如果为了追求效率，应该考虑批量自增，思路是改一下批量更新
+     * @param $blogId
+     * @param string $key
+     * @param integer $value
+     * @return int
+     */
+    public function updateBlogStatistic($blogId, $key, $value)
+    {
+        return DB::table($this->table)->where('blog_id', $blogId)
+            ->increment($key, $value);
     }
 }

@@ -8,10 +8,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Motto extends Model
+class Motto extends BaseModel
 {
     protected $table = 'motto';
 
