@@ -13,7 +13,7 @@ use Monolog\Formatter\NormalizerFormatter;
 
 class LineFormatter extends BaseLineFormatter
 {
-    public const SIMPLE_FORMAT = "[%datetime%] [" . LOG_ID . "] [%level_name%]: %message% %context% %extra%\n";
+    public const SIMPLE_FORMAT = "[%datetime%] [" . LOG_ID . "] [%level_name%] %message% %context% %extra%\n";
 
     public const DATE_FORMAT = 'Y-m-d H:i:s';
 

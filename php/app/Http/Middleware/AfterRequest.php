@@ -34,15 +34,18 @@ class AfterRequest
         $input = $request->input();
         $inputJson = json_encode($input, JSON_UNESCAPED_UNICODE);
 
-        $messageArr = [
-            "[using_time:{$useTime}s]",
-            "[path:{$path}]",
-            "[input:{$inputJson}]"
-        ];
+        $uid = 0;
         $userInfo = $request->offsetGet('user_info');
         if (!empty($userInfo)) {
-            $messageArr[] = "[uid:{$userInfo['id']}]";
+            $uid = $userInfo['id'];
         }
+
+        $messageArr = [
+            "using_time:{$useTime}s",
+            "path:/{$path}",
+            "uid:{$uid}",
+            "input:{$inputJson}"
+        ];
 
         // 在response中加入log_id
         if ($response instanceof JsonResponse) {
@@ -53,7 +56,7 @@ class AfterRequest
             $jsonData['log_id'] = LOG_ID;
             $response = (new JsonResponse())->setData($jsonData);
 
-            $messageArr[] = "[response:{$responseContent}]";
+            $messageArr[] = "response:{$responseContent}";
         }
 
 
