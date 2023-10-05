@@ -93,7 +93,7 @@ class SyncBlogCommand extends Command
                 return $res;
             } catch (\Exception $e) {
                 $errorMsg = 'error_line:' . $e->getLine() . ' error_msg:' . $e->getMessage();
-                Log::warning($errorMsg);
+                Log::channel('changye_blog_console')->warning($errorMsg);
                 // exit可以强制退出，不返回ack信号，避免了消息因为程序执行异常而丢失。
                 exit;
             }
