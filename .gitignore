@@ -51,6 +51,8 @@
 /web/*.ntvs*
 /web/*.njsproj
 /web/*.sln
-/web/.vs
+/web/.vs/*
+/web/package-lock.json
+
 
 /crontab_php
