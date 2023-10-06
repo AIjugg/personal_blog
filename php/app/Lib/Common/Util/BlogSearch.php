@@ -87,7 +87,7 @@ class BlogSearch
     }
 
 
-    public function searchBlogFromEs($word)
+    public function searchBlogFromEs($word, $state = 0)
     {
         // es格式的搜索
         $params = [
@@ -112,18 +112,22 @@ class BlogSearch
                                     'content' => $word
                                 ]
                             ]
-                        ],
-                        "must" => [
-                            [
-                                "term" => [
-                                    "state" => SystemEnum::BLOG_STATE_NORMAL
-                                ]
-                            ]
                         ]
                     ]
                 ]
             ]
         ];
+
+        if (!empty($state)) {
+            $params['body']['query']['bool']['must'] = [
+                [
+                    "term" => [
+                        "state" => $state
+                    ]
+                ]
+            ];
+        }
+
         $response = $this->es->search($params);
 
         $data = $response['hits']['hits'];

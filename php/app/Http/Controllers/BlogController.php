@@ -312,7 +312,7 @@ class BlogController extends BaseController
                 // $condition['title'] = trim($input['word']);
 
                 // 使用es搜索
-                $blogIds = (new BlogSearch())->searchBlogFromEs(trim($input['word']));
+                $blogIds = (new BlogSearch())->searchBlogFromEs(trim($input['word']), SystemEnum::BLOG_STATE_NORMAL);
                 if (empty($blogIds)) {
                     return response()->json(ApiResponse::buildResponse(['list' => [], 'total' => 0]));
                 } else {
@@ -669,8 +669,18 @@ class BlogController extends BaseController
             $uid = $userInfo['id'];
 
             $condition = ['uid' => $uid];
+
+            // 关键词搜索
             if (!empty($input['word'])) {
-                $condition['title'] = trim($input['word']);
+                // $condition['title'] = trim($input['word']);
+
+                // 使用es搜索
+                $blogIds = (new BlogSearch())->searchBlogFromEs(trim($input['word']));
+                if (empty($blogIds)) {
+                    return response()->json(ApiResponse::buildResponse(['list' => [], 'total' => 0]));
+                } else {
+                    $condition['blog_id'] = $blogIds;
+                }
             }
             if (!empty($input['type_id'])) {
                 $condition['type_id'] = $input['type_id'];
