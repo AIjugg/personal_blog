@@ -75,7 +75,7 @@ class LogEsIndex
             return $res;
         } catch (\Exception $e) {
             $errorMsg = $e->getMessage();
-            Log::error($errorMsg);
+            Log::channel("changye_blog_console")->error($errorMsg);
         }
     }
 }
