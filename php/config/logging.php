@@ -130,6 +130,14 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
             'log_max_files' => 14
+        ],
+        'changye_blog_sql' => [
+            'driver' => 'daily',
+            'tap' => [App\Lib\Log\CustomizeLogFormatter::class],
+            'path' => storage_path('logs/sql.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'log_max_files' => 14
         ]
     ],
 

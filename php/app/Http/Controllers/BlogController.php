@@ -287,13 +287,13 @@ class BlogController extends BaseController
     public function getBlogList(Request $request)
     {
         try {
-            $input = $request->only(['word','type_id','page','pagesize','sort_filed','sort_direction']);
+            $input = $request->only(['word','type_id','page','pagesize','sort_field','sort_direction']);
 
             // 验证参数
             $validate = Validator::make($input, [
                 'word' => 'nullable|string',
                 'type_id' => 'nullable',
-                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
+                'sort_field' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
                 'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
                 'pagesize' => 'nullable|integer',
@@ -515,11 +515,11 @@ class BlogController extends BaseController
     public function listBlogDraft(Request $request)
     {
         try {
-            $input = $request->only(['page','pagesize','sort_filed','sort_direction']);
+            $input = $request->only(['page','pagesize','sort_field','sort_direction']);
 
             // 验证参数
             $validate = Validator::make($input, [
-                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at'])],
+                'sort_field' => ['nullable', Rule::in(['created_at','updated_at'])],
                 'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
                 'pagesize' => 'nullable|integer',
@@ -643,13 +643,13 @@ class BlogController extends BaseController
     public function managerBlogList(Request $request)
     {
         try {
-            $input = $request->only(['word','type_id','page','pagesize','sort_filed','sort_direction']);
+            $input = $request->only(['word','type_id','page','pagesize','sort_field','sort_direction']);
 
             // 验证参数
             $validate = Validator::make($input, [
                 'word' => 'nullable|string',
                 'type_id' => 'nullable',
-                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
+                'sort_field' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
                 'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
                 'pagesize' => 'nullable|integer',

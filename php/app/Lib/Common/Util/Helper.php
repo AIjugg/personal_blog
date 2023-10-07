@@ -19,14 +19,14 @@ class Helper
     public static function sortStandard($input)
     {
         $sortArr = [];
-        if (!empty($input['sort_filed'])) {
-            $sortArr['sort_filed'] = $input['sort_filed'];
+        if (!empty($input['sort_field'])) {
+            $sortArr['sort_field'] = $input['sort_field'];
         }
         if (!empty($input['sort_direction'])) {
             $sortArr['sort_direction'] = $input['sort_direction'];
         }
 
-        if (!empty($sortArr['sort_filed']) && empty($sortArr['sort_direction'])) {
+        if (!empty($sortArr['sort_field']) && empty($sortArr['sort_direction'])) {
             $sortArr['sort_direction'] = 'desc';
         }
 
