@@ -169,10 +169,6 @@ class BlogSearch
             $messageArr = json_decode($message, true);
 
             try {
-                if (empty($messageArr['column'])) {
-                    throw new CommonException(ErrorCodes::PARAM_ERROR, $message);
-                }
-
                 $blogId = $messageArr['blog_id'];
                 if (empty($blogId)) {
                     throw new CommonException(ErrorCodes::BLOG_ID_EMPTY, $message);
@@ -288,7 +284,7 @@ class BlogSearch
             // 这个其实是软删除
             $response = $this->es->delete($param);
         } else {
-            $param['body'] = $data;
+            $param['body'] = ['doc' => $data];
             // 更新文档
             $response = $this->es->update($param);
         }

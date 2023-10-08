@@ -55,7 +55,7 @@ class BlogSyncEs
      * 通过canal同步mysql数据到es
      * @throws \Exception
      */
-    public function syncData()
+    public function syncDataToMq()
     {
         try {
             $this->canalClient = CanalConnectorFactory::createClient(CanalClient::TYPE_SOCKET_CLUE);
