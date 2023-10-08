@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\BlogSyncQueue;
 use App\Lib\Common\Util\CommonException;
 use App\Lib\Common\Util\ErrorCodes;
-use App\Lib\Common\Util\RabbitmqService;
 use App\Services\BlogService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -50,7 +50,8 @@ class SyncBlogCommand extends Command
      */
     public function handle()
     {
-        RabbitmqService::pop($this->config['queue'], function ($message) {
+        $mq = new BlogSyncQueue();
+        $mq->popData(function ($message) {
             // 读取消息，再插入数据库
             $messageArr = json_decode($message, true);
 

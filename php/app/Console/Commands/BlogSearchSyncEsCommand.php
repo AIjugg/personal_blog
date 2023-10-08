@@ -45,8 +45,10 @@ class BlogSearchSyncEsCommand extends Command
 
             if ($method == 'create') {  // 创建日志索引
                 (new BlogSearch())->createIndex();
-            } elseif (($method == 'sync')) {  // 使用canal同步mysql数据到es
+            } elseif ($method == 'sync') {  // 使用canal同步mysql数据到es
                 (new BlogSyncEs())->syncData();
+            } elseif ($method == 'init') {   // 初始化mysql数据同步到es
+                (new BlogSyncEs())->initBlogData();
             }
             var_dump('over');
             exit;

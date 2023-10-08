@@ -45,6 +45,18 @@ class BlogSyncQueue implements ShouldQueue
         RabbitmqService::push($this->config['queue'], $this->config['exchange'], $this->config['routing_key'], $data);
     }
 
+
+    /**
+     * 消费消息
+     * 回调函数 @param $callback
+     * @throws \Exception
+     */
+    public function popData($callback)
+    {
+        RabbitmqService::pop($this->config['queue'], $callback);
+    }
+
+
     /**
      * laravel queue 消费者
      * Execute the job.

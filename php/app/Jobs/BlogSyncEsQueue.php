@@ -49,6 +49,16 @@ class BlogSyncEsQueue implements ShouldQueue
 
 
     /**
+     * 消费消息
+     * 回调函数 @param $callback
+     * @throws \Exception
+     */
+    public function popData($callback)
+    {
+        RabbitmqService::pop($this->config['queue'], $callback);
+    }
+
+    /**
      * Execute the job.
      *
      * @return void
