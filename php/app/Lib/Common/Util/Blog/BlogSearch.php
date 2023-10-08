@@ -8,7 +8,6 @@
 
 namespace App\Lib\Common\Util;
 
-use App\Lib\Common\Constant\SystemEnum;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 

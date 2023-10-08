@@ -758,7 +758,8 @@ class BlogController extends BaseController
                 $data['type_ids'] = $typeIds;
             }
 
-            new BlogSyncQueue($data);
+            $mq = new BlogSyncQueue();
+            $mq->pushData($data);
 
             $result = ApiResponse::buildResponse([]);
         } catch (\Exception $e) {

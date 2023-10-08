@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Lib\Common\Util\Blog\BlogSyncEs;
 use Illuminate\Console\Command;
 use App\Lib\Common\Util\BlogSearch;
+use Illuminate\Support\Facades\Log;
 
 class BlogSearchSyncEsCommand extends Command
 {
@@ -38,15 +40,18 @@ class BlogSearchSyncEsCommand extends Command
      */
     public function handle()
     {
-        $method = $this->argument('method');
+        try {
+            $method = $this->argument('method');
 
-        $blogEs = new BlogSearch();
-        if ($method == 'create') {  // 创建日志索引
-            $blogEs->createIndex();
-        } else {  // 同步mysql数据到es
-            // 直接利用FileBeat传送数据给了logStash，再通过logStash同步到了es中。
+            if ($method == 'create') {  // 创建日志索引
+                (new BlogSearch())->createIndex();
+            } elseif (($method == 'sync')) {  // 使用canal同步mysql数据到es
+                (new BlogSyncEs())->syncData();
+            }
+            var_dump('over');
+            exit;
+        } catch (\Exception $e) {
+            Log::channel('changye_blog_console')->warning($e->getMessage());
         }
-        var_dump('over');
-        exit;
     }
 }
