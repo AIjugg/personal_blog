@@ -10,7 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\BlogSyncQueue;
 use App\Lib\Common\Constant\SystemEnum;
-use App\Lib\Common\Util\BlogSearch;
+use App\Lib\Common\Util\Blog\BlogSearch;
 use App\Lib\Common\Util\CommonException;
 use App\Lib\Common\Util\ErrorCodes;
 use App\Lib\Common\Util\Helper;
