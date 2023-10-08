@@ -19,7 +19,14 @@ class BlogContent extends BaseModel
         $contentQuery = DB::table($this->table);
 
         if (!empty($condition['blog_id'])) {
-            $contentQuery->where('blog_id', $condition['blog_id']);
+            $where = is_array($condition['blog_id']) ? 'whereIn' : 'where';
+            $contentQuery->$where('blog_id', $condition['blog_id']);
+        }
+
+        $total = $contentQuery->count();
+        if ($total > 1) {
+            return $contentQuery->get()->map(function ($value) { return (array)$value; })
+                ->toArray();
         }
 
         $content = $contentQuery->get()->toArray();

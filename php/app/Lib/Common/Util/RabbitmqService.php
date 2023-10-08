@@ -46,12 +46,12 @@ class RabbitmqService
 
         //监听数据,成功
         $channel->set_ack_handler(function (AMQPMessage $message) {
-            Log::info("数据写入成功");
+            Log::channel('changye_blog_console')->info("数据写入成功");
         });
 
         //监听数据,失败
         $channel->set_nack_handler(function (AMQPMessage $message) {
-            Log::info("数据写入失败");
+            Log::channel('changye_blog_console')->info("数据写入失败");
         });
 
         //声明一个队列
@@ -99,21 +99,23 @@ class RabbitmqService
         //构建消息通道
         $channel = $connection->channel();
 
-        //从队列中取出消息，并且消费
-        $message = $channel->basic_get($queue);
+        while (true) {
+            //从队列中取出消息，并且消费
+            $message = $channel->basic_get($queue);
 
-        if (!$message) return false;
+            if (!$message) return false;
 
-        //消息主题返回给回调函数
-        $res = $callback($message->body);
+            //消息主题返回给回调函数
+            $res = $callback($message->body);
 
-        if ($res) {
-            Log::info('ack验证');
-            //ack验证，如果消费失败了，从新获取一次数据再次消费
-            $channel->basic_ack($message->getDeliveryTag());
+            if ($res) {
+                Log::channel('changye_blog_console')->info('ack验证');
+                //ack验证，如果消费失败了，从新获取一次数据再次消费
+                $channel->basic_ack($message->getDeliveryTag());
+            }
+
+            Log::channel('changye_blog_console')->info('ack消费完成');
         }
-
-        Log::info('ack消费完成');
 
         $channel->close();
         $connection->close();

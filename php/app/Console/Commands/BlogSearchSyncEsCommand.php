@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Lib\Common\Util\Blog\BlogSyncEs;
 use Illuminate\Console\Command;
-use App\Lib\Common\Util\BlogSearch;
+use App\Lib\Common\Util\Blog\BlogSearch;
 use Illuminate\Support\Facades\Log;
 
 class BlogSearchSyncEsCommand extends Command
@@ -49,6 +49,8 @@ class BlogSearchSyncEsCommand extends Command
                 (new BlogSyncEs())->syncData();
             } elseif ($method == 'init') {   // 初始化mysql数据同步到es
                 (new BlogSyncEs())->initBlogData();
+            } elseif ($method == 'first_sync') {
+                (new BlogSearch())->syncBlogDataToEs();
             }
             var_dump('over');
             exit;
