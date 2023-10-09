@@ -22,8 +22,18 @@ class EsServiceProvider extends ServiceProvider
     {
         // 注册一个名为 es 的单例
         $this->app->singleton('es', function () {
+            $hosts = [
+                [
+                    'host' => config('database.elasticsearch.host'),
+                    'port' => config('database.elasticsearch.port'),
+                    'scheme' => config('database.elasticsearch.scheme'),
+                    'user' => config('database.elasticsearch.user'),
+                    'pass' => config('database.elasticsearch.pass'),
+                ]
+            ];
+
             // 从配置文件读取 Elastic Search 服务器列表
-            $builder = ESClientBuilder::create()->setHosts(config('database.elasticsearch.hosts'));
+            $builder = ESClientBuilder::create()->setHosts($hosts);
             // 如果是开发环境
             if (app()->environment() === 'local') {
                 // 配置日志，Elastic Search 的请求和返回数据将打印到日志文件中，方便我们调试

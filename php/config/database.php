@@ -146,7 +146,11 @@ return [
 
     'elasticsearch' => [
         // Elasticsearch 支持多台服务器负载均衡，因此这里是一个数组
-        'hosts' => explode(';',env('ES_HOSTS')),
+        'host' => env('ES_HOST', '127.0.0.1'),
+        'port' => env('ES_PORT', '9200'),
+        'scheme' => env('ES_SCHEME', 'http'),
+        'user' => env('ES_USER', ''),
+        'pass' => env('ES_PWD', ''),
     ],
 
     'canal' => [
