@@ -2,22 +2,24 @@
 
 namespace App\Jobs;
 
-use App\Lib\Common\Util\RabbitmqService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Lib\Common\Util\RabbitmqService;
 
-
-class BlogSyncQueue implements ShouldQueue
+/**
+ * 将blog数据推送到消息队列中，再同步到es
+ * Class BlogSyncEsQueue
+ * @package App\Jobs
+ */
+class BlogSyncEsQueue implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-
     private $config;
-
 
     /**
      * Create a new job instance.
@@ -27,9 +29,9 @@ class BlogSyncQueue implements ShouldQueue
     public function __construct()
     {
         $this->config = [
-            'queue' => env('RABBITMQ_BLOG_QUEUE', 'blog_insert_edit'),
-            'exchange' => env('RABBITMQ_BLOG_EXCHANGE_NAME', 'update_blog_exchange'),
-            'routing_key' => env('RABBITMQ_BLOG_ROUTING_KEY', 'blog_edit_routingkey'),
+            'queue' => env('RABBITMQ_ES_QUEUE', 'blog_sync_es'),
+            'exchange' => env('RABBITMQ_ES_EXCHANGE_NAME', 'blog_sync_es_exchange'),
+            'routing_key' => env('RABBITMQ_ES_ROUTING_KEY', 'blog_sync_es_routingkey'),
         ];
     }
 
@@ -56,17 +58,13 @@ class BlogSyncQueue implements ShouldQueue
         RabbitmqService::pop($this->config['queue'], $callback);
     }
 
-
     /**
-     * laravel queue 消费者
      * Execute the job.
-     * @throws \Exception
      *
-     * @see \App\Console\Commands\SyncBlogCommand
+     * @return void
      */
     public function handle()
     {
-        // 用laravel的queue使用rabbitmq问题太多，放弃了，直接写了个Command，详见\App\Console\Commands\SyncBlogCommand
 
     }
 }

@@ -41,6 +41,8 @@ class Blog extends BaseModel
 
             $blogQuery->join('blog_type_relation as br', 'br.blog_id', '=', 'b.blog_id')
                 ->$where('br.type_id', $condition['type_id']);
+
+            $blogQuery->select(['b.*','br.type_id']);
         }
 
         return $blogQuery;

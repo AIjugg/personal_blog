@@ -96,7 +96,7 @@ export default {
   data () {
     return {
       typeId: sessionStorage.getItem('editTypeId') ? sessionStorage.getItem('editTypeId') : 0,
-      sortBy: sessionStorage.getItem('editSortBy') ? sessionStorage.getItem('editSortBy') : 'created_at',
+      sortBy: sessionStorage.getItem('editSortBy') ? sessionStorage.getItem('editSortBy') : 'updated_at',
       sortList: [
         {
           'key': 'updated_at',
@@ -130,7 +130,7 @@ export default {
       sessionStorage.setItem('editPage', this.page)
       this.$http.get(this.baseUrl + '/blog/manager-blog-list', {params: { type_id: this.typeId,
         word: this.word,
-        sort_filed: this.sortBy,
+        sort_field: this.sortBy,
         sort_direction: 'desc',
         page: this.page,
         pagesize: 10

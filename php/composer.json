@@ -12,7 +12,8 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "11.0"
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "11.0",
+        "xingwenge/canal_php": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

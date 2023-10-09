@@ -134,7 +134,7 @@ export default {
       sessionStorage.setItem('blogPage', this.page)
       this.$http.get(this.baseUrl + '/blog/blog-list', {params: { type_id: this.typeId,
         word: this.word,
-        sort_filed: this.sortBy,
+        sort_field: this.sortBy,
         sort_direction: 'desc',
         page: this.page,
         pagesize: 10

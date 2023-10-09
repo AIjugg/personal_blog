@@ -34,6 +34,7 @@ class ErrorCodes
     const DRAFT_EDIT_FAIL = 12013;
     const DRAFT_DELETE_FAIL = 12014;
     const BLOG_TYPE_RELATION_EXIST = 12015;
+    const BLOG_ID_EMPTY = 12016;
 
      // 用户
     const USER_PWD_WRONG = 13001;
@@ -77,6 +78,7 @@ class ErrorCodes
         self::DRAFT_DELETE_FAIL => '删除草稿失败',
         self::BLOG_TYPE_RELATION_EXIST => '分类已关联博客',
         self::NEW_PWD_REPEAT => '新密码与旧密码一致',
+        self::BLOG_ID_EMPTY => '博客id为空',
 
         self::USER_PWD_WRONG => '用户密码错误',
         self::USER_PWD_REPEAT_WRONG => '两次密码不一致',

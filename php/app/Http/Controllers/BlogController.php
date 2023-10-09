@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\BlogSyncQueue;
 use App\Lib\Common\Constant\SystemEnum;
+use App\Lib\Common\Util\Blog\BlogSearch;
 use App\Lib\Common\Util\CommonException;
 use App\Lib\Common\Util\ErrorCodes;
 use App\Lib\Common\Util\Helper;
@@ -286,13 +287,13 @@ class BlogController extends BaseController
     public function getBlogList(Request $request)
     {
         try {
-            $input = $request->only(['word','type_id','page','pagesize','sort_filed','sort_direction']);
+            $input = $request->only(['word','type_id','page','pagesize','sort_field','sort_direction']);
 
             // 验证参数
             $validate = Validator::make($input, [
                 'word' => 'nullable|string',
                 'type_id' => 'nullable',
-                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
+                'sort_field' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
                 'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
                 'pagesize' => 'nullable|integer',
@@ -305,9 +306,20 @@ class BlogController extends BaseController
             }
 
             $condition = ['state' => SystemEnum::BLOG_STATE_NORMAL];
+
+            // 关键词搜索
             if (!empty($input['word'])) {
-                $condition['title'] = trim($input['word']);
+                // $condition['title'] = trim($input['word']);
+
+                // 使用es搜索
+                $blogIds = (new BlogSearch())->searchBlogFromEs(trim($input['word']), SystemEnum::BLOG_STATE_NORMAL);
+                if (empty($blogIds)) {
+                    return response()->json(ApiResponse::buildResponse(['list' => [], 'total' => 0]));
+                } else {
+                    $condition['blog_id'] = $blogIds;
+                }
             }
+
             if (!empty($input['type_id'])) {
                 $condition['type_id'] = $input['type_id'];
             }
@@ -503,11 +515,11 @@ class BlogController extends BaseController
     public function listBlogDraft(Request $request)
     {
         try {
-            $input = $request->only(['page','pagesize','sort_filed','sort_direction']);
+            $input = $request->only(['page','pagesize','sort_field','sort_direction']);
 
             // 验证参数
             $validate = Validator::make($input, [
-                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at'])],
+                'sort_field' => ['nullable', Rule::in(['created_at','updated_at'])],
                 'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
                 'pagesize' => 'nullable|integer',
@@ -631,13 +643,13 @@ class BlogController extends BaseController
     public function managerBlogList(Request $request)
     {
         try {
-            $input = $request->only(['word','type_id','page','pagesize','sort_filed','sort_direction']);
+            $input = $request->only(['word','type_id','page','pagesize','sort_field','sort_direction']);
 
             // 验证参数
             $validate = Validator::make($input, [
                 'word' => 'nullable|string',
                 'type_id' => 'nullable',
-                'sort_filed' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
+                'sort_field' => ['nullable', Rule::in(['created_at','updated_at', 'like', 'pageview'])],
                 'sort_direction' => ['nullable', Rule::in(['asc','desc'])],
                 'page' => 'nullable|integer',
                 'pagesize' => 'nullable|integer',
@@ -657,8 +669,18 @@ class BlogController extends BaseController
             $uid = $userInfo['id'];
 
             $condition = ['uid' => $uid];
+
+            // 关键词搜索
             if (!empty($input['word'])) {
-                $condition['title'] = trim($input['word']);
+                // $condition['title'] = trim($input['word']);
+
+                // 使用es搜索
+                $blogIds = (new BlogSearch())->searchBlogFromEs(trim($input['word']));
+                if (empty($blogIds)) {
+                    return response()->json(ApiResponse::buildResponse(['list' => [], 'total' => 0]));
+                } else {
+                    $condition['blog_id'] = $blogIds;
+                }
             }
             if (!empty($input['type_id'])) {
                 $condition['type_id'] = $input['type_id'];
@@ -736,7 +758,8 @@ class BlogController extends BaseController
                 $data['type_ids'] = $typeIds;
             }
 
-            new BlogSyncQueue($data);
+            $mq = new BlogSyncQueue();
+            $mq->pushData($data);
 
             $result = ApiResponse::buildResponse([]);
         } catch (\Exception $e) {
