@@ -23,15 +23,8 @@ class BlogContent extends BaseModel
             $contentQuery->$where('blog_id', $condition['blog_id']);
         }
 
-        $total = $contentQuery->count();
-        if ($total > 1) {
-            return $contentQuery->get()->map(function ($value) { return (array)$value; })
-                ->toArray();
-        }
-
-        $content = $contentQuery->get()->toArray();
-
-        return $content;
+        return $contentQuery->get()->map(function ($value) { return (array)$value; })
+            ->toArray();
     }
 
 
