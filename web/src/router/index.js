@@ -16,7 +16,6 @@ import type from '@/components/personal/Type'
 import userInfo from '@/components/personal/UserInfo'
 import statistic from '@/components/personal/Statistic'
 const Router = require('vue-router')
-Vue.use(Router)
 
 let myrouter = new Router({
   routes: [
