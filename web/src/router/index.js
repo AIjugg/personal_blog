@@ -1,5 +1,3 @@
-import Vue from 'vue'
-import Router from 'vue-router'
 import Test from '@/components/Test'
 import Home from '@/components/Home'
 import Message from '@/components/Message'
@@ -17,7 +15,7 @@ import blogManager from '@/components/personal/BlogManager'
 import type from '@/components/personal/Type'
 import userInfo from '@/components/personal/UserInfo'
 import statistic from '@/components/personal/Statistic'
-
+const Router = require('vue-router')
 Vue.use(Router)
 
 let myrouter = new Router({

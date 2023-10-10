@@ -18,5 +18,13 @@ module.exports = {
     source: 'src',
     img: 'src',
     image: 'xlink:href'
+  },
+  configureWebpack: {
+    externals: {
+        'vue': 'Vue',
+        'element-ui': 'Element',
+        'vue-router': 'VueRouter',
+        'vue-resource': 'VueResource'
+    }
   }
 }
