@@ -26,7 +26,7 @@ module.exports = {
     'vue-router': 'VueRouter',
     'element-ui': 'Element',
     'vue-resource': 'VueResource',
-    // 'highlight.js': 'hljs',
+    'highlight.js': 'hljs',
     'iview': 'iview'
   },
   context: path.resolve(__dirname, '../'),

@@ -9,16 +9,16 @@ import App from './App'
 // import 'quill/dist/quill.snow.css'
 // import 'quill/dist/quill.bubble.css'
 import globalApi from './plugin/globleApi'
-import hljs from 'highlight.js'
+// import hljs from 'highlight.js'
 // 使用样式，有多种样式可选
-import 'highlight.js/styles/agate.css'
+// import 'highlight.js/styles/agate.css'
 
 const Vue = require('vue')
 const ElementUI = require('element-ui')
 const ViewUI = require('iview')
 const VueResource = require('vue-resource')
 const VueQuillEditor = require('vue-quill-editor')
-// const hljs = require('highlight.js')
+const hljs = require('highlight.js')
 
 // Vue.use(ElementUI)
 // Vue.use(VueResource)
