@@ -3,22 +3,28 @@
 // import Vue from 'vue'
 import router from './router'
 import App from './App'
+import ViewUI from 'iview'
 // import 'view-design/dist/styles/iview.css'
-import VueQuillEditor from 'vue-quill-editor'
+// import VueQuillEditor from 'vue-quill-editor'
 // import 'quill/dist/quill.core.css'
 // import 'quill/dist/quill.snow.css'
 // import 'quill/dist/quill.bubble.css'
 import globalApi from './plugin/globleApi'
 import hljs from 'highlight.js'
 // 使用样式，有多种样式可选
-import 'highlight.js/styles/agate.css'
+// import 'highlight.js/styles/agate.css'
 
 const Vue = require('vue')
 const ElementUI = require('element-ui')
 const VueResource = require('vue-resource')
+const VueQuillEditor = require('vue-quill-editor')
+
+Vue.use(ElementUI)
+Vue.use(VueResource)
+Vue.use(VueQuillEditor)
+Vue.use(ViewUI)
 
 Vue.config.productionTip = false
-Vue.use(VueQuillEditor)
 
 Vue.prototype.baseUrl = globalApi.baseURL
 Vue.directive('highlight', function (el) {

@@ -22,9 +22,10 @@ const createLintingRule = () => ({
 module.exports = {
   externals: {
     'vue': 'Vue',
-    'iview': 'iview',
     'vue-quill-editor': 'VueQuillEditor',
     'vue-router': 'VueRouter',
+    'element-ui': 'Element',
+    'vue-resource': 'VueResource'
   },
   context: path.resolve(__dirname, '../'),
   entry: {
