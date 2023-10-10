@@ -25,7 +25,9 @@ module.exports = {
     'vue-quill-editor': 'VueQuillEditor',
     'vue-router': 'VueRouter',
     'element-ui': 'Element',
-    'vue-resource': 'VueResource'
+    'vue-resource': 'VueResource',
+    'highlight.js': 'hljs',
+    'iview': 'iview'
   },
   context: path.resolve(__dirname, '../'),
   entry: {
