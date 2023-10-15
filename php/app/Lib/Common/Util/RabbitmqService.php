@@ -89,15 +89,19 @@ class RabbitmqService
     /**
      * @param $queue
      * @param $callback
+     * @param int $prefetchCount 堆积的unack的消息数量
      * @return bool
      * @throws \Exception
      */
-    public static function pop($queue, $callback)
+    public static function pop($queue, $callback, $prefetchCount = 10)
     {
         $connection = self::getConnect();
 
         //构建消息通道
         $channel = $connection->channel();
+
+        // 控制队列unack消息推送的数量，避免因为消息过多，导致内存消耗过大或者内存溢出、内存泄漏
+        $channel->basic_qos(null, $prefetchCount, null);
 
         while (true) {
             //从队列中取出消息，并且消费
