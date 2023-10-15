@@ -88,6 +88,13 @@ class BlogSearch
     }
 
 
+    /**
+     * es搜索
+     * @param $word
+     * @param int $state
+     * @return array
+     * @throws \Exception
+     */
     public function searchBlogFromEs($word, $state = 0)
     {
         // es格式的搜索
@@ -139,15 +146,19 @@ class BlogSearch
             ];
         }
 
-        $response = $this->es->search($params);
+        try {
+            $response = $this->es->search($params);
 
-        $data = $response['hits']['hits'];
-        $blogIds = [];
-        if (empty($data)) {
-            return [];
-        }
-        foreach ($data as $v) {
-            $blogIds[] = $v['_source']['blog_id'];
+            $data = $response['hits']['hits'];
+            $blogIds = [];
+            if (empty($data)) {
+                return [];
+            }
+            foreach ($data as $v) {
+                $blogIds[] = $v['_source']['blog_id'];
+            }
+        } catch (\Exception $e) {
+            throw $e;
         }
 
 
